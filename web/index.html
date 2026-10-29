@@ -113,6 +113,40 @@ input:focus,select:focus,textarea:focus{border-color:var(--violet);outline:none}
 .tweaks .f{grid-column:auto;display:flex;align-items:center;gap:8px}
 .tweaks input{width:96px;padding:7px 10px}
 .formula{font-size:13px;color:var(--faint);margin-top:10px}
+.sub3{font-size:17px;margin:20px 0 4px}
+.hint{font-size:13.5px;color:var(--mute);margin:0 0 8px}
+.alertas{display:grid;gap:8px;margin-top:12px}
+.alerta{border-radius:14px;padding:10px 14px;font-size:14px;font-weight:600;background:var(--orange-soft);color:var(--orange-text)}
+.alerta.grave{background:var(--pink-soft);color:var(--pink-text)}
+.antro{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.antro span{font-size:13px;font-weight:700;padding:5px 10px;border-radius:30px;background:var(--surface-2)}
+.eqs{display:grid;gap:6px}
+.eq{display:grid;grid-template-columns:auto 1fr auto;gap:2px 10px;align-items:center;padding:10px 12px;border-radius:14px;border:1.5px solid var(--line);cursor:pointer}
+.eq:has(input:checked){border-color:var(--violet);background:var(--violet-soft)}
+.eq input{accent-color:var(--violet);width:18px;height:18px}
+.eq b{font-variant-numeric:tabular-nums}
+.eq small{grid-column:2 / -1;font-size:12.5px;color:var(--mute)}
+.eq .rec{font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:20px;background:var(--lime);color:var(--lime-ink);margin-left:6px}
+details.mais{margin-top:10px;border-radius:14px;background:var(--surface-2);padding:10px 14px}
+details.mais summary{cursor:pointer;font-weight:700;font-size:14.5px}
+.tab2{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px;table-layout:fixed}
+.tab2 td{padding:5px 4px;border-bottom:1px dashed var(--line);vertical-align:top}
+.tab2 td{overflow-wrap:anywhere}
+.tab2 td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;width:28%}
+.tab2 small{color:var(--mute)}
+.extras{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-top:12px}
+.extras div{border-radius:14px;padding:10px 12px;background:var(--surface-2);font-size:13px}
+.extras b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
+.dri{margin-top:14px}
+.dri .lin{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 90px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.dri .bar{height:8px;border-radius:5px;background:var(--surface);overflow:hidden}
+.dri .bar i{display:block;height:100%;background:var(--lime-text)}
+.dri .lin.baixo .bar i{background:var(--orange-text)}
+.dri .lin.ul .bar i{background:var(--pink-text)}
+.dri .n{text-align:right;font-variant-numeric:tabular-nums}
+.tweaks select{width:auto;padding:7px 10px}
+[data-so]{display:none}
+[data-so].on{display:grid}
 /* cardápio */
 .bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
 @media (max-width:640px){.bars{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -355,13 +389,23 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
               <div class="f w3"><label for="p-nome">Nome</label><input type="text" id="p-nome" autocomplete="off"></div>
               <div class="f w3"><label for="p-tel">WhatsApp do paciente</label><input type="tel" id="p-tel" inputmode="tel" placeholder="(81) 99999-9999" autocomplete="off"></div>
               <div class="f"><label for="p-nasc">Nascimento</label><input type="date" id="p-nasc"></div>
-              <div class="f w1"><label for="p-idade">Idade</label><input type="number" id="p-idade" min="10" max="100" inputmode="numeric"></div>
+              <div class="f w1"><label for="p-idade">Idade</label><input type="number" id="p-idade" min="0" max="110" inputmode="numeric"></div>
               <div class="f w1"><label for="p-sexo">Sexo</label><select id="p-sexo"><option value="f">Feminino</option><option value="m">Masculino</option></select></div>
               <div class="f"><label for="p-ref">Refeições</label><select id="p-ref"><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
               <div class="f"><label for="p-peso">Peso (kg)</label><input type="number" id="p-peso" step="0.1" inputmode="decimal"></div>
               <div class="f"><label for="p-alt">Altura (cm)</label><input type="number" id="p-alt" inputmode="numeric"></div>
-              <div class="f"><label for="p-ativ">Nível de atividade</label><select id="p-ativ">
-                <option value="1.2">Sedentário</option><option value="1.375">Leve (1–3x/sem)</option><option value="1.55">Moderado (3–5x/sem)</option><option value="1.725">Intenso (6–7x/sem)</option><option value="1.9">Muito intenso</option></select></div>
+              <div class="f"><label for="p-caf">Nível de atividade (CAF)</label><select id="p-caf"></select></div>
+              <div class="f"><label for="p-ativ">Fator de atividade (TMB × FA)</label><select id="p-ativ"></select></div>
+              <div class="f"><label for="p-fase">Fase da vida</label><select id="p-fase"><option value="">Nenhuma em especial</option><option value="gestante">Gestante</option><option value="lactante">Amamentando</option></select></div>
+              <div class="f" data-so="gestante"><label for="p-sem">Semana gestacional</label><input type="number" id="p-sem" min="1" max="42" inputmode="numeric"></div>
+              <div class="f" data-so="gestante"><label for="p-pesopre">Peso antes da gestação (kg)</label><input type="number" id="p-pesopre" step="0.1" inputmode="decimal"></div>
+              <div class="f" data-so="lactante"><label for="p-lactm">Meses de amamentação</label><input type="number" id="p-lactm" min="0" max="24" inputmode="numeric"></div>
+              <div class="f"><label for="p-gord">Gordura corporal (%)</label><input type="number" id="p-gord" step="0.1" inputmode="decimal" placeholder="se tiver"></div>
+              <div class="f"><label for="p-cint">Cintura (cm)</label><input type="number" id="p-cint" step="0.1" inputmode="decimal"></div>
+              <div class="f"><label for="p-quad">Quadril (cm)</label><input type="number" id="p-quad" step="0.1" inputmode="decimal"></div>
+              <div class="f"><label for="p-atleta">Atleta ou treina com regularidade?</label><select id="p-atleta"><option value="">Não</option><option value="sim">Sim</option></select></div>
+              <div class="f" data-so="atleta"><label for="p-mod">Modalidade principal</label><select id="p-mod"></select></div>
+              <div class="f" data-so="atleta"><label for="p-horas">Horas de treino por semana</label><input type="number" id="p-horas" step="0.5" min="0" inputmode="decimal"></div>
               <div class="f w3"><label for="p-obj">Objetivo</label><select id="p-obj"><option value="perda">Perda de peso</option><option value="manter">Manutenção</option><option value="ganho">Ganho de massa</option></select></div>
               <div class="f w6"><span class="lbl" id="tags-l">Restrições e alergias</span><div class="tags" id="p-tags" role="group" aria-labelledby="tags-l"></div></div>
               <div class="f w3"><label for="p-padrao">Padrão alimentar</label><select id="p-padrao"></select></div>
@@ -380,15 +424,26 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
               <div class="m or"><div class="v" id="m-cho">0 g</div><div class="k">Carboidratos</div><div class="s" id="m-cho-s"></div></div>
               <div class="m pk"><div class="v" id="m-lip">0 g</div><div class="k">Gorduras</div><div class="s" id="m-lip-s"></div></div>
             </div>
+            <div class="alertas" id="m-alertas"></div>
+            <div class="antro" id="m-antro"></div>
+            <h3 class="sub3">Gasto energético total (GET)</h3>
+            <p class="hint" id="m-motivo"></p>
+            <div class="eqs" id="m-eqs" role="radiogroup" aria-label="Equação de gasto energético"></div>
+            <details class="mais"><summary>Taxa metabólica basal (TMB) em cada equação</summary><table class="tab2" id="m-tmbs"></table></details>
+            <h3 class="sub3">Ajustes</h3>
             <div class="tweaks">
-              <span>TMB <b id="m-tmb">0</b> kcal</span><span>GET <b id="m-get">0</b> kcal</span><span>IMC <b id="m-imc">0</b> <span id="m-imc-c"></span></span>
-            </div>
-            <div class="tweaks">
-              <div class="f"><label for="t-kcal">Meta de kcal</label><input type="number" id="t-kcal" step="10" placeholder="auto"></div>
+              <div class="f"><label for="t-ajuste">Déficit/superávit (kcal/dia)</label><input type="number" id="t-ajuste" step="50" placeholder="auto"></div>
+              <div class="f"><label for="t-kcal">Meta final (kcal)</label><input type="number" id="t-kcal" step="10" placeholder="auto"></div>
               <div class="f"><label for="t-ptn">Proteína (g/kg)</label><input type="number" id="t-ptn" step="0.1" placeholder="auto"></div>
+              <div class="f"><label for="t-ptnbase">sobre o</label><select id="t-ptnbase"><option value="">automático</option><option value="atual">peso atual</option><option value="ajustado">peso ajustado</option><option value="mlg">massa magra</option></select></div>
+              <div class="f"><label for="t-cho">Carboidrato (g/kg)</label><input type="number" id="t-cho" step="0.5" placeholder="pelo resto"></div>
               <div class="f"><label for="t-lip">Gorduras (% kcal)</label><input type="number" id="t-lip" step="1" placeholder="28"></div>
             </div>
-            <p class="formula">Mifflin-St Jeor: TMB = 10 × peso + 6,25 × altura − 5 × idade + 5 (homens) ou − 161 (mulheres). GET = TMB × fator de atividade. Perda de peso: −15%; ganho de massa: +10%.</p>
+            <label class="check" id="t-treino-l" hidden style="margin-top:10px"><input type="checkbox" id="t-treino"><span>Somar o gasto do treino: <b id="t-treino-v">0</b> kcal/dia em média (use com CAF sedentário ou FA 1,2 para não contar duas vezes)</span></label>
+            <h3 class="sub3">Outras metas do dia</h3>
+            <div class="extras" id="m-extras"></div>
+            <details class="mais"><summary>Vitaminas e minerais recomendados (DRI)</summary><p class="hint" id="m-dri-g" style="margin-top:8px"></p><table class="tab2" id="m-dri"></table></details>
+            <p class="formula" id="m-formula"></p>
           </section>
 
           <section class="card panel" data-step="cardapio">
@@ -405,6 +460,7 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
               <div class="status" id="ai-status" role="status"></div>
             </div>
             <div class="adeq" id="bars" aria-label="Adequação do dia"></div>
+            <details class="mais dri" id="dri"><summary>Vitaminas e minerais do dia (DRI)</summary><p class="hint" id="dri-g" style="margin-top:8px"></p><div id="dri-list"></div></details>
             <datalist id="taco-list"></datalist>
             <div class="meals" id="meals"></div>
             <div class="mf" style="padding:12px 0 0"><button class="btn ghost sm" id="add-meal">Adicionar refeição</button></div>
@@ -422,7 +478,8 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
             <div class="step"><div><h2>Revisar e liberar</h2><p>O paciente só vê a última versão liberada. Mudanças salvas depois só chegam a ele quando você liberar de novo.</p></div></div>
             <div class="form" style="margin-bottom:16px">
               <div class="f"><label for="p-retorno">Próximo retorno</label><input type="date" id="p-retorno"></div>
-              <div class="f w6"><label for="p-sup">Suplementos (um por linha: produto; dose; horário; observação)</label><textarea id="p-sup" rows="3" placeholder="Creatina; 3 g; 08:00; com o café da manhã"></textarea></div>
+              <div class="f w6"><label for="p-sup">Suplementos (um por linha: produto; dose; horário; observação)</label><textarea id="p-sup" rows="3" placeholder="Creatina; 3 g; 08:00; com o café da manhã"></textarea>
+                <select id="p-sup-ref" aria-label="Inserir suplemento de referência" style="margin-top:6px"><option value="">+ Inserir suplemento com dose de referência…</option></select></div>
             </div>
             <label class="check" for="rev"><input type="checkbox" id="rev"><span>Revisei o cardápio, as quantidades e as substituições e assumo a prescrição deste plano.</span></label>
             <div class="actions" style="margin-top:16px">
@@ -495,8 +552,11 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script type="module">
 import * as N from "/lib/nutri.mjs";
+import * as E from "/lib/energia.mjs";
+import * as D from "/lib/dri.mjs";
 import { gerarPDF, baixar } from "/lib/pdf.mjs";
 const taco = N.criarTaco(await (await fetch("/data/taco.json")).json());
+try { taco.adicionar(await (await fetch("/data/suplementos.json")).json(), "rótulo"); } catch {}
 (() => {
 "use strict";
 const $ = (id) => document.getElementById(id);
@@ -524,8 +584,9 @@ const EXEMPLO = {
   codigo: null, status: "exemplo",
   paciente: { nome: "Ana Souza", nascimento: "1998-03-14", telefone: "", sexo: "f", idade: 28, peso: 65, altura: 165, atividade: "1.55", objetivo: "perda", refeicoes: "5",
     restricoesTags: [], padrao: "onivoro", restricoes: "", treino: "Musculação às 19h, 5 vezes por semana", naoGosta: "jiló, peixe cru",
-    preferencias: "Trabalha das 9h às 18h e leva marmita. Gosta de cuscuz e tapioca no café." },
-  ajustes: { kcal: "", ptn: "", lip: "" }, proximo_retorno: null,
+    preferencias: "Trabalha das 9h às 18h e leva marmita. Gosta de cuscuz e tapioca no café.",
+    caf: "pouco", fase: "", gordura: "27", cintura: "76", quadril: "100", atleta: "", modalidade: "Musculação, moderada", horasSemana: "5" },
+  ajustes: { kcal: "", ptn: "", lip: "", eq: "tmbxfa_mifflin" }, proximo_retorno: null,
   cardapio: { refeicoes: hidratar(EX_REFEICOES), suplementos: "",
     observacoes: "Beba de 2,3 a 2,5 litros de água por dia. Nos dias de treino, faça o lanche da tarde cerca de 1 hora antes da academia." },
   compras: { categorias: [] },
@@ -535,53 +596,116 @@ const clone = (o) => JSON.parse(JSON.stringify(o));
 let plan = clone(EXEMPLO);
 let dirty = false;
 let nutri = { nome: "", crn: "", whatsapp: "" };
+// Idade com casas decimais (bebês e crianças pequenas usam meses nas equações).
+const idadeExata = (iso) => { if (!iso) return 0; const d = (Date.now() - new Date(iso + "T12:00:00")) / (365.25 * 864e5); return d > 0 && d < 120 ? d : 0; };
 const idadeDe = (iso) => { if (!iso) return 0; const n = new Date(iso + "T12:00:00"), h = new Date(); let a = h.getFullYear() - n.getFullYear(); if (h.getMonth() < n.getMonth() || (h.getMonth() === n.getMonth() && h.getDate() < n.getDate())) a--; return a > 0 && a < 120 ? a : 0; };
 
-/* ---------- cálculos ---------- */
+/* ---------- cálculos (lib/energia.mjs e lib/dri.mjs) ---------- */
+function perfilDe(p) {
+  const idade = idadeExata(p.nascimento) || num(p.idade), alt = num(p.altura), pre = num(p.pesoPre);
+  const fem = p.sexo !== "m";
+  return { sexo: p.sexo === "m" ? "m" : "f", idade, peso: num(p.peso), altura: alt, caf: p.caf || "inativo", fa: num(p.atividade) || 1.55,
+    gordura: num(p.gordura) || null, cintura: num(p.cintura) || null, quadril: num(p.quadril) || null, objetivo: p.objetivo,
+    atleta: p.atleta === "sim", horasTreinoDia: num(p.horasSemana) / 7, usarPesoAjustado: true,
+    gestante: fem && p.fase === "gestante" ? { semanas: num(p.semanas) || 20 } : null,
+    lactante: fem && p.fase === "lactante" ? { meses: num(p.lactMeses) || 3 } : null,
+    imcPre: pre && alt ? pre / (alt / 100) ** 2 : null };
+}
+const r10 = (x) => Math.round(x / 10) * 10;
 function calc(p, aj) {
-  const peso = num(p.peso), alt = num(p.altura), idade = num(p.idade);
-  const tmb = peso && alt && idade ? 10 * peso + 6.25 * alt - 5 * idade + (p.sexo === "m" ? 5 : -161) : 0;
-  const get = tmb * num(p.atividade || 1.2);
-  const fat = p.objetivo === "perda" ? 0.85 : p.objetivo === "ganho" ? 1.1 : 1;
-  const auto = Math.round((get * fat) / 10) * 10;
-  const kcal = num(aj.kcal) || auto;
-  const gkg = num(aj.ptn) || (p.objetivo === "perda" ? 1.6 : p.objetivo === "ganho" ? 1.8 : 1.2);
-  const ptn = Math.round(gkg * peso);
-  const lipPct = num(aj.lip) || 28;
-  const lip = Math.round((kcal * lipPct) / 100 / 9);
-  const cho = Math.max(0, Math.round((kcal - ptn * 4 - lip * 9) / 4));
-  const imc = alt ? peso / (alt / 100) ** 2 : 0;
-  const imcC = !imc ? "" : imc < 18.5 ? "baixo peso" : imc < 25 ? "eutrofia" : imc < 30 ? "sobrepeso" : "obesidade";
-  return { tmb: Math.round(tmb), get: Math.round(get), kcal, ptn, cho, lip, gkg, lipPct, imc, imcC, auto };
+  const pf = perfilDe(p);
+  if (!pf.peso || !pf.altura || !pf.idade) return { vazio: true, kcal: 0, ptn: 0, cho: 0, lip: 0, gkg: 0, lipPct: 0, alertas: [] };
+  const av = E.avaliar(pf);
+  const esc = av.gets.find((g) => g.id === aj.eq) || av.gets.find((g) => g.id === av.recomendada) || av.gets[0];
+  const mod = E.ATIVIDADES.find((a) => a.nome === p.modalidade);
+  const treino = pf.atleta && mod ? E.gastoTreino(mod.met, pf.peso, num(p.horasSemana)) : 0;
+  const get = esc.kcal + (aj.somarTreino ? treino : 0);
+  const especial = pf.gestante || pf.lactante || pf.idade < 19;
+  const ajPadrao = especial ? 0 : p.objetivo === "perda" ? -r10(get * 0.15) : p.objetivo === "ganho" ? r10(get * 0.1) : 0;
+  const ajuste = String(aj.ajuste ?? "").trim() !== "" ? num(aj.ajuste) : ajPadrao;
+  const auto = r10(get + ajuste), kcal = num(aj.kcal) || auto;
+  // Proteína: g/kg sobre peso atual, ajustado (obesidade) ou massa magra (atleta em déficit).
+  const recP = av.rec.proteina;
+  const baseId = aj.ptnBase || (recP.base === "mlg" && av.mlg ? "mlg" : av.usarAjustado && av.pesoAjustado ? "ajustado" : "atual");
+  const pesoBase = baseId === "mlg" && av.mlg ? av.mlg : baseId === "ajustado" && av.pesoAjustado ? av.pesoAjustado : pf.peso;
+  const gkgPadrao = pf.atleta || especial || pf.idade >= 65 ? (recP.min + recP.max) / 2 : p.objetivo === "perda" ? 1.6 : p.objetivo === "ganho" ? 1.8 : 1.2;
+  const gkg = num(aj.ptn) || Math.round(gkgPadrao * 10) / 10;
+  const ptn = Math.round(gkg * pesoBase);
+  let cho, lip, lipPct;
+  if (num(aj.cho)) { cho = Math.round(num(aj.cho) * pf.peso); lip = Math.max(0, Math.round((kcal - ptn * 4 - cho * 4) / 9)); lipPct = kcal ? (lip * 9 / kcal) * 100 : 0; }
+  else { lipPct = num(aj.lip) || 28; lip = Math.round((kcal * lipPct) / 100 / 9); cho = Math.max(0, Math.round((kcal - ptn * 4 - lip * 9) / 4)); }
+  const tmbRef = av.tmbs.find((t) => t.id === "mifflin") || av.tmbs.find((t) => t.id === "henry");
+  const ritmo = E.ritmoSemanal(kcal - get);
+  const alertas = [];
+  if (av.imc && av.imc < 18.5 && pf.idade >= 19) alertas.push(["grave", `IMC ${fmt(av.imc, 1)}: baixo peso. Avalie risco nutricional e sinais de transtorno alimentar antes de qualquer déficit.`]);
+  if (especial && kcal < get - 50) alertas.push(["grave", pf.gestante ? "Gestante: não se recomenda déficit calórico." : pf.lactante ? "Lactante: déficit grande pode reduzir a produção de leite." : "Criança/adolescente: priorize crescimento; evite déficit sem indicação clínica."]);
+  if (especial && !esc.id.startsWith("eer")) alertas.push(["grave", `${esc.nome} não inclui o custo de ${pf.gestante ? "gestação" : pf.lactante ? "lactação" : "crescimento"}. Para este perfil, use a EER (NASEM 2023 ou IOM 2005).`]);
+  if (tmbRef && kcal < tmbRef.kcal) alertas.push(["grave", `A meta (${fmt(kcal)} kcal) está abaixo da TMB estimada (${fmt(tmbRef.kcal)} kcal).`]);
+  if (ritmo < 0 && -ritmo > pf.peso * 0.01) alertas.push(["", `Perda estimada de ${fmt(-ritmo, 2)} kg/semana: acima de 1% do peso por semana.`]);
+  if (ritmo > 0.5) alertas.push(["", `Ganho estimado de ${fmt(ritmo, 2)} kg/semana: acima do usual para ganho de massa magra (0,25 a 0,5 kg).`]);
+  if (pf.idade >= 19 && gkg * pesoBase / pf.peso > 3.1) alertas.push(["", "Proteína acima de 3,1 g/kg: confira a necessidade."]);
+  return { pf, av, esc, get, treino, ajuste, ajPadrao, auto, kcal, ptn, cho, lip, gkg, lipPct, baseId, pesoBase, ritmo, alertas, dri: D.referencias(pf) };
 }
 const totals = (refs) => N.totais(refs);
 const mealTot = (r) => totals([r]);
 
 /* ---------- ficha <-> estado ---------- */
-const FIELDS = { nome: "p-nome", telefone: "p-tel", nascimento: "p-nasc", sexo: "p-sexo", idade: "p-idade", peso: "p-peso", altura: "p-alt", atividade: "p-ativ", objetivo: "p-obj", refeicoes: "p-ref", restricoes: "p-restr", preferencias: "p-pref", padrao: "p-padrao", treino: "p-treino", naoGosta: "p-ngosta" };
+const FIELDS = { nome: "p-nome", telefone: "p-tel", nascimento: "p-nasc", sexo: "p-sexo", idade: "p-idade", peso: "p-peso", altura: "p-alt", atividade: "p-ativ",
+  caf: "p-caf", fase: "p-fase", semanas: "p-sem", pesoPre: "p-pesopre", lactMeses: "p-lactm", gordura: "p-gord", cintura: "p-cint", quadril: "p-quad", atleta: "p-atleta", modalidade: "p-mod", horasSemana: "p-horas", objetivo: "p-obj", refeicoes: "p-ref", restricoes: "p-restr", preferencias: "p-pref", padrao: "p-padrao", treino: "p-treino", naoGosta: "p-ngosta" };
 $("p-padrao").append(...N.PADROES.map((p) => el("option", { value: p.id, text: p.nome })));
 $("p-tags").append(...N.RESTRICOES.map((r) => el("label", { class: "tag" }, el("input", { type: "checkbox", value: r.id, id: "tag-" + r.id }), r.nome)));
-$("taco-list").append(...taco.lista.map((f) => el("option", { value: f.nome })));
+$("p-caf").append(...E.CAF.map((c) => el("option", { value: c.id, text: c.nome, title: c.desc })));
+$("p-ativ").append(...E.FATORES.map((f) => el("option", { value: String(f.v), text: f.nome })));
+$("p-mod").append(el("option", { value: "", text: "Escolha" }), ...E.ATIVIDADES.map((a) => el("option", { value: a.nome, text: `${a.nome} (${String(a.met).replace(".", ",")} MET)` })));
+$("p-sup-ref").append(...E.SUPLEMENTOS_REF.map((x, i) => el("option", { value: String(i), text: `${x.produto}: ${x.dose}` })));
+$("p-sup-ref").addEventListener("change", (e) => {
+  const x = E.SUPLEMENTOS_REF[e.target.value]; if (!x) return;
+  const t = $("p-sup"); t.value = (t.value.trim() ? t.value.trim() + "\n" : "") + [x.produto, x.dose, x.horario, x.obs].join("; ");
+  e.target.value = ""; readForm(); markDirty();
+});
+// Busca de alimentos: TACO + suplementos agora; a USDA (7 mil itens) carrega na primeira busca.
+const rotulo = (f) => f.fonte === "USDA" ? f.nome + " · USDA" : f.fonte === "rótulo" ? f.nome + " · rótulo" : f.nome;
+const porRotulo = new Map();
+const listarOpcoes = (fs) => { for (const f of fs) porRotulo.set(rotulo(f), f); $("taco-list").append(...fs.map((f) => el("option", { value: rotulo(f) }))); };
+listarOpcoes([...taco.lista, ...taco.extra]);
+let usdaPromessa = null;
+const carregarUSDA = () => (usdaPromessa ||= fetch("/data/usda.json").then((r) => r.json()).then((d) => { const antes = taco.extra.length; taco.adicionar(d, "USDA"); listarOpcoes(taco.extra.slice(antes)); }).catch(() => (usdaPromessa = null)));
+document.addEventListener("focusin", (e) => { if (e.target.matches?.("input[list=taco-list]")) carregarUSDA(); });
+function mostrarCampos() {
+  const fase = $("p-sexo").value === "m" ? "" : $("p-fase").value;
+  if ($("p-sexo").value === "m") $("p-fase").value = "";
+  $("p-fase").disabled = $("p-sexo").value === "m";
+  document.querySelectorAll("[data-so]").forEach((c) => c.classList.toggle("on", c.dataset.so === fase || (c.dataset.so === "atleta" && $("p-atleta").value === "sim")));
+}
 function fillForm() {
   for (const [k, id] of Object.entries(FIELDS)) $(id).value = plan.paciente[k] ?? (k === "padrao" ? "onivoro" : "");
   const tags = new Set(plan.paciente.restricoesTags || []);
   document.querySelectorAll("#p-tags input").forEach((c) => (c.checked = tags.has(c.value)));
-  $("t-kcal").value = plan.ajustes?.kcal ?? ""; $("t-ptn").value = plan.ajustes?.ptn ?? ""; $("t-lip").value = plan.ajustes?.lip ?? "";
+  const aj = plan.ajustes || {};
+  $("t-kcal").value = aj.kcal ?? ""; $("t-ptn").value = aj.ptn ?? ""; $("t-lip").value = aj.lip ?? "";
+  $("t-ajuste").value = aj.ajuste ?? ""; $("t-cho").value = aj.cho ?? ""; $("t-ptnbase").value = aj.ptnBase ?? ""; $("t-treino").checked = !!aj.somarTreino;
+  if (!plan.paciente.caf) $("p-caf").value = "inativo";
+  if (!plan.paciente.atividade) $("p-ativ").value = "1.55";
+  mostrarCampos();
   $("obs").value = plan.cardapio?.observacoes ?? "";
   $("p-retorno").value = plan.proximo_retorno || ""; $("p-sup").value = plan.cardapio?.suplementos || "";
   $("p-idade").readOnly = !!idadeDe(plan.paciente.nascimento);
   $("rev").checked = false;
 }
 function readForm() {
+  // Mudou a fase da vida (gestante, lactante) ou a faixa etária: volta para a equação indicada.
+  const faseAntes = `${plan.paciente.fase || ""}|${plan.paciente.sexo}|${Math.floor(perfilDe(plan.paciente).idade / 19)}`;
   for (const [k, id] of Object.entries(FIELDS)) plan.paciente[k] = $(id).value;
   plan.paciente.restricoesTags = [...document.querySelectorAll("#p-tags input:checked")].map((c) => c.value);
-  plan.ajustes = { kcal: $("t-kcal").value, ptn: $("t-ptn").value, lip: $("t-lip").value };
+  plan.ajustes = { ...(plan.ajustes || {}), kcal: $("t-kcal").value, ptn: $("t-ptn").value, lip: $("t-lip").value, ajuste: $("t-ajuste").value, cho: $("t-cho").value, ptnBase: $("t-ptnbase").value, somarTreino: $("t-treino").checked };
+  mostrarCampos();
   // Com a data de nascimento, a idade é calculada e o campo fica só leitura.
   const idade = idadeDe(plan.paciente.nascimento);
   $("p-idade").readOnly = !!idade;
   if (idade) { plan.paciente.idade = String(idade); $("p-idade").value = idade; }
   plan.proximo_retorno = $("p-retorno").value || null;
   plan.cardapio.suplementos = $("p-sup").value;
+  if (faseAntes !== `${plan.paciente.fase || ""}|${plan.paciente.sexo}|${Math.floor(perfilDe(plan.paciente).idade / 19)}` && plan.ajustes?.eq) { delete plan.ajustes.eq; toast("Fase da vida mudou: voltei para a equação indicada"); }
 }
 function markDirty() { dirty = true; renderHead(); }
 
@@ -597,13 +721,53 @@ function renderHead() {
 
 function renderMetas() {
   const m = calc(plan.paciente, plan.ajustes || {});
-  plan.metas = { tmb: m.tmb, get: m.get, kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip, imc: Math.round(m.imc * 10) / 10, fib: Math.round((m.kcal / 1000) * 14), agua_ml: Math.round((num(plan.paciente.peso) * 35) / 50) * 50 || 2000 };
-  $("m-kcal").textContent = fmt(m.kcal); $("m-kcal-s").textContent = num(plan.ajustes?.kcal) ? "definido por você" : plan.paciente.objetivo === "perda" ? "GET − 15%" : plan.paciente.objetivo === "ganho" ? "GET + 10%" : "igual ao GET";
-  $("m-ptn").textContent = fmt(m.ptn) + " g"; $("m-ptn-s").textContent = fmt(m.gkg, 1) + " g/kg · " + fmt(m.ptn * 4) + " kcal";
-  $("m-cho").textContent = fmt(m.cho) + " g"; $("m-cho-s").textContent = m.kcal ? fmt((m.cho * 4 / m.kcal) * 100) + "% das kcal" : "";
-  $("m-lip").textContent = fmt(m.lip) + " g"; $("m-lip-s").textContent = fmt(m.lipPct) + "% das kcal";
-  $("m-tmb").textContent = fmt(m.tmb); $("m-get").textContent = fmt(m.get); $("m-imc").textContent = m.imc ? fmt(m.imc, 1) : "–"; $("m-imc-c").textContent = m.imcC ? "(" + m.imcC + ")" : "";
-  $("t-kcal").placeholder = m.auto ? String(m.auto) : "auto"; $("t-ptn").placeholder = String(m.gkg);
+  const av = m.av;
+  plan.metas = { kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip, tmb: av ? (av.tmbs.find((t) => t.id === "mifflin") || av.tmbs[0])?.kcal : 0, get: m.get || 0,
+    equacao: m.esc?.nome || "", imc: av ? Math.round(av.imc * 10) / 10 : 0, fib: m.dri ? Math.max(Math.round((m.kcal / 1000) * 14), 0) : 0,
+    ptnMinima: !!(m.pf && (m.pf.gestante || m.pf.lactante || m.pf.idade < 19 || m.pf.idade >= 65) && !num(plan.ajustes?.ptn)),
+    agua_ml: av ? Math.round(av.agua / 50) * 50 : 2000, sodio_max: m.dri?.micros.find((x) => x.k === "na")?.ul || 2300 };
+  const s = (x) => String(x).replace(".", ",");
+  $("m-kcal").textContent = fmt(m.kcal);
+  $("m-kcal-s").textContent = m.vazio ? "preencha peso, altura e idade" : num(plan.ajustes?.kcal) ? "definido por você" : `${m.esc.nome}${m.ajuste ? (m.ajuste > 0 ? " + " : " − ") + fmt(Math.abs(m.ajuste)) : ""}`;
+  $("m-ptn").textContent = fmt(m.ptn) + " g"; $("m-ptn-s").textContent = m.vazio ? "" : `${fmt(m.gkg, 1)} g/kg (${{ atual: "peso atual", ajustado: "peso ajustado", mlg: "massa magra" }[m.baseId]}) · ${fmt(m.ptn * 4)} kcal`;
+  $("m-cho").textContent = fmt(m.cho) + " g"; $("m-cho-s").textContent = m.kcal ? `${fmt((m.cho * 4 / m.kcal) * 100)}% · ${fmt(m.cho / (m.pf?.peso || 1), 1)} g/kg` : "";
+  $("m-lip").textContent = fmt(m.lip) + " g"; $("m-lip-s").textContent = m.kcal ? fmt(m.lipPct) + "% das kcal" : "";
+  $("m-alertas").replaceChildren(...(m.alertas || []).map(([c, t]) => el("div", { class: "alerta " + c, role: "alert", text: t })));
+  $("t-kcal").placeholder = m.auto ? String(m.auto) : "auto"; $("t-ptn").placeholder = m.gkg ? s(m.gkg) : "auto"; $("t-ajuste").placeholder = m.vazio ? "auto" : String(m.ajPadrao);
+  $("t-treino-l").hidden = !m.treino; $("t-treino-v").textContent = fmt(m.treino || 0);
+  if (m.vazio) { for (const id of ["m-antro", "m-eqs", "m-tmbs", "m-extras", "m-dri"]) $(id).replaceChildren(); $("m-motivo").textContent = "Preencha peso, altura e idade (ou nascimento) na Ficha."; $("m-formula").textContent = ""; renderBars(); return; }
+  const chips = [`IMC ${fmt(av.imc, 1)} · ${av.classe}`, `Peso ideal ${fmt(av.pesoIdeal, 1)} kg (IMC ${s(av.imcAlvo)})`];
+  if (av.pesoAjustado && av.usarAjustado) chips.push(`Peso ajustado ${fmt(av.pesoAjustado, 1)} kg (proteína e equações marcadas)`);
+  if (av.mlg) chips.push(`Massa magra ${fmt(av.mlg, 1)} kg`);
+  if (av.rcq) chips.push(`RCQ ${fmt(av.rcq, 2)} (${av.riscoRcq})`);
+  if (av.rce) chips.push(`Cintura/altura ${fmt(av.rce, 2)} (${av.riscoRce})`);
+  if (av.riscoCintura) chips.push(`Cintura: risco ${av.riscoCintura}`);
+  if (av.ganhoGestacional) chips.push(`Ganho na gestação: ${s(av.ganhoGestacional.total[0])} a ${s(av.ganhoGestacional.total[1])} kg (${s(av.ganhoGestacional.semana[0])} a ${s(av.ganhoGestacional.semana[1])} kg/sem no 2º e 3º tri)`);
+  $("m-antro").replaceChildren(...chips.map((t) => el("span", { text: t })));
+  $("m-motivo").textContent = "Indicada para este perfil: " + av.motivo + " Toque em outra equação para comparar ou usar.";
+  const linhaEq = (g) => el("label", { class: "eq" },
+    el("input", { type: "radio", name: "eq", value: g.id, checked: g.id === m.esc.id, onchange: () => { plan.ajustes = { ...(plan.ajustes || {}), eq: g.id }; renderMetas(); markDirty(); atualizarIA(); } }),
+    el("span", {}, g.nome, g.id === av.recomendada ? el("span", { class: "rec", text: "indicada" }) : null),
+    el("b", { text: fmt(g.kcal) + " kcal" }), el("small", { text: g.ref + ". " + g.nota }));
+  const vis = (g) => g.id.startsWith("eer") || g.id === av.recomendada || g.id === m.esc.id;
+  const outras = av.gets.filter((g) => !vis(g));
+  $("m-eqs").replaceChildren(...av.gets.filter(vis).map(linhaEq),
+    outras.length ? el("details", { class: "mais" }, el("summary", { text: `Ver mais ${outras.length} equações (TMB × fator de atividade)` }), el("div", { class: "eqs", style: "margin-top:8px" }, outras.map(linhaEq))) : null);
+  $("m-tmbs").replaceChildren(...av.tmbs.map((t) => el("tr", {}, el("td", {}, el("b", { text: t.nome }), el("br"), el("small", { text: t.ref + (t.nota ? ". " + t.nota : "") })), el("td", { class: "n", text: fmt(t.kcal) + " kcal" }))));
+  const d = m.dri, rec = av.rec;
+  const extras = [["Água", `${fmt(av.agua / 1000, 1)} L/dia`, m.pf.idade < 19 ? "Holliday-Segar" : `${m.pf.idade >= 65 ? 30 : 35} ml/kg · DRI água total ${s(d.agua)} L`],
+    ["Fibra", `${fmt(Math.round((m.kcal / 1000) * 14))} g/dia`, `14 g/1.000 kcal · DRI ${d.micros.find((x) => x.k === "fib")?.meta ?? "–"} g`],
+    ["Sódio", `até ${fmt(plan.metas.sodio_max)} mg`, "CDRR 2019 (≈ 5,8 g de sal)"],
+    ["Açúcar livre", `< ${fmt(m.kcal * 0.1 / 4)} g`, "menos de 10% da energia (OMS); ideal < 5%"],
+    ["Gordura saturada", `< ${fmt(m.kcal * 0.1 / 9)} g`, "menos de 10% da energia"],
+    ["Proteína de referência", rec.proteina?.texto || "–", `DRI mínimo ${s(d.ptn)} g/dia`]];
+  if (rec.carboidrato) extras.push(["Carboidrato (esporte)", rec.carboidrato.texto, rec.fontes.join("; ")]);
+  extras.push(["Faixas (AMDR)", `P ${d.amdr.ptn.join("–")}% · C ${d.amdr.cho.join("–")}% · G ${d.amdr.lip.join("–")}%`, "DRI, % da energia"]);
+  $("m-extras").replaceChildren(...extras.map(([k, v, n]) => el("div", {}, el("span", { text: k }), el("b", { text: v }), el("small", { text: n }))));
+  $("m-dri-g").textContent = `Grupo: ${d.grupo}. RDA cobre 97 a 98% das pessoas saudáveis; AI é a ingestão adequada quando não há RDA; UL é o limite máximo seguro.`;
+  $("m-dri").replaceChildren(...d.micros.filter((x) => x.k !== "fib").map((x) => el("tr", {}, el("td", {}, x.nome, x.nota ? el("br") : null, x.nota ? el("small", { text: x.nota }) : null),
+    el("td", { class: "n", text: `${fmt(x.meta, x.meta < 10 ? 1 : 0)} ${x.un} (${x.tipo})` }), el("td", { class: "n", text: x.ul != null ? `UL ${fmt(x.ul, x.ul < 10 ? 1 : 0)}` : "" }))));
+  $("m-formula").textContent = `Equação em uso: ${m.esc.nome} = ${fmt(m.esc.kcal)} kcal${m.treino && plan.ajustes?.somarTreino ? ` + treino ${fmt(m.treino)} kcal` : ""}${m.ajuste ? ` ${m.ajuste > 0 ? "+" : "−"} ${fmt(Math.abs(m.ajuste))} kcal (${m.ajuste < 0 ? "déficit" : "superávit"}; ≈ ${fmt(Math.abs(m.ritmo), 2)} kg/semana)` : ""}.`;
   renderBars();
 }
 
@@ -611,15 +775,29 @@ function renderBars() {
   const t = totals(plan.cardapio.refeicoes), m = plan.metas || {};
   const fibMeta = m.kcal ? Math.round((m.kcal / 1000) * 14) : 0;
   const box = $("bars"); box.replaceChildren();
-  const itens = [["kcal", "Energia", " kcal", m.kcal, N.TOLERANCIA.kcal], ["ptn", "Proteína", " g", m.ptn, N.TOLERANCIA.macro], ["cho", "Carboidrato", " g", m.cho, N.TOLERANCIA.macro], ["lip", "Gordura", " g", m.lip, N.TOLERANCIA.macro], ["fib", "Fibra", " g", fibMeta, null], ["na", "Sódio", " mg", 2000, null]];
+  const itens = [["kcal", "Energia", " kcal", m.kcal, N.TOLERANCIA.kcal], ["ptn", "Proteína", " g", m.ptn, N.TOLERANCIA.macro], ["cho", "Carboidrato", " g", m.cho, N.TOLERANCIA.macro], ["lip", "Gordura", " g", m.lip, N.TOLERANCIA.macro], ["fib", "Fibra", " g", fibMeta, null], ["na", "Sódio", " mg", m.sodio_max || 2300, null]];
   for (const [k, lab, u, meta, tol] of itens) {
     const v = t[k] || 0, pct = meta ? (v / meta) * 100 : 0, d = meta ? Math.abs(v - meta) / meta : 0;
     // Fibra: mínimo; sódio: limite máximo; demais: alvo com tolerância.
-    const cls = !meta ? "" : k === "fib" ? (v >= meta ? "ok" : v >= meta * 0.8 ? "near" : "out") : k === "na" ? (v <= meta ? "ok" : v <= meta * 1.2 ? "near" : "out") : d <= tol ? "ok" : d <= tol * 2 ? "near" : "out";
+    const cls = !meta ? "" : k === "ptn" && m.ptnMinima ? (v >= meta * 0.9 && v <= meta * 1.5 ? "ok" : v >= meta * 0.8 ? "near" : "out") : k === "fib" ? (v >= meta ? "ok" : v >= meta * 0.8 ? "near" : "out") : k === "na" ? (v <= meta ? "ok" : v <= meta * 1.2 ? "near" : "out") : d <= tol ? "ok" : d <= tol * 2 ? "near" : "out";
     box.append(el("div", { class: "ad " + cls, title: lab + ": " + fmt(v) + u + " de " + fmt(meta) + u },
       el("div", { class: "k", text: lab }), el("div", { class: "v", text: fmt(v) + u }),
-      el("div", { class: "p", text: meta ? (k === "na" ? "limite " + fmt(meta) : k === "fib" ? "mín. " + fmt(meta) : fmt(pct) + "% da meta") : "sem meta" })));
+      el("div", { class: "p", text: meta ? (k === "na" ? "limite " + fmt(meta) : k === "fib" || (k === "ptn" && m.ptnMinima) ? "mín. " + fmt(meta) : fmt(pct) + "% da meta") : "sem meta" })));
   }
+  renderDRI(t);
+}
+function renderDRI(t) {
+  const pf = perfilDe(plan.paciente), lista = $("dri-list");
+  if (!pf.idade || !t.kcal) { $("dri-g").textContent = "Monte o cardápio para ver vitaminas e minerais."; lista.replaceChildren(); return; }
+  const ad = D.adequacao(t, pf).filter((x) => x.k !== "fib" && x.k !== "na");
+  $("dri-g").textContent = `Comparado com as DRIs do grupo ${D.referencias(pf).grupo}. A TACO não mede vitamina D, E, K, B9, B12 nem selênio: para esses, só contam alimentos da USDA.`;
+  lista.replaceChildren(...ad.map((x) => {
+    const sem = t.semDado?.[x.k] || 0, pct = x.pct ?? 0;
+    return el("div", { class: "lin" + (x.acimaUL ? " ul" : x.valor != null && pct < 70 ? " baixo" : "") },
+      el("span", {}, x.nome, el("br"), el("small", { text: x.valor == null ? "sem dado nos alimentos" : `${fmt(x.valor, x.valor < 10 ? 1 : 0)} de ${fmt(x.meta, x.meta < 10 ? 1 : 0)} ${x.un} (${x.tipo})${sem ? ` · ${sem} itens sem dado` : ""}${x.acimaUL ? ` · acima do UL (${fmt(x.ul)})` : ""}` })),
+      el("div", { class: "bar" }, el("i", { style: `width:${Math.min(100, pct)}%` })),
+      el("span", { class: "n", text: x.valor == null ? "–" : pct + "%" }));
+  }));
 }
 
 /* ---------- cardápio ---------- */
@@ -638,8 +816,8 @@ function renderMeals() {
         medida.textContent = it.taco_id ? it.quantidade.replace(/^\d+ g\s*/, "") : "";
         totEl.textContent = fmt(mealTot(r).kcal) + " kcal"; renderBars(); markDirty();
       };
-      const nome = el("input", { type: "text", class: "a", value: it.alimento || it.taco_nome || "", list: "taco-list", placeholder: "Buscar na TACO", "aria-label": "Alimento",
-        onchange: (e) => { const f = taco.lista.find((x) => x.nome === e.target.value); if (f) { it.taco_id = f.id; it.alimento = f.nome; it.gramas = it.gramas || 100; it.unidade = null; gramas.value = it.gramas; } else it.alimento = e.target.value; atualizar(); } });
+      const nome = el("input", { type: "text", class: "a", value: it.alimento || it.taco_nome || "", list: "taco-list", placeholder: "Buscar na TACO ou USDA", "aria-label": "Alimento",
+        onchange: (e) => { const f = porRotulo.get(e.target.value) || taco.lista.find((x) => x.nome === e.target.value); if (f) { it.taco_id = f.id; it.alimento = f.nome; it.fonte = f.fonte || "TACO"; it.gramas = it.gramas || 100; it.unidade = null; gramas.value = it.gramas; } else it.alimento = e.target.value; atualizar(); } });
       const gramas = el("input", { type: "number", min: "0", step: "5", value: String(Math.round(it.gramas || 0)), "aria-label": "Gramas de " + (it.alimento || "alimento"), oninput: (e) => { it.gramas = num(e.target.value); atualizar(); } });
       rows.append(el("div", { class: "row" }, nome, el("div", { class: "q" }, gramas, el("small", { text: "g" }), medida), ...outs,
         el("button", { class: "x", title: "Remover item", "aria-label": "Remover " + (it.alimento || "item"), onclick: () => { r.itens.splice(ii, 1); markDirty(); renderMeals(); renderBars(); } }, "×")));
@@ -680,7 +858,7 @@ const DISTRIBUICAO = {
 function motivosIA() {
   const p = plan.paciente, falta = [];
   if (!session) falta.push("entre na sua conta (aba Perfil)");
-  const campos = [["peso", "peso"], ["altura", "altura"], ["idade", "idade"]].filter(([k]) => !num(p[k])).map(([, n]) => n);
+  const campos = [["peso", "peso"], ["altura", "altura"], ["idade", "idade"]].filter(([k]) => k === "idade" ? !perfilDe(p).idade : !num(p[k])).map(([, n]) => n);
   if (campos.length) falta.push("preencha " + campos.join(", ").replace(/, ([^,]*)$/, " e $1") + " na Ficha");
   else if (!plan.metas?.kcal) falta.push("confira as metas na etapa Metas");
   return falta;
@@ -699,15 +877,26 @@ function statusIA(html, err) { const s = $("ai-status"); s.className = "status" 
 $("stop-ai").addEventListener("click", () => ctl?.abort());
 $("retry-ai").addEventListener("click", () => $("gen-menu").click());
 
+function faseTexto(p) {
+  const pf = perfilDe(p), t = [];
+  if (pf.gestante) t.push(`gestante, ${pf.gestante.semanas} semanas (evitar peixe cru, carnes malpassadas, queijos não pasteurizados e excesso de cafeína)`);
+  if (pf.lactante) t.push(`amamentando há ${pf.lactante.meses} meses`);
+  if (pf.idade < 2) t.push("bebê: alimentação complementar, sem açúcar nem ultraprocessados, consistência adequada à idade");
+  else if (pf.idade < 12) t.push("criança: porções e preparações infantis, lanche escolar prático");
+  else if (pf.idade < 19) t.push("adolescente");
+  else if (pf.idade >= 65) t.push("idoso: preparações macias, proteína distribuída nas refeições, atenção a cálcio, vitamina D e B12");
+  if (pf.atleta) t.push(`atleta/praticante: ${p.modalidade || "treino"} ${p.horasSemana ? p.horasSemana + " h/semana" : ""} (pré-treino com carboidrato, pós-treino com proteína e carboidrato)`);
+  return t.join("; ");
+}
 $("gen-menu").addEventListener("click", async () => {
   readForm(); renderMetas();
   if (motivosIA().length) return atualizarIA();
   const p = plan.paciente, m = plan.metas;
   const dist = DISTRIBUICAO[num(p.refeicoes)] || DISTRIBUICAO[5];
   const corpo = {
-    ficha: { sexo: p.sexo, idade: num(p.idade), objetivo: $("p-obj").selectedOptions[0]?.textContent || p.objetivo, restricoes: p.restricoesTags || [], padrao: p.padrao || "onivoro",
+    ficha: { sexo: p.sexo, idade: Math.max(1, Math.round(perfilDe(p).idade)), objetivo: $("p-obj").selectedOptions[0]?.textContent || p.objetivo, restricoes: p.restricoesTags || [], padrao: p.padrao || "onivoro", fase: faseTexto(p),
       preferencias: [p.preferencias, p.restricoes && "Outras restrições: " + p.restricoes].filter(Boolean).join("\n"), naoGosta: p.naoGosta || "", treino: p.treino || "" },
-    metas: { kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip },
+    metas: { kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip, ptnMinima: !!m.ptnMinima },
     refeicoes: dist.map(([nome, horario, pct]) => ({ nome, horario, pct })),
   };
   ctl = new AbortController(); atualizarIA();
@@ -750,7 +939,7 @@ function snapshot() {
   const p = plan.paciente, m = plan.metas || {}, tags = p.restricoesTags || [];
   return {
     paciente_nome: p.nome, nutri: { ...nutri }, proximo_retorno: plan.proximo_retorno || null,
-    metas: { kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip, fib: m.fib, agua_ml: m.agua_ml },
+    metas: { kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip, fib: m.fib, agua_ml: m.agua_ml, sodio_max: m.sodio_max },
     restricoes: tags, padrao: p.padrao || "onivoro",
     cardapio: { observacoes: plan.cardapio.observacoes || "", refeicoes: plan.cardapio.refeicoes.map((r) => ({ nome: r.nome, horario: r.horario || "", substituicoes: r.substituicoes || "",
       itens: r.itens.filter((i) => i.alimento).map((i) => ({ alimento: i.alimento, quantidade: i.quantidade || "", kcal: Math.round(i.kcal || 0),
@@ -912,7 +1101,7 @@ $("save-nutri").addEventListener("click", async () => {
 });
 
 /* ---------- eventos da ficha ---------- */
-for (const id of [...Object.values(FIELDS), "t-kcal", "t-ptn", "t-lip", "p-retorno", "p-sup"]) $(id).addEventListener("input", () => { readForm(); renderMetas(); markDirty(); atualizarIA(); });
+for (const id of [...Object.values(FIELDS), "t-kcal", "t-ptn", "t-lip", "t-ajuste", "t-cho", "t-ptnbase", "t-treino", "p-retorno", "p-sup"]) $(id).addEventListener("input", () => { readForm(); renderMetas(); markDirty(); atualizarIA(); });
 $("p-tags").addEventListener("change", () => { readForm(); markDirty(); });
 $("obs").addEventListener("input", () => { plan.cardapio.observacoes = $("obs").value; markDirty(); });
 $("add-meal").addEventListener("click", () => { plan.cardapio.refeicoes.push({ nome: "Nova refeição", horario: "", itens: [{ alimento: "", quantidade: "", kcal: 0, ptn: 0, cho: 0, lip: 0 }], substituicoes: "" }); markDirty(); renderMeals(); renderBars(); });

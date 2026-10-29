@@ -1,0 +1,53 @@
+// Confere as equações com contas feitas à mão (valores das publicações originais).
+import * as E from '../lib/energia.mjs';
+import * as D from '../lib/dri.mjs';
+let falhas = 0;
+const perto = (nome, v, esperado, tol = 1) => { const ok = Math.abs(v - esperado) <= tol; if (!ok) falhas++; console.log(`${ok ? 'ok ' : 'ERRO'} ${nome}: ${v} (esperado ${esperado})`); };
+const ach = (l, id) => l.find((x) => x.id === id)?.kcal;
+
+const ana = { sexo: 'f', idade: 28, peso: 65, altura: 165, caf: 'inativo', fa: 1.55 };
+const a = E.avaliar(ana);
+perto('Mifflin mulher 28a 65kg 165cm', ach(a.tmbs, 'mifflin'), 1380);
+perto('Henry só peso mulher 18-30', ach(a.tmbs, 'henry'), 1410);
+perto('FAO/OMS mulher 18-30', ach(a.tmbs, 'fao'), 1452);
+perto('Harris-Benedict revisada', ach(a.tmbs, 'hb1984'), r(447.593 + 9.247 * 65 + 3.098 * 165 - 4.330 * 28));
+perto('EER 2023 mulher inativa', ach(a.gets, 'eer2023'), 2094);
+perto('EER 2005 mulher sedentária (CAF 1,0)', ach(a.gets, 'eer2005'), 1967);
+perto('EER 2005 mulher pouco ativa (CAF 1,12)', ach(E.avaliar({ ...ana, caf: 'pouco' }).gets, 'eer2005'), 2184);
+perto('Mifflin × 1,55', ach(a.gets, 'tmbxfa_mifflin'), 2139);
+const g = E.avaliar({ ...ana, peso: 72, imcPre: 22, gestante: { semanas: 30 } });
+perto('EER 2023 gestante 30 sem, IMC pré 22', ach(g.gets, 'eer2023'), 2480);
+perto('EER 2005 gestante 3º tri (+452)', ach(g.gets, 'eer2005'), r(354 - 6.91 * 28 + (9.36 * 72 + 726 * 1.65)) + 452);
+perto('EER 2023 gestante 1º tri = não gestante', ach(E.avaliar({ ...ana, gestante: { semanas: 10 } }).gets, 'eer2023'), 2094);
+perto('EER 2023 lactante 3 meses (+400)', ach(E.avaliar({ ...ana, lactante: { meses: 3 } }).gets, 'eer2023'), 2494);
+const bebe = E.avaliar({ sexo: 'm', idade: 0.5, peso: 7.9, altura: 68, caf: 'inativo', fa: 1 });
+perto('EER 2023 bebê menino 6 meses', ach(bebe.gets, 'eer2023'), 634);
+perto('EER 2005 bebê 6 meses (89p−100+22)', ach(bebe.gets, 'eer2005'), 625);
+const crianca = E.avaliar({ sexo: 'm', idade: 8, peso: 25, altura: 128, caf: 'ativo', fa: 1.55 });
+perto('EER 2023 menino 8a ativo', ach(crianca.gets, 'eer2023'), 1788);
+perto('EER 2005 menino 8a ativo (CAF 1,26, +20)', ach(crianca.gets, 'eer2005'), r(88.5 - 61.9 * 8 + 1.26 * (26.7 * 25 + 903 * 1.28) + 20));
+const obeso = E.avaliar({ sexo: 'm', idade: 45, peso: 110, altura: 175, caf: 'inativo', fa: 1.2 });
+perto('EER 2005 homem IMC 35,9 (equação de sobrepeso)', ach(obeso.gets, 'eer2005'), r(1085.6 - 10.08 * 45 + 1 * (13.7 * 110 + 416 * 1.75)));
+console.log('   IMC', obeso.imc.toFixed(1), obeso.classe, '| peso ideal', obeso.pesoIdeal.toFixed(1), '| ajustado', obeso.pesoAjustado.toFixed(1));
+perto('Peso ajustado = (110 − ideal) × 0,25 + ideal', obeso.pesoAjustado, (110 - 22 * 1.75 ** 2) * 0.25 + 22 * 1.75 ** 2, 0.01);
+const atleta = E.avaliar({ sexo: 'm', idade: 25, peso: 80, altura: 180, gordura: 12, atleta: true, horasTreinoDia: 1.5, caf: 'ativo', fa: 1.725 });
+perto('Cunningham, MLG 70,4 kg', ach(atleta.tmbs, 'cunningham'), r(500 + 22 * 70.4));
+perto('Katch-McArdle', ach(atleta.tmbs, 'katch'), r(370 + 21.6 * 70.4));
+console.log('   atleta: recomendada', atleta.recomendada, '|', atleta.rec.proteina.texto, '|', atleta.rec.carboidrato.texto);
+const idoso = E.avaliar({ sexo: 'f', idade: 75, peso: 60, altura: 155, caf: 'inativo', fa: 1.2 });
+perto('Henry mulher > 70', ach(idoso.tmbs, 'henry'), 1177);
+console.log('   idosa:', idoso.classe, '| proteína', idoso.rec.proteina.texto, '| água', idoso.agua, 'ml');
+perto('Treino: musculação vigorosa 5 h/sem, 80 kg', E.gastoTreino(6, 80, 5), 286);
+// DRIs
+const ref = (p) => Object.fromEntries(D.referencias(p).micros.map((m) => [m.k, m.meta]));
+perto('Ferro mulher 28a = 18 mg', ref(ana).fe, 18, 0);
+perto('Ferro gestante = 27 mg', ref({ ...ana, gestante: { semanas: 20 } }).fe, 27, 0);
+perto('Folato gestante = 600 µg', ref({ ...ana, gestante: { semanas: 20 } }).b9, 600, 0);
+perto('Cálcio homem 75a = 1200 mg', ref({ sexo: 'm', idade: 75 }).ca, 1200, 0);
+perto('Vit D > 70 = 20 µg', ref({ sexo: 'm', idade: 75 }).vitd, 20, 0);
+perto('Cálcio adolescente 15a = 1300', ref({ sexo: 'f', idade: 15 }).ca, 1300, 0);
+perto('Vit A lactante 25a = 1300', ref({ sexo: 'f', idade: 25, lactante: { meses: 2 } }).vita, 1300, 0);
+console.log(D.referencias({ sexo: 'f', idade: 15 }).grupo, '|', D.referencias({ sexo: 'f', idade: 32, gestante: { semanas: 20 } }).grupo, '|', D.referencias({ sexo: 'm', idade: 0.3 }).grupo);
+console.log(falhas ? `FALHOU: ${falhas}` : 'OK: todas as equações conferem');
+process.exit(falhas ? 1 : 0);
+function r(x) { return Math.round(x); }

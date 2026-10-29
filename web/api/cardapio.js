@@ -24,15 +24,16 @@ const LIMITE_MS = 52000;
 const Entrada = z.object({
   ficha: z.object({
     sexo: z.enum(['f', 'm']),
-    idade: z.coerce.number().min(10).max(110),
+    idade: z.coerce.number().min(1).max(110),
     objetivo: z.string().max(40),
     restricoes: z.array(z.string().max(30)).max(20).default([]),
     padrao: z.string().max(30).default('onivoro'),
     preferencias: z.string().max(1500).default(''),
     naoGosta: z.string().max(500).default(''),
     treino: z.string().max(200).default(''),
+    fase: z.string().max(400).default(''),
   }),
-  metas: z.object({ kcal: z.number().positive(), ptn: z.number().positive(), cho: z.number().positive(), lip: z.number().positive() }),
+  metas: z.object({ kcal: z.number().positive(), ptn: z.number().positive(), cho: z.number().positive(), lip: z.number().positive(), ptnMinima: z.boolean().default(false) }),
   refeicoes: z.array(z.object({ nome: z.string().max(40), horario: z.string().max(5), pct: z.number().min(0).max(100) })).min(3).max(8),
 });
 
@@ -175,9 +176,10 @@ function promptInicial(d, candidatos) {
   const refs = d.refeicoes.map((r) => `- ${r.nome} às ${r.horario}: cerca de ${Math.round((m.kcal * r.pct) / 100)} kcal`).join('\n');
   return `Você é assistente de um nutricionista brasileiro e monta uma PROPOSTA de cardápio de um dia, que ele vai revisar.
 Paciente: ${f.sexo === 'm' ? 'homem' : 'mulher'}, ${f.idade} anos. Objetivo: ${f.objetivo}. Padrão alimentar: ${f.padrao}. Restrições e alergias: ${f.restricoes.join(', ') || 'nenhuma'}.
+Fase da vida e esporte: ${f.fase || 'adulto sem condição especial'}.
 Treino: ${f.treino || 'não informado'}. Não gosta de: ${f.naoGosta || 'nada informado'}.
 Preferências e rotina: ${f.preferencias || 'não informadas'}.
-Metas do dia: ${m.kcal} kcal, ${m.ptn} g de proteína, ${m.cho} g de carboidrato, ${m.lip} g de gordura.
+Metas do dia: ${m.kcal} kcal, ${m.ptn} g de proteína${m.ptnMinima ? ' (mínimo)' : ''}, ${m.cho} g de carboidrato, ${m.lip} g de gordura.
 Refeições e distribuição de energia:
 ${refs}
 

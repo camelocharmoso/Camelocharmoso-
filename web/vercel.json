@@ -2,7 +2,7 @@
   "functions": {
     "api/cardapio.js": {
       "maxDuration": 60,
-      "includeFiles": "{data,lib}/**"
+      "includeFiles": "{data/taco.json,lib/**}"
     }
   },
   "headers": [

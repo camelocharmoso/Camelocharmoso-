@@ -54,11 +54,18 @@ export function violacoes(food, restricoes = [], padrao = 'onivoro', naoGosta = 
   return out;
 }
 
+// Base de alimentos: TACO (ids numéricos) e, quando carregada, USDA (ids "u…"), na mesma busca.
 export function criarTaco(data) {
-  const lista = (data.alimentos || data).filter((f) => f.kcal > 0);
+  const base0 = (f) => { for (const k of ['ptn', 'cho', 'lip', 'fib', 'na']) f[k] ??= 0; return f; };
+  const lista = (data.alimentos || data).filter((f) => f.kcal > 0).map(base0);
   const porId = new Map(lista.map((f) => [f.id, f]));
-  return { lista, porId, get: (id) => porId.get(Number(id)) };
+  const base = { lista, porId, extra: [], get: (id) => porId.get(id) ?? porId.get(Number(id)) };
+  base.adicionar = (outros, fonte) => { for (const f of (outros.alimentos || outros)) if (f.kcal > 0 && !porId.has(f.id)) { base0(f); f.fonte = fonte; porId.set(f.id, f); base.extra.push(f); } };
+  return base;
 }
+
+// Micronutrientes guardados em cada item (it.mic) e somados no dia.
+export const MICROS = ['sat', 'acu', 'col', 'ca', 'fe', 'mg', 'p', 'k', 'zn', 'cu', 'mn', 'se', 'vita', 'vitd', 'vite', 'vitk', 'vitc', 'b1', 'b2', 'b3', 'b6', 'b9', 'b12'];
 
 const r1 = (x) => Math.round(x * 10) / 10;
 
@@ -87,7 +94,8 @@ export function calcularItem(taco, it) {
   return {
     ...it, taco_id: f.id, alimento: it.alimento || f.nome, taco_nome: f.nome, gramas: g,
     quantidade: medidaTexto(g, it.unidade),
-    kcal: Math.round(f.kcal * k), ptn: r1(f.ptn * k), cho: r1(f.cho * k), lip: r1(f.lip * k), fib: r1(f.fib * k), na: Math.round(f.na * k),
+    kcal: Math.round(f.kcal * k), ptn: r1(f.ptn * k), cho: r1(f.cho * k), lip: r1(f.lip * k), fib: r1((f.fib || 0) * k), na: Math.round((f.na || 0) * k),
+    mic: Object.fromEntries(MICROS.filter((m) => f[m] != null).map((m) => [m, Math.round(f[m] * k * 100) / 100])),
   };
 }
 
@@ -95,6 +103,14 @@ export function totais(refeicoes) {
   const t = { kcal: 0, ptn: 0, cho: 0, lip: 0, fib: 0, na: 0 };
   for (const r of refeicoes || []) for (const i of r.itens || []) for (const k of Object.keys(t)) t[k] += Number(i[k]) || 0;
   for (const k of Object.keys(t)) t[k] = k === 'kcal' || k === 'na' ? Math.round(t[k]) : r1(t[k]);
+  // Micronutrientes: soma o que há; "semDado" conta itens sem o valor (a TACO não mede B12, folato, vit. D etc.).
+  const itens = (refeicoes || []).flatMap((r) => r.itens || []).filter((i) => i.kcal > 0);
+  t.semDado = {};
+  for (const m of MICROS) {
+    const com = itens.filter((i) => i.mic && i.mic[m] != null);
+    if (com.length) t[m] = Math.round(com.reduce((s, i) => s + i.mic[m], 0) * 10) / 10;
+    t.semDado[m] = itens.length - com.length;
+  }
   return t;
 }
 
@@ -104,9 +120,11 @@ export function desvios(t, metas) {
   return d;
 }
 
+// Com metas.ptnMinima (proteína pela RDA: gestante, lactante, criança, idoso), a proteína é piso: vale de −10% a +50%.
+export const proteinaOk = (d, metas) => (metas.ptnMinima ? d.ptn >= -TOLERANCIA.macro && d.ptn <= 0.5 : Math.abs(d.ptn) <= TOLERANCIA.macro);
 export function dentroDaMeta(t, metas) {
   const d = desvios(t, metas);
-  return Math.abs(d.kcal) <= TOLERANCIA.kcal && ['ptn', 'cho', 'lip'].every((k) => Math.abs(d[k]) <= TOLERANCIA.macro);
+  return Math.abs(d.kcal) <= TOLERANCIA.kcal && proteinaOk(d, metas) && ['cho', 'lip'].every((k) => Math.abs(d[k]) <= TOLERANCIA.macro);
 }
 
 const perfil = (f) => { const e = f.ptn * 4 + f.cho * 4 + f.lip * 9 || 1; return [f.ptn * 4 / e, f.cho * 4 / e, f.lip * 9 / e]; };
@@ -140,8 +158,23 @@ function resolver3(A, b) {
 }
 
 // Ajusta as porções por grupo de macronutriente dominante e depois pela energia total.
+// Porção mínima por tipo: o ajuste não pode transformar a carne do almoço em 10 g.
+export function minimoGramas(f) {
+  if (!f) return 5;
+  const c = f.cat || '', n = norm(f.nome);
+  if (/Carnes|Pescados/.test(c)) return 60;
+  if (/Ovos/.test(c)) return 45;
+  if (/Leguminosas/.test(c) && !/amendoim|pacoca/.test(n)) return 40;
+  if (/Gorduras/.test(c)) return 3;
+  if (/Nozes|amendoim/.test(c + n)) return 10;
+  if (/Frutas/.test(c)) return 50;
+  if (/Verduras/.test(c)) return 20;
+  return 15;
+}
+
 export function ajustarPorcoes(taco, refeicoes, metas) {
-  let refs = refeicoes.map((r) => ({ ...r, itens: r.itens.map((i) => calcularItem(taco, i)) }));
+  // _g0 guarda a porção que a IA sugeriu: o ajuste fica entre 40% e o limite do alimento.
+  let refs = refeicoes.map((r) => ({ ...r, itens: r.itens.map((i) => calcularItem(taco, { ...i, _g0: i._g0 ?? i.gramas })) }));
   const fixo = (i) => !taco.get(i.taco_id) || norm(i.taco_nome).includes('cafe, infusao');
   for (let it = 0; it < 6; it++) {
     const grupos = { ptn: [0, 0, 0], cho: [0, 0, 0], lip: [0, 0, 0] };
@@ -157,14 +190,14 @@ export function ajustarPorcoes(taco, refeicoes, metas) {
     const m = resolver3(A, b);
     const fator = {};
     ordem.forEach((g, k) => (fator[g] = m && grupos[g].some((x) => x > 0) ? Math.min(1.6, Math.max(0.6, m[k])) : 1));
-    const escala = (i, x) => { const f = taco.get(i.taco_id); return calcularItem(taco, { ...i, gramas: Math.min(limiteGramas(f), Math.max(5, i.gramas * x)) }); };
+    const escala = (i, x) => { const f = taco.get(i.taco_id); const piso = Math.min(limiteGramas(f), Math.max(minimoGramas(f), (i._g0 || i.gramas) * 0.4)); return calcularItem(taco, { ...i, gramas: Math.min(limiteGramas(f), Math.max(piso, i.gramas * x)) }); };
     refs = refs.map((r) => ({ ...r, itens: r.itens.map((i) => (fixo(i) ? i : escala(i, fator[dominante(taco.get(i.taco_id))]))) }));
     const t = totais(refs);
     const s = t.kcal ? Math.min(1.4, Math.max(0.7, metas.kcal / t.kcal)) : 1;
     refs = refs.map((r) => ({ ...r, itens: r.itens.map((i) => (fixo(i) ? i : escala(i, s))) }));
     if (dentroDaMeta(totais(refs), metas)) break;
   }
-  refs = refs.map((r) => ({ ...r, itens: r.itens.map((i) => calcularItem(taco, { ...i, gramas: fixo(i) ? i.gramas : arredondar(i.gramas, taco.get(i.taco_id)) })) }));
+  refs = refs.map((r) => ({ ...r, itens: r.itens.map(({ _g0, ...i }) => calcularItem(taco, { ...i, gramas: fixo(i) ? i.gramas : arredondar(i.gramas, taco.get(i.taco_id)) })) }));
   return refs;
 }
 
