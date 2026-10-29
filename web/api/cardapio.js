@@ -3,14 +3,22 @@
 import { readFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import { criarTaco, violacoes, ajustarPorcoes, trocarProibidos, totais, desvios, dentroDaMeta, TOLERANCIA } from '../lib/nutri.mjs';
+import { criarTaco, paraCardapio, violacoes, ajustarPorcoes, trocarProibidos, totais, desvios, dentroDaMeta, TOLERANCIA } from '../lib/nutri.mjs';
 
 export const config = { maxDuration: 60 };
 
 const taco = criarTaco(JSON.parse(readFileSync(new URL('../data/taco.json', import.meta.url), 'utf8')));
 const SUPABASE_URL = 'https://flxltpgirbdcimqzjaht.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_WAPK9_OdhIcwJgFedfcX7Q_fEgus9h3';
-const MODELOS = { anthropic: process.env.ANTHROPIC_MODEL || 'claude-sonnet-5-5', gemini: process.env.GEMINI_MODEL || 'gemini-3.5-flash', groq: process.env.GROQ_MODEL || 'openai/gpt-oss-120b' };
+// Fila de modelos: o primeiro com chave configurada responde; erro, limite de uso ou demora passa a vez ao próximo.
+// Cada modelo tem a própria cota nos planos gratuitos, por isso há dois de cada provedor.
+const FILA = [
+  ['anthropic', process.env.ANTHROPIC_MODEL || 'claude-sonnet-5-5'],
+  ['gemini', process.env.GEMINI_MODEL || 'gemini-3.5-flash'],
+  ['gemini', 'gemini-3.1-flash-lite'],
+  ['groq', process.env.GROQ_MODEL || 'openai/gpt-oss-120b'],
+  ['groq', 'openai/gpt-oss-20b'],
+];
 const LIMITE_MS = 52000;
 
 const Entrada = z.object({
@@ -92,13 +100,13 @@ async function usuarioLogado(req) {
 
 // A conversa é neutra ({ papel: 'user' | 'assistant', texto }); cada provedor recebe o esquema e devolve o objeto.
 // Erro de rede/limite/chave num provedor faz tentar o próximo configurado.
-async function pedir(url, opcoes, provedor) {
+async function pedir(url, opcoes, provedor, modelo) {
   const r = await fetch(url, { method: 'POST', ...opcoes });
   const corpo = await r.json().catch(() => ({}));
   if (!r.ok) {
     const nome = provedor[0].toUpperCase() + provedor.slice(1);
     if (r.status === 401 || r.status === 403) throw new ErroApp(503, 'chave_invalida', `A chave do ${nome} configurada na Vercel foi recusada.`);
-    if (r.status === 404) throw new ErroApp(503, 'modelo_invalido', `O modelo ${MODELOS[provedor]} não foi encontrado no ${nome}.`);
+    if (r.status === 404) throw new ErroApp(503, 'modelo_invalido', `O modelo ${modelo} não foi encontrado no ${nome}.`);
     if (r.status === 413 || r.status === 429 || r.status === 503 || r.status === 529) throw new ErroApp(503, 'ia_ocupada', 'A IA está ocupada agora. Tente de novo em alguns segundos.');
     throw new ErroApp(502, 'ia_erro', `A IA respondeu com erro (${provedor} ${r.status}).`);
   }
@@ -107,47 +115,59 @@ async function pedir(url, opcoes, provedor) {
 const json = (t) => { try { return JSON.parse(String(t || '').replace(/^```(?:json)?\s*|\s*```$/g, '')); } catch { return null; } };
 
 const PROVEDORES = {
-  async anthropic(conversa, sinal, chave) {
+  async anthropic(conversa, sinal, chave, modelo) {
     const ferramenta = { name: 'montar_cardapio', description: DESCRICAO, input_schema: ESQUEMA };
     const msgs = conversa.map((m) => ({ role: m.papel, content: m.texto }));
     const c = await pedir('https://api.anthropic.com/v1/messages', { signal: sinal, headers: { 'x-api-key': chave, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model: MODELOS.anthropic, max_tokens: 6000, tools: [ferramenta], tool_choice: { type: 'tool', name: 'montar_cardapio' }, messages: msgs }) }, 'anthropic');
+      body: JSON.stringify({ model: modelo, max_tokens: 6000, tools: [ferramenta], tool_choice: { type: 'tool', name: 'montar_cardapio' }, messages: msgs }) }, 'anthropic', modelo);
     return c.content?.find((x) => x.type === 'tool_use')?.input;
   },
-  async gemini(conversa, sinal, chave) {
-    const c = await pedir(`https://generativelanguage.googleapis.com/v1beta/models/${MODELOS.gemini}:generateContent`, { signal: sinal, headers: { 'x-goog-api-key': chave, 'content-type': 'application/json' },
+  async gemini(conversa, sinal, chave, modelo) {
+    const c = await pedir(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, { signal: sinal, headers: { 'x-goog-api-key': chave, 'content-type': 'application/json' },
       body: JSON.stringify({ systemInstruction: { parts: [{ text: DESCRICAO + ' Responda só com o JSON pedido.' }] },
         contents: conversa.map((m) => ({ role: m.papel === 'assistant' ? 'model' : 'user', parts: [{ text: m.texto }] })),
-        generationConfig: { responseMimeType: 'application/json', responseJsonSchema: ESQUEMA, temperature: 0.7, maxOutputTokens: 8000 } }) }, 'gemini');
+        generationConfig: { responseMimeType: 'application/json', responseJsonSchema: ESQUEMA, temperature: 0.7, maxOutputTokens: 8000 } }) }, 'gemini', modelo);
     return json(c.candidates?.[0]?.content?.parts?.filter((p) => !p.thought).map((p) => p.text).join(''));
   },
-  async groq(conversa, sinal, chave) {
+  async groq(conversa, sinal, chave, modelo) {
     const c = await pedir('https://api.groq.com/openai/v1/chat/completions', { signal: sinal, headers: { Authorization: `Bearer ${chave}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ model: MODELOS.groq, temperature: 0.7, max_completion_tokens: 8000,
+      body: JSON.stringify({ model: modelo, temperature: 0.7, max_completion_tokens: 8000,
         messages: [{ role: 'system', content: DESCRICAO + ' Responda só com o JSON pedido.' }, ...conversa.map((m) => ({ role: m.papel, content: m.texto }))],
-        response_format: { type: 'json_schema', json_schema: { name: 'montar_cardapio', strict: true, schema: ESQUEMA } } }) }, 'groq');
+        response_format: { type: 'json_schema', json_schema: { name: 'montar_cardapio', strict: true, schema: ESQUEMA } } }) }, 'groq', modelo);
     return json(c.choices?.[0]?.message?.content);
   },
 };
 const CHAVES = { anthropic: 'ANTHROPIC_API_KEY', gemini: 'GEMINI_API_KEY', groq: 'GROQ_API_KEY' };
 
+// Modelo que recusou por limite fica 60 s no fim da fila (vale enquanto a função continuar aquecida).
+const ocupadoAte = new Map();
+
 async function chamarIA(conversa, sinal, requestId) {
-  const ativos = Object.keys(PROVEDORES).filter((p) => process.env[CHAVES[p]]);
+  const agora = Date.now();
+  const ativos = FILA.filter(([p]) => process.env[CHAVES[p]])
+    .sort((a, b) => ((ocupadoAte.get(a[1]) || 0) > agora) - ((ocupadoAte.get(b[1]) || 0) > agora));
   if (!ativos.length) throw new ErroApp(503, 'sem_chave', 'A IA ainda não foi configurada no servidor (falta GEMINI_API_KEY, GROQ_API_KEY ou ANTHROPIC_API_KEY na Vercel).');
   let ultimo;
-  for (const [i, p] of ativos.entries()) {
-    // Se houver reserva, o provedor tem 25 s; depois disso passa a vez para o próximo.
-    const limite = i < ativos.length - 1 ? AbortSignal.timeout(25000) : null;
-    try { return await PROVEDORES[p](conversa, limite ? AbortSignal.any([sinal, limite]) : sinal, process.env[CHAVES[p]]); }
-    catch (e) {
+  for (const [i, [p, modelo]] of ativos.entries()) {
+    if (sinal.aborted) break;
+    // Com reserva na fila, cada modelo tem até 20 s (o primeiro) ou 15 s; o último usa o tempo que sobrar.
+    const limite = i < ativos.length - 1 ? AbortSignal.timeout(i === 0 ? 20000 : 15000) : null;
+    try {
+      const saida = await PROVEDORES[p](conversa, limite ? AbortSignal.any([sinal, limite]) : sinal, process.env[CHAVES[p]], modelo);
+      console.log(`[cardapio ${requestId}] respondeu ${p} ${modelo}`);
+      return saida;
+    } catch (e) {
       const passouDoLimite = limite?.aborted && !sinal.aborted;
       if (!passouDoLimite && (e.name === 'AbortError' || e.name === 'TimeoutError' || !(e instanceof ErroApp))) throw e;
       if (passouDoLimite) e = new ErroApp(504, 'tempo_esgotado', 'A IA demorou demais para responder.');
-      console.warn(`[cardapio ${requestId}] ${p} falhou (${e.codigo}), tentando o próximo`);
+      if (e.codigo === 'ia_ocupada' || e.codigo === 'tempo_esgotado') ocupadoAte.set(modelo, Date.now() + 60000);
+      console.warn(`[cardapio ${requestId}] ${p} ${modelo} falhou (${e.codigo}), tentando o próximo`);
       ultimo = e;
     }
   }
-  throw ultimo;
+  if (sinal.aborted) throw Object.assign(new Error('tempo'), { name: 'AbortError' });
+  throw ultimo?.codigo === 'tempo_esgotado' ? new ErroApp(503, 'ia_ocupada', 'As IAs gratuitas estão sobrecarregadas agora. Tente de novo em 1 minuto.')
+    : ultimo?.codigo === 'ia_ocupada' ? new ErroApp(503, 'ia_ocupada', 'As IAs gratuitas atingiram o limite de uso deste minuto. Tente de novo em 1 minuto.') : ultimo;
 }
 
 function promptInicial(d, candidatos) {
@@ -183,7 +203,7 @@ export default async function handler(req, res) {
     if (!entrada.success) throw new ErroApp(400, 'ficha_incompleta', 'A ficha está incompleta para gerar o cardápio.');
     const d = entrada.data;
     const { restricoes, padrao, naoGosta } = d.ficha;
-    const candidatos = taco.lista.filter((f) => !violacoes(f, restricoes, padrao, naoGosta).length);
+    const candidatos = taco.lista.filter((f) => paraCardapio(f) && !violacoes(f, restricoes, padrao, naoGosta).length);
 
     const ctl = new AbortController();
     const relogio = setTimeout(() => ctl.abort(), LIMITE_MS);
