@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Os Animais × Mylena Almeida</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+@page{size:1920px 1080px;margin:0}
+:root{
+  --asfalto:#131512;--asfalto2:#1C1F1A;--linha:#2E322B;
+  --creme:#F1EBDD;--papel:#E8E0CE;--tinta:#161814;--cinza:#6B6A60;--cinza-escuro:#A39F92;
+  --verde:#B9C46B;--verde-escuro:#6E7A2F;--ambar:#F0A43A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--asfalto)}
+body{font-family:"Inter Tight",sans-serif;-webkit-font-smoothing:antialiased}
+.s{width:1920px;height:1080px;position:relative;overflow:hidden;padding:120px 140px 0;page-break-after:always;break-after:page}
+.s:last-child{page-break-after:auto;break-after:auto}
+.escuro{background:var(--asfalto);color:var(--creme)}
+.claro{background:var(--creme);color:var(--tinta)}
+.verde{background:var(--verde);color:var(--tinta)}
+/* grão */
+.s::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.claro::before{opacity:.10;mix-blend-mode:multiply}
+
+/* tipografia */
+.disp{font-family:Anton,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.5px;line-height:.92}
+.it{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400;text-transform:none;letter-spacing:0}
+.escuro .it{color:var(--verde)}
+.claro .it{color:var(--verde-escuro)}
+.verde .it{color:var(--creme)}
+h2.disp{font-size:112px}
+h2.disp .it{font-size:1.12em;line-height:.8}
+.mono{font-family:"JetBrains Mono",monospace;font-weight:500;letter-spacing:3px;text-transform:uppercase}
+p,li{font-size:28px;line-height:1.45}
+.escuro p{color:var(--cinza-escuro)}
+.claro p{color:var(--cinza)}
+
+/* marcador de quilometragem */
+.km{display:flex;align-items:center;gap:22px;font-size:20px;margin-bottom:46px}
+.km b{font-weight:700;padding:8px 14px;border:2px solid currentColor;border-radius:4px}
+.escuro .km b{color:var(--ambar)}
+.claro .km b,.verde .km b{color:var(--tinta)}
+.km .faixa{width:120px;height:4px;background:repeating-linear-gradient(90deg,var(--ambar) 0 22px,transparent 22px 36px)}
+.claro .km .faixa,.verde .km .faixa{background:repeating-linear-gradient(90deg,var(--tinta) 0 22px,transparent 22px 36px)}
+.km span{opacity:.85}
+
+/* rodapé */
+.rod{position:absolute;left:140px;right:140px;bottom:56px;display:flex;justify-content:space-between;font-size:16px}
+.escuro .rod{color:#6F7268}.claro .rod{color:#8E8A7D}.verde .rod{color:#4B5222}
+
+/* faixa da estrada */
+.estrada{height:6px;background:repeating-linear-gradient(90deg,var(--ambar) 0 60px,transparent 60px 100px)}
+.claro .estrada{background:repeating-linear-gradient(90deg,var(--tinta) 0 60px,transparent 60px 100px);opacity:.25}
+
+/* CAPA */
+.capa{padding-top:150px}
+.capa .titulo{font-size:250px;margin-top:10px}
+.capa .titulo .x{color:var(--ambar);font-family:"Inter Tight";font-style:normal;font-weight:500;font-size:130px;vertical-align:30px;margin-right:28px}
+.capa .titulo .it{font-size:230px;display:block;margin-top:-10px;line-height:1}
+.capa .tag{font-size:40px;color:var(--creme);margin-top:40px;font-weight:500}
+.capa .tag em{font-family:"Instrument Serif",serif;font-size:50px;color:var(--verde)}
+.capa svg.rota{position:absolute;right:-170px;top:0;height:1080px}
+.capa .rod{right:560px}
+
+/* colunas numeradas */
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:64px;margin-top:80px}
+.cols .n{font-size:84px;color:var(--ambar);line-height:1}
+.claro .cols .n{color:var(--verde-escuro)}
+.cols h3{font-family:Anton;font-weight:400;text-transform:uppercase;font-size:46px;margin:18px 0 14px;letter-spacing:.5px}
+.cols > div{border-top:2px solid rgba(0,0,0,.12);padding-top:30px}
+.escuro .cols > div{border-color:var(--linha)}
+.nota{margin-top:70px;font-size:32px!important;max-width:1400px}
+.nota strong{color:var(--tinta);font-weight:600}
+
+/* split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:120px;align-items:start}
+.lista-serv > div{border-top:2px solid rgba(0,0,0,.12);padding:28px 0}
+.lista-serv > div:last-child{border-bottom:2px solid rgba(0,0,0,.12)}
+.lista-serv h4{font-family:Anton;font-weight:400;font-size:40px;text-transform:uppercase;letter-spacing:.5px}
+.lista-serv p{font-size:26px;margin-top:4px}
+blockquote{margin-top:56px;padding-left:34px;border-left:6px solid var(--ambar);font-family:"Instrument Serif",serif;font-size:48px;line-height:1.2;color:var(--tinta)}
+
+/* diagrama mão dupla */
+.fluxo{display:grid;grid-template-columns:1fr 280px 1fr 280px 1fr;align-items:stretch;margin-top:120px}
+.no{border:2px solid var(--linha);background:var(--asfalto2);border-radius:20px;padding:48px 42px;min-height:420px}
+.no.meio{border-color:var(--verde);background:#20251B}
+.no small{display:block;font-size:18px;color:var(--ambar);margin-bottom:16px}
+.no h4{font-family:Anton;font-weight:400;font-size:56px;text-transform:uppercase;line-height:1;color:var(--creme)}
+.no p{font-size:27px;margin-top:22px}
+.seta{padding:0 20px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+.seta .l{height:6px;margin:16px 0;background:repeating-linear-gradient(90deg,var(--ambar) 0 26px,transparent 26px 42px);position:relative}
+.seta .l.v{background:repeating-linear-gradient(90deg,var(--verde) 0 26px,transparent 26px 42px)}
+.seta .l::after{content:"";position:absolute;right:-4px;top:-9px;border:12px solid transparent;border-left:16px solid var(--ambar)}
+.seta .l.v::after{right:auto;left:-4px;border-left-color:transparent;border-right:16px solid var(--verde)}
+.seta span{display:block;font-size:23px;line-height:1.35;color:var(--cinza-escuro)}
+.seta span b{color:var(--creme);font-weight:600}
+
+/* frase */
+.frase{display:flex;flex-direction:column;justify-content:center;padding-top:0}
+.frase h2{font-size:132px}
+
+/* 15% */
+.pct{display:grid;grid-template-columns:860px 1fr;align-items:center;margin-top:20px}
+.pct .num{font-family:Anton;font-size:560px;line-height:.85;color:var(--verde);letter-spacing:-6px}
+.pct .num sup{font-size:220px;color:var(--ambar);vertical-align:230px;letter-spacing:0}
+.pct h3{font-family:Anton;font-weight:400;text-transform:uppercase;font-size:84px;line-height:.95}
+.pct p{margin-top:30px;font-size:30px}
+.pct .chip{display:inline-flex;gap:16px;align-items:center;margin-top:40px;border:2px dashed var(--ambar);border-radius:10px;padding:18px 26px;font-size:24px;color:var(--creme)}
+.pct .chip b{font-family:"JetBrains Mono";color:var(--ambar);letter-spacing:3px;font-size:28px}
+
+/* cards */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:64px}
+.card{background:#FBF8F1;border-radius:20px;padding:40px 46px;min-height:230px;position:relative}
+.card .n{font-family:"JetBrains Mono";font-size:20px;color:var(--verde-escuro);letter-spacing:3px}
+.card h4{font-family:Anton;font-weight:400;text-transform:uppercase;font-size:46px;margin:14px 0 10px;letter-spacing:.5px}
+.card p{font-size:25px}
+.card.dark{background:var(--asfalto);color:var(--creme)}
+.card.dark .n{color:var(--ambar)}
+.card.dark p{color:var(--cinza-escuro)}
+
+/* rota série */
+.tabela > div{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--linha);padding:30px 0}
+.tabela > div:last-child{border-bottom:2px solid var(--linha)}
+.tabela h4{font-family:Anton;font-weight:400;text-transform:uppercase;font-size:44px;color:var(--creme)}
+.tabela span{font-size:26px;color:var(--cinza-escuro)}
+
+/* troca */
+.troca{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:56px}
+.troca .box{border-radius:22px;padding:48px 54px}
+.troca .rec{background:var(--asfalto);color:var(--creme)}
+.troca .peco{background:#FBF8F1}
+.troca .box .mono{font-size:18px;margin-bottom:26px;display:block}
+.troca .rec .mono{color:var(--ambar)}
+.troca .peco .mono{color:var(--verde-escuro)}
+.troca li{list-style:none;font-size:28px;padding:11px 0;border-top:1px solid rgba(0,0,0,.08);display:flex;gap:18px;align-items:baseline}
+.troca .rec li{border-color:#2A2E27}
+.troca li::before{content:"";flex:0 0 18px;height:4px;background:var(--ambar);transform:translateY(-8px)}
+.troca .peco li::before{background:var(--verde-escuro)}
+.troca li.top{font-weight:700}
+.troca li.top em{font-style:normal;font-family:"JetBrains Mono";font-size:16px;letter-spacing:2px;background:var(--verde);color:var(--tinta);padding:4px 10px;border-radius:4px;margin-left:8px;vertical-align:4px}
+
+/* desconto lista */
+.serv{display:grid;grid-template-columns:1fr 1fr;column-gap:60px}
+.serv > div{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid rgba(0,0,0,.12);padding:26px 0}
+.serv h4{font-family:Anton;font-weight:400;text-transform:uppercase;font-size:36px;letter-spacing:.5px}
+.serv b{font-family:"JetBrains Mono";font-size:20px;color:var(--verde-escuro);letter-spacing:2px}
+
+/* risco zero */
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:64px;margin-top:80px}
+.trio .big{white-space:nowrap;font-family:Anton;font-size:150px;line-height:1;color:var(--verde)}
+.trio p{margin-top:18px;font-size:28px}
+.trio > div{border-top:6px solid var(--ambar);padding-top:36px}
+
+/* linha do tempo */
+.tempo{position:relative;margin-top:170px;display:grid;grid-template-columns:repeat(5,1fr);gap:36px}
+.tempo::before{content:"";position:absolute;left:0;right:0;top:22px;height:44px;background:var(--tinta);border-radius:4px}
+.tempo::after{content:"";position:absolute;left:20px;right:20px;top:42px;height:4px;background:repeating-linear-gradient(90deg,var(--ambar) 0 40px,transparent 40px 70px)}
+.tempo > div{position:relative;z-index:1;padding-top:110px}
+.tempo .pin{position:absolute;top:0;left:0;width:88px;height:88px;border-radius:50%;background:var(--creme);border:6px solid var(--tinta);display:grid;place-items:center;font-family:Anton;font-size:36px}
+.tempo .q{font-family:"JetBrains Mono";font-size:18px;letter-spacing:2px;color:var(--verde-escuro);text-transform:uppercase}
+.tempo h4{font-family:Anton;font-weight:400;text-transform:uppercase;font-size:40px;margin:12px 0 10px;line-height:1}
+.tempo p{font-size:24px}
+
+/* contato */
+.cta h2{font-size:190px}
+.contatos{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:110px;margin-top:80px}
+.contatos .mono{font-size:18px;color:var(--ambar)}
+.contatos div div{font-size:42px;margin-top:12px;color:var(--creme);font-weight:500}
+</style>
+</head>
+<body>
+
+<!-- 01 CAPA -->
+<section class="s escuro capa">
+  <svg class="rota" viewBox="0 0 700 1080" fill="none">
+    <path d="M520 1100 C 520 900, 260 860, 300 680 S 600 520, 520 360 S 300 160, 420 -20" stroke="#262A23" stroke-width="120" stroke-linecap="round"/>
+    <path d="M520 1100 C 520 900, 260 860, 300 680 S 600 520, 520 360 S 300 160, 420 -20" stroke="#F0A43A" stroke-width="6" stroke-dasharray="40 30"/>
+    <circle cx="300" cy="680" r="20" fill="#B9C46B"/><circle cx="300" cy="680" r="38" stroke="#B9C46B" stroke-width="3"/>
+    <circle cx="520" cy="360" r="20" fill="#B9C46B"/><circle cx="520" cy="360" r="38" stroke="#B9C46B" stroke-width="3"/>
+  </svg>
+  <div class="km mono"><b>KM 00</b><i class="faixa"></i><span>Proposta de parceria · 2026</span></div>
+  <h1 class="disp titulo">Os Animais<span class="it"><span class="x">×</span>Mylena Almeida</span></h1>
+  <p class="tag">Vocês escolhem a rota. <em>Eu cuido da cozinha.</em></p>
+  <div class="rod mono"><span>Mylena Almeida · Gestão de cozinhas</span><span>Recife · Outubro 2026</span></div>
+</section>
+
+<!-- 02 PONTO DE PARTIDA -->
+<section class="s claro">
+  <div class="km mono"><b>KM 01</b><i class="faixa"></i><span>O ponto de partida</span></div>
+  <h2 class="disp">Quando o grupo indica um lugar,<br><span class="it">empresta o nome.</span></h2>
+  <div class="cols">
+    <div><div class="disp n">01</div><h3>Interdição</h3><p>O restaurante fecha e a galera que foi indicada perde a viagem.</p></div>
+    <div><div class="disp n">02</div><h3>Alguém passa mal</h3><p>Basta um caso pra uma recomendação virar reclamação no grupo.</p></div>
+    <div><div class="disp n">03</div><h3>Prato que muda</h3><p>Cada dia sai de um jeito, e a experiência do rolê também.</p></div>
+  </div>
+  <p class="nota">O grupo já cuida da rota, das motos e da segurança na estrada. <strong>A cozinha das paradas ainda fica no escuro.</strong></p>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>02 / 15</span></div>
+</section>
+
+<!-- 03 A PERGUNTA -->
+<section class="s escuro frase">
+  <div class="km mono"><b>KM 02</b><i class="faixa"></i><span>A pergunta</span></div>
+  <h2 class="disp" style="font-size:120px">E se ser parceiro do Os Animais<br>também significasse ter uma<br><span class="it">cozinha bem cuidada?</span></h2>
+  <p style="margin-top:50px;max-width:1300px;font-size:32px">Um benefício a mais pros membros, um diferencial pras marcas parceiras e um motivo a mais pra todo mundo querer fazer parte.</p>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>03 / 15</span></div>
+</section>
+
+<!-- 04 QUEM SOU -->
+<section class="s claro">
+  <div class="km mono"><b>KM 03</b><i class="faixa"></i><span>Quem vai cuidar disso</span></div>
+  <div class="split">
+    <div>
+      <h2 class="disp">Prazer,<br>eu sou a <span class="it">Mylena.</span></h2>
+      <p style="margin-top:44px">Trabalho com gestão de cozinhas. Venho da Nutrição e da rotina de Unidades de Alimentação, e meu foco é a parte que o cliente não vê.</p>
+      <blockquote>“Eu não entrego papel e vou embora. Treino a equipe até ela fazer certo sozinha.”</blockquote>
+    </div>
+    <div class="lista-serv" style="margin-top:20px">
+      <div><h4>Boas práticas</h4><p>Manual, POPs e checklist do jeito da casa.</p></div>
+      <div><h4>Ficha técnica e custo</h4><p>Quanto cada prato custa e quanto ele deixa.</p></div>
+      <div><h4>Treinamento de equipe</h4><p>Higiene, armazenamento, manipulação e palestras.</p></div>
+      <div><h4>Desperdício sob controle</h4><p>Estoque, validade e aproveitamento.</p></div>
+    </div>
+  </div>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>04 / 15</span></div>
+</section>
+
+<!-- 05 MÃO DUPLA -->
+<section class="s escuro">
+  <div class="km mono"><b>KM 04</b><i class="faixa"></i><span>Como a parceria funciona</span></div>
+  <h2 class="disp">Uma estrada de <span class="it">mão dupla.</span></h2>
+  <div class="fluxo">
+    <div class="no"><small class="mono">Quem usa</small><h4>Membros<br>Os Animais</h4><p>Quem tem negócio de comida ganha condição especial.</p></div>
+    <div class="seta"><span><b>15% + palestra</b><br>e conteúdo</span><div class="l v"></div><div class="l"></div><span><b>Divulgação</b><br>no grupo</span></div>
+    <div class="no meio"><small class="mono">Quem cuida</small><h4>Mylena<br>Almeida</h4><p>Diagnóstico, boas práticas, treinamento e acompanhamento.</p></div>
+    <div class="seta"><span><b>Indicação</b><br>pra sua rede</span><div class="l v"></div><div class="l"></div><span><b>Mesma condição</b><br>e visibilidade</span></div>
+    <div class="no"><small class="mono">Quem indica</small><h4>Marcas<br>parceiras</h4><p>As marcas que já apoiam o grupo, apresentadas por ele.</p></div>
+  </div>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>05 / 15</span></div>
+</section>
+
+<!-- 06 FRASE -->
+<section class="s verde frase">
+  <div class="km mono"><b>KM 05</b><i class="faixa"></i><span>A proposta em uma frase</span></div>
+  <h2 class="disp">Benefício pros membros.<br>Porta aberta pras marcas.<br><span class="it">Sem custo pro grupo.</span></h2>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>06 / 15</span></div>
+</section>
+
+<!-- 07 15% -->
+<section class="s escuro">
+  <div class="km mono"><b>KM 06</b><i class="faixa"></i><span>Benefício principal</span></div>
+  <div class="pct">
+    <div class="num">15<sup>%</sup></div>
+    <div>
+      <h3>de desconto em <span class="it">todos os serviços.</span></h3>
+      <p>Pra membros do grupo que têm negócio de comida, pras marcas parceiras do Os Animais e pra quem chegar indicado por elas.</p>
+      <div class="chip">Basta se identificar como do grupo <b>ANIMAIS15</b></div>
+    </div>
+  </div>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>07 / 15</span></div>
+</section>
+
+<!-- 08 VANTAGENS -->
+<section class="s claro">
+  <div class="km mono"><b>KM 07</b><i class="faixa"></i><span>E não para no desconto</span></div>
+  <h2 class="disp">Mais <span class="it">quatro</span> vantagens.</h2>
+  <div class="cards">
+    <div class="card"><div class="n">01</div><h4>Palestra gratuita</h4><p>“O que o fiscal olha primeiro na tua cozinha.” 30 minutos num encontro do grupo.</p></div>
+    <div class="card"><div class="n">02</div><h4>3 diagnósticos de cortesia</h4><p>Os 3 primeiros negócios parceiros recebem uma visita de diagnóstico sem custo.</p></div>
+    <div class="card"><div class="n">03</div><h4>Certificado “Equipe treinada”</h4><p>Quem conclui o treinamento recebe o certificado, e o grupo pode destacar esses lugares na rota.</p></div>
+    <div class="card dark"><div class="n">04</div><h4>Série “Rota Os Animais”</h4><p>Conteúdo gravado nas cozinhas parceiras, em collab com o perfil do grupo.</p></div>
+  </div>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>08 / 15</span></div>
+</section>
+
+<!-- 09 ROTA -->
+<section class="s escuro">
+  <div class="km mono"><b>KM 08</b><i class="faixa"></i><span>Destaque</span></div>
+  <div class="split" style="align-items:center;margin-top:110px">
+    <div>
+      <h2 class="disp" style="font-size:150px">Rota<br><span class="it">Os Animais.</span></h2>
+      <p style="margin-top:40px">Uma série de vídeos visitando a cozinha das paradas parceiras: bastidor, organização e dicas. O restaurante mostra que é cuidadoso, o grupo ganha conteúdo novo e a comunidade descobre onde comer bem.</p>
+    </div>
+    <div class="tabela">
+      <div><h4>Pro restaurante</h4><span>Vitrine de confiança</span></div>
+      <div><h4>Pro grupo</h4><span>Conteúdo sem custo</span></div>
+      <div><h4>Pras marcas</h4><span>Aparecem junto</span></div>
+      <div><h4>Pros membros</h4><span>Onde parar com segurança</span></div>
+    </div>
+  </div>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>09 / 15</span></div>
+</section>
+
+<!-- 10 MARCAS -->
+<section class="s claro">
+  <div class="km mono"><b>KM 09</b><i class="faixa"></i><span>Pras marcas parceiras</span></div>
+  <h2 class="disp">Por que as marcas vão<br><span class="it">querer indicar.</span></h2>
+  <div class="cols">
+    <div><div class="disp n">01</div><h3>Parceria que rende mais</h3><p>A marca passa a oferecer um benefício real pra própria rede: cozinha organizada com condição especial.</p></div>
+    <div><div class="disp n">02</div><h3>Aparece do lado certo</h3><p>Marcas de comida podem ganhar o certificado “Equipe treinada” e entrar na série Rota Os Animais.</p></div>
+    <div><div class="disp n">03</div><h3>Indicar dá zero trabalho</h3><p>Uma mensagem pronta e um código. Quem chega indicado entra com os mesmos 15%.</p></div>
+  </div>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>10 / 15</span></div>
+</section>
+
+<!-- 11 TROCA -->
+<section class="s claro">
+  <div class="km mono"><b>KM 10</b><i class="faixa"></i><span>A troca</span></div>
+  <h2 class="disp" style="font-size:96px">Vocês ganham muito. <span class="it">Eu peço pouco.</span></h2>
+  <div class="troca">
+    <div class="box rec"><span class="mono">O grupo recebe</span><ul>
+      <li>15% em todos os serviços</li>
+      <li>Palestra gratuita num encontro</li>
+      <li>3 diagnósticos de cortesia</li>
+      <li>Certificado pros parceiros</li>
+      <li>Conteúdo em collab</li>
+      <li>Relatório no fim do teste</li>
+    </ul></div>
+    <div class="box peco"><span class="mono">Eu peço</span><ul>
+      <li class="top">Apresentação às marcas parceiras <em>O principal</em></li>
+      <li>Um post anunciando a parceria</li>
+      <li>A mensagem nos grupos de membros</li>
+      <li>30 minutos num encontro já previsto</li>
+      <li>Aceitar os collabs da série</li>
+    </ul></div>
+  </div>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>11 / 15</span></div>
+</section>
+
+<!-- 12 O QUE ENTRA -->
+<section class="s claro">
+  <div class="km mono"><b>KM 11</b><i class="faixa"></i><span>Condição Os Animais</span></div>
+  <h2 class="disp">O que entra no <span class="it">desconto.</span></h2>
+  <div class="serv" style="margin-top:60px">
+    <div><h4>Diagnóstico da cozinha</h4><b>−15%</b></div>
+    <div><h4>Treinamento de equipe</h4><b>−15%</b></div>
+    <div><h4>Boas práticas e POPs</h4><b>−15%</b></div>
+    <div><h4>Controle de desperdício</h4><b>−15%</b></div>
+    <div><h4>Ficha técnica e custo</h4><b>−15%</b></div>
+    <div><h4>Palestras para equipes</h4><b>−15%</b></div>
+    <div style="border-bottom:2px solid rgba(0,0,0,.12)"><h4>Padronização de receitas</h4><b>−15%</b></div>
+    <div style="border-bottom:2px solid rgba(0,0,0,.12)"><h4>Acompanhamento mensal</h4><b>−15%</b></div>
+  </div>
+  <p style="margin-top:40px;font-size:22px;max-width:1500px">Valores enviados conforme o tamanho de cada cozinha. Documentos e atividades privativas de nutricionista são feitos com nutricionista responsável técnica registrada no CRN.</p>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>12 / 15</span></div>
+</section>
+
+<!-- 13 RISCO ZERO -->
+<section class="s escuro">
+  <div class="km mono"><b>KM 12</b><i class="faixa"></i><span>Sem amarras</span></div>
+  <h2 class="disp">Risco <span class="it">zero</span> pro grupo.</h2>
+  <div class="trio">
+    <div><div class="big">R$ 0</div><p>de custo pro grupo.</p></div>
+    <div><div class="big">Livre</div><p>Sem exclusividade. O grupo continua fechando com quem quiser.</p></div>
+    <div><div class="big">3 meses</div><p>pra testar, com relatório no fim: membros atendidos, cozinhas treinadas e episódios publicados. Se não fizer sentido, é só encerrar.</p></div>
+  </div>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>13 / 15</span></div>
+</section>
+
+<!-- 14 PRÓXIMOS PASSOS -->
+<section class="s claro">
+  <div class="km mono"><b>KM 13</b><i class="faixa"></i><span>Próximos passos</span></div>
+  <h2 class="disp">Do “sim” à <span class="it">primeira parada.</span></h2>
+  <div class="tempo">
+    <div><div class="pin">1</div><div class="q">Semana 1</div><h4>Conversa rápida</h4><p>15 minutos pra ajustar ao jeito do grupo.</p></div>
+    <div><div class="pin">2</div><div class="q">Semana 2</div><h4>Anúncio e marcas</h4><p>Post, mensagem pros membros e apresentação às marcas parceiras.</p></div>
+    <div><div class="pin">3</div><div class="q">Próximo encontro</div><h4>Palestra</h4><p>30 minutos com a galera e os donos de negócio.</p></div>
+    <div><div class="pin">4</div><div class="q">Meses 1 a 3</div><h4>Visitas e episódios</h4><p>3 cortesias que viram os primeiros episódios da Rota.</p></div>
+    <div><div class="pin">5</div><div class="q">Mês 3</div><h4>Relatório</h4><p>Números na mesa e decisão de seguir juntos.</p></div>
+  </div>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>14 / 15</span></div>
+</section>
+
+<!-- 15 CTA -->
+<section class="s escuro cta">
+  <svg class="rota" viewBox="0 0 700 1080" fill="none" style="position:absolute;right:-60px;top:0;height:1080px">
+    <path d="M200 1100 C 260 860, 600 820, 520 600 S 220 360, 460 -20" stroke="#262A23" stroke-width="120" stroke-linecap="round"/>
+    <path d="M200 1100 C 260 860, 600 820, 520 600 S 220 360, 460 -20" stroke="#F0A43A" stroke-width="6" stroke-dasharray="40 30"/>
+    <circle cx="520" cy="600" r="20" fill="#B9C46B"/><circle cx="520" cy="600" r="38" stroke="#B9C46B" stroke-width="3"/>
+  </svg>
+  <div class="km mono" style="margin-top:110px"><b>KM 14</b><i class="faixa"></i><span>Vamos juntos?</span></div>
+  <h2 class="disp">Bora <span class="it">acelerar</span><br>essa parceria?</h2>
+  <div class="contatos">
+    <div><span class="mono">Mylena Almeida</span><div>Gestão de cozinhas</div></div>
+    <div><span class="mono">WhatsApp</span><div>(81) _____-_____</div></div>
+    <div><span class="mono">Instagram</span><div>@__________</div></div>
+  </div>
+  <div class="rod mono"><span>Os Animais × Mylena Almeida</span><span>15 / 15</span></div>
+</section>
+
+</body>
+</html>
