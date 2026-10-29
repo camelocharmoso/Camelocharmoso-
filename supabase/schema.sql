@@ -52,3 +52,10 @@ as $$
 $$;
 revoke all on function public.plano_por_codigo(text) from public;
 grant execute on function public.plano_por_codigo(text) to anon, authenticated;
+
+-- Permissões da API: só usuários logados acessam as tabelas (as regras acima limitam a cada um o que é seu)
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on public.planos to authenticated;
+grant select, insert, update, delete on public.nutricionistas to authenticated;
+revoke all on public.planos from anon;
+revoke all on public.nutricionistas from anon;
