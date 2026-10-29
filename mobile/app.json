@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Prato Planejado",
+    "slug": "prato-planejado",
+    "owner": "ryancoimbras-team",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#F6F4FB",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "br.com.pratoplanejado.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "br.com.pratoplanejado.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#5B3DF5",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#5B3DF5"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f4f5a1ec-8149-43ae-ba3b-185c395f93a7"
+      }
+    }
+  }
+}
