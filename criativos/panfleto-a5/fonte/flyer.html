@@ -1,0 +1,73 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+@page{size:154mm 216mm;margin:0}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{--paper:#ebe5d9;--ink:#141210;--red:#d8351a}
+html,body{background:var(--paper)}
+body{color:var(--ink);font-family:Archivo,sans-serif}
+.p{position:relative;width:1124px;height:1576px;overflow:hidden;background:var(--paper)}
+@media print{.p{zoom:.51784}}
+.grain{position:absolute;inset:0;background:url(grain.png);background-size:600px;mix-blend-mode:multiply;opacity:.5;z-index:20;pointer-events:none}
+.mono{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:16px;letter-spacing:1.5px;text-transform:uppercase}
+.hdr{position:absolute;top:62px;left:64px;right:64px;display:flex;justify-content:space-between;align-items:center}
+.stamp{width:104px;height:104px;border-radius:50%;background:var(--ink);display:grid;place-items:center}
+.stamp img{width:80px}
+.hdr .r{text-align:right;line-height:1.6;font-size:17px}
+.hdr .r b{color:var(--red)}
+.ph{position:absolute;overflow:hidden;background:#222}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.main{left:64px;top:194px;width:620px;height:716px}
+.main img{object-position:45% 32%;filter:grayscale(1) contrast(1.15)}
+.s1{left:704px;top:194px;width:356px;height:350px}
+.s1 img{object-position:50% 30%;filter:grayscale(1) contrast(1.1)}
+.s2{left:704px;top:560px;width:356px;height:350px}
+.s2 img{object-position:50% 42%;filter:grayscale(1) contrast(1.15)}
+.tag{position:absolute;left:14px;bottom:14px;background:var(--paper);padding:6px 10px}
+.tick{position:absolute;left:-40px;width:1210px;top:872px;height:66px;background:var(--red);color:var(--paper);transform:rotate(-3.2deg);display:flex;align-items:center;white-space:nowrap;font-weight:800;font-stretch:115%;font-size:31px;letter-spacing:1px;text-transform:uppercase;z-index:5;box-shadow:0 6px 0 var(--ink)}
+.tick span{margin:0 18px}
+.tick i{font-family:"Instrument Serif";font-style:italic;font-size:40px}
+h1{position:absolute;left:60px;top:978px;font-weight:900;font-stretch:125%;font-size:138px;line-height:.86;letter-spacing:-5px;text-transform:uppercase}
+h1 em{font-family:"Instrument Serif";font-style:italic;font-weight:400;text-transform:none;letter-spacing:-2px;font-size:150px;color:var(--red)}
+.sticker{position:absolute;left:500px;top:1052px;width:172px;height:172px;border-radius:50%;background:var(--red);color:var(--paper);display:grid;place-items:center;text-align:center;transform:rotate(-12deg);z-index:6;line-height:1}
+.sticker b{display:block;font-weight:900;font-stretch:115%;font-size:44px;letter-spacing:-1px;margin:4px 0}
+.sticker span{font-family:"IBM Plex Mono";font-size:14px;font-weight:600;letter-spacing:1px}
+.menu{position:absolute;left:64px;top:1240px;width:656px}
+.row{display:flex;align-items:baseline;gap:12px;padding:10px 0;border-top:2.5px solid var(--ink)}
+.row:last-child{border-bottom:2.5px solid var(--ink)}
+.row .n{font-weight:800;font-stretch:110%;font-size:31px;text-transform:uppercase}
+.row .d{flex:1;border-bottom:2.5px dotted rgba(20,18,16,.55);transform:translateY(-6px)}
+.row .v{font-weight:900;font-size:42px;letter-spacing:-1px}
+.row .v small{font-size:19px;font-weight:700;margin-right:3px;vertical-align:8px}
+.foot{position:absolute;left:64px;top:1452px;width:656px;display:flex;justify-content:space-between;font-size:15px}
+.cta{position:absolute;left:744px;top:1240px;width:316px;height:276px;background:var(--ink);color:var(--paper);padding:22px 22px 20px;display:flex;flex-direction:column;justify-content:space-between}
+.cta .k{color:var(--red);font-size:15px}
+.cta .mid{display:flex;gap:16px;align-items:center}
+.cta .qr{width:148px;height:148px;background:var(--paper);padding:7px;flex:none}
+.cta .qr img{width:100%;height:100%;display:block}
+.cta .big{font-family:"Instrument Serif";font-style:italic;font-size:27px;line-height:1.02}
+.cta .num{font-weight:900;font-stretch:88%;font-size:40px;letter-spacing:-1px;white-space:nowrap}
+</style></head><body><div class="p">
+<div class="grain"></div>
+<div class="hdr">
+ <div class="stamp"><img src="logo.png"></div>
+ <div class="r mono">Rua Paula Batista, 604<br>Casa Amarela — <b>Recife</b></div>
+</div>
+<div class="ph main"><img src="foto.jpg"><div class="tag mono">Fade + barba</div></div>
+<div class="ph s1"><img src="razor.jpg"></div>
+<div class="ph s2"><img src="beard.jpg"></div>
+<div class="tick"><span>Corte</span><i>✶</i><span>Barba</span><i>✶</i><span>Combo</span><i>✶</i><span>Casa Amarela</span><i>✶</i><span>Recife</span><i>✶</i><span>Corte</span></div>
+<h1>Na régua,<br><em>sempre.</em></h1>
+<div class="sticker"><div><span>NO COMBO</span><b>-R$10</b><span>CABELO+BARBA</span></div></div>
+<div class="menu">
+ <div class="row"><span class="n">Cabelo</span><span class="d"></span><span class="v"><small>R$</small>50</span></div>
+ <div class="row"><span class="n">Barba</span><span class="d"></span><span class="v"><small>R$</small>40</span></div>
+ <div class="row"><span class="n">Cabelo + Barba</span><span class="d"></span><span class="v"><small>R$</small>80</span></div>
+</div>
+<div class="foot mono"><span>Fixo 81 2014-1545</span><span>@edbarbearia</span></div>
+<div class="cta">
+ <div class="mono k">● Agende pelo WhatsApp</div>
+ <div class="mid"><div class="qr"><img src="qr.svg"></div><div class="big">Aponte a câmera e marque</div></div>
+ <div class="num">81 9.9942-1727</div>
+</div>
+</div></body></html>
