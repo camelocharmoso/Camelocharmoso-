@@ -331,3 +331,16 @@ export function substitutos(taco, item, restricoes = [], padrao = 'onivoro', nao
       return calcularItem(taco, { taco_id: x.id, alimento: x.nome, gramas: g, unidade: null });
     });
 }
+
+// Lista enxuta enviada à IA: só alimentos prontos para comer e de uso comum (o nutricionista
+// ainda pode buscar qualquer item da TACO no editor). Corta o pedido pela metade em tokens.
+const CRU_OK = new Set(['Frutas e derivados', 'Verduras, hortaliças e derivados', 'Nozes e sementes', 'Leite e derivados']);
+const FORA_DO_CARDAPIO = /condensado|mingau|infantil|pe-de-moleque|pacoca|petit suisse|bebida lactea|iogurte, sabor|\bcrua?s?\b|\bpo\b|mistura para|tablete|instantaneo|recheado|wafer|refrigerante|cerveja|aguardente|isotonica|frit|milanesa|empanad|com gordura|congelado|coracao|figado|moela|lingua|bucho|tripa|mocoto|rim\b|apresuntado|hamburguer|salsicha|linguica|mortadela|presunto|bacon|salame|toucinho|torresmo|chantilly|maionese|glicose|gelatina|shoyu|tempero|fermento|farinha|amido|fecula|polvilho|massa|enlatad|conserva|pastel|coxinha|empada|quibe|kibe|esfiha|pizza|biscoito|bolo|chocolate|achocolatado|doce|cocada|quindim|maria mole|marmelada|geleia|acucar|creme de|caldo de/;
+export function paraCardapio(f) {
+  const n = norm(f.nome);
+  if (/^(aveia|tapioca)/.test(n)) return true;
+  if (/\bcrua?s?\b/.test(n) && CRU_OK.has(f.cat)) return !FORA_DO_CARDAPIO.test(n.replace(/\bcrua?s?\b/g, ''));
+  if (['Miscelâneas', 'Outros alimentos industrializados'].includes(f.cat)) return false;
+  if (f.cat === 'Produtos açucarados') return /^mel\b|rapadura/.test(n);
+  return !FORA_DO_CARDAPIO.test(n);
+}
