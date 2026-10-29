@@ -1,0 +1,797 @@
+<title>Prato Planejado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: barra fixa com abas; área do nutricionista em duas colunas (lista de planos | editor em etapas); área do paciente em uma coluna estreita, pensada para celular. */
+:root{
+  --bg:#F6F4FB; --surface:#FFFFFF; --surface-2:#F0EDF8; --line:#E4E0EF; --fg:#17132B; --mute:#5D5973; --faint:#8C88A0;
+  --violet:#5B3DF5; --violet-ink:#FFFFFF; --violet-soft:#ECE8FF; --violet-text:#4327D8;
+  --lime:#B8F04A; --lime-ink:#17132B; --lime-soft:#EEFBD4; --lime-text:#4D7A00;
+  --orange:#FF6A2B; --orange-soft:#FFE6DA; --orange-text:#B8400C;
+  --pink:#FF4F9A; --pink-soft:#FFE1EE; --pink-text:#C0145F;
+  --display:"Bricolage Grotesque",ui-rounded,"Segoe UI",system-ui,sans-serif;
+  --body:Figtree,"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#110E1C; --surface:#1C1830; --surface-2:#252040; --line:#332D52; --fg:#F2F0FA; --mute:#B4AFCB; --faint:#8A85A3;
+  --violet:#7A62FF; --violet-soft:#2A2456; --violet-text:#B7A9FF;
+  --lime-soft:#24300F; --lime-text:#C6F46A; --orange-soft:#3A2116; --orange-text:#FF9A6B; --pink-soft:#3A1729; --pink-text:#FF8CBD;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#110E1C; --surface:#1C1830; --surface-2:#252040; --line:#332D52; --fg:#F2F0FA; --mute:#B4AFCB; --faint:#8A85A3;
+  --violet:#7A62FF; --violet-soft:#2A2456; --violet-text:#B7A9FF;
+  --lime-soft:#24300F; --lime-text:#C6F46A; --orange-soft:#3A2116; --orange-text:#FF9A6B; --pink-soft:#3A1729; --pink-text:#FF8CBD;
+  color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;margin:0}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;margin:0;text-wrap:balance}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+/* topo */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.03em}
+.brand .dot{width:30px;height:30px;border-radius:50%;background:var(--lime);position:relative;flex:none}
+.brand .dot::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--violet)}
+.tabs{display:flex;gap:6px;background:var(--surface-2);padding:5px;border-radius:40px;margin-left:auto}
+.tab{border:0;background:transparent;padding:8px 16px;border-radius:30px;font-weight:700;cursor:pointer;color:var(--mute)}
+.tab[aria-selected="true"]{background:var(--violet);color:var(--violet-ink)}
+.proto{font-size:13px;font-weight:700;padding:5px 11px;border-radius:30px;background:var(--orange-soft);color:var(--orange-text)}
+.notice{margin-top:16px;border-radius:16px;padding:12px 16px;background:var(--violet-soft);color:var(--violet-text);font-size:14.5px;font-weight:500}
+.notice b{font-weight:800}
+/* layout nutri */
+.nutri{display:grid;grid-template-columns:290px minmax(0,1fr);gap:20px;padding-block:20px 60px;align-items:start}
+@media (max-width:900px){.nutri{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:22px;padding:20px}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);display:grid;gap:14px}
+@media (max-width:900px){.side{position:static}}
+.side h2{font-size:18px}
+.plist{display:grid;gap:6px;margin-top:12px;max-height:46vh;overflow:auto}
+.pitem{display:grid;grid-template-columns:1fr auto;gap:2px 8px;text-align:left;border:1.5px solid transparent;background:var(--surface-2);border-radius:14px;padding:10px 12px;cursor:pointer}
+.pitem[aria-current="true"]{border-color:var(--violet)}
+.pitem .n{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pitem .c{font-size:12.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;padding:3px 10px;border-radius:30px;white-space:nowrap}
+.chip.draft{background:var(--orange-soft);color:var(--orange-text)}
+.chip.ok{background:var(--lime-soft);color:var(--lime-text)}
+.chip.ex{background:var(--pink-soft);color:var(--pink-text)}
+.empty{font-size:14px;color:var(--mute);margin-top:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:30px;padding:11px 18px;font-weight:800;cursor:pointer;background:var(--violet);color:var(--violet-ink);text-decoration:none}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.lime{background:var(--lime);color:var(--lime-ink)}
+.btn.ghost{background:var(--surface-2);color:var(--fg)}
+.btn.pink{background:var(--pink);color:#fff}
+.btn.sm{padding:7px 13px;font-size:14px}
+.btn.block{width:100%}
+.editor{display:grid;gap:18px;min-width:0}
+.head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.head h1{font-size:clamp(26px,3.4vw,36px);font-weight:800}
+.head .code{font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;padding:5px 12px;border-radius:30px;background:var(--surface-2)}
+.head .sp{flex:1}
+.step{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.step .num{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;background:var(--violet);color:var(--violet-ink);flex:none}
+.step h2{font-size:22px}
+.step p{margin:2px 0 0;color:var(--mute);font-size:14px}
+.step .sp{flex:1}
+.form{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.f{display:grid;gap:5px;grid-column:span 2;min-width:0}
+.f.w3{grid-column:span 3}.f.w6{grid-column:span 6}.f.w1{grid-column:span 1}
+@media (max-width:640px){.form{grid-template-columns:repeat(2,minmax(0,1fr))}.f,.f.w3,.f.w6{grid-column:span 2}.f.w1{grid-column:span 1}}
+label{font-size:13.5px;font-weight:700;color:var(--mute)}
+input[type=text],input[type=number],select,textarea{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;min-width:0}
+textarea{resize:vertical;min-height:44px}
+input:focus,select:focus,textarea:focus{border-color:var(--violet);outline:none}
+/* metas */
+.metas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.metas{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.m{border-radius:18px;padding:16px;min-width:0}
+.m .v{font-family:var(--display);font-weight:800;font-size:clamp(26px,3vw,34px);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.m .k{font-size:13.5px;font-weight:700;margin-top:8px}
+.m .s{font-size:12.5px;opacity:.85;margin-top:2px}
+.m.vi{background:var(--violet);color:var(--violet-ink)}
+.m.li{background:var(--lime);color:var(--lime-ink)}
+.m.or{background:var(--orange-soft);color:var(--orange-text)}
+.m.pk{background:var(--pink-soft);color:var(--pink-text)}
+.m.sf{background:var(--surface-2)}
+.tweaks{display:flex;flex-wrap:wrap;gap:12px 20px;margin-top:14px;font-size:14px;color:var(--mute)}
+.tweaks .f{grid-column:auto;display:flex;align-items:center;gap:8px}
+.tweaks input{width:96px;padding:7px 10px}
+.formula{font-size:13px;color:var(--faint);margin-top:10px}
+/* cardápio */
+.bars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+@media (max-width:640px){.bars{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.bar .l{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--mute);font-variant-numeric:tabular-nums;gap:6px}
+.bar .t{height:10px;border-radius:6px;background:var(--surface-2);margin-top:6px;overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:6px;background:var(--violet)}
+.bar.over .t i{background:var(--pink)}
+.meals{display:grid;gap:14px}
+.meal{border:1.5px solid var(--line);border-radius:20px;overflow:hidden;background:var(--surface)}
+.meal .mh{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:12px 14px;background:var(--surface-2)}
+.meal .mh input{width:auto;flex:1 1 180px;font-family:var(--display);font-weight:800;font-size:18px;border:0;background:transparent;padding:4px 6px}
+.meal .mh .hr{flex:0 0 92px;font-family:var(--body);font-size:15px;font-weight:700}
+.meal .mh .tot{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--violet-text)}
+.rows{padding:6px 10px 10px}
+.row{display:grid;grid-template-columns:minmax(0,2.4fr) minmax(0,1.6fr) repeat(4,58px) 34px;gap:6px;align-items:center;padding:4px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:0}
+.row.hd{font-size:12px;font-weight:800;color:var(--faint);border:0;padding-bottom:0}
+.row input{border:1.5px solid transparent;background:transparent;padding:7px 8px;border-radius:9px;font-size:14.5px}
+.row input:hover{border-color:var(--line)}
+.row input[type=number]{text-align:right;font-variant-numeric:tabular-nums;padding:7px 4px}
+.x{width:30px;height:30px;border-radius:50%;border:0;background:transparent;color:var(--faint);cursor:pointer;font-size:18px;line-height:1}
+.x:hover{background:var(--pink-soft);color:var(--pink-text)}
+@media (max-width:640px){
+  .row{grid-template-columns:repeat(4,minmax(0,1fr)) 34px;padding:8px 0}
+  .row .a{grid-column:1 / 5}.row .q{grid-column:1 / 6;order:2}
+  .row .x{grid-column:5;grid-row:1}
+  .row input[type=number]{order:3}
+  .row.hd{display:none}
+}
+.subs{margin:4px 10px 12px;padding:10px 12px;border-radius:14px;background:var(--lime-soft);color:var(--lime-text);font-size:14px}
+.subs b{font-weight:800}
+.mf{display:flex;flex-wrap:wrap;gap:8px;padding:0 10px 12px}
+.ai-box{display:grid;gap:12px;border-radius:20px;padding:18px;background:var(--violet);color:var(--violet-ink)}
+.ai-box h3{font-size:20px}
+.ai-box p{margin:0;font-size:14.5px;opacity:.92}
+.ai-box .act{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.status{font-size:14px;font-weight:700}
+.status.err{color:var(--pink-text)}
+.ai-box .status{color:var(--violet-ink)}
+.obs{margin-top:14px}
+/* compras */
+.shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.cat{border-radius:18px;padding:14px 16px;background:var(--surface-2);min-width:0}
+.cat h3{font-size:16px;margin-bottom:8px}
+.cat ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.cat li{display:flex;gap:8px;align-items:flex-start;font-size:14.5px}
+.cat li span.q{margin-left:auto;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap;padding-left:8px}
+.cat input[type=checkbox]{margin-top:3px;accent-color:var(--violet);width:17px;height:17px;flex:none}
+/* revisar */
+.review{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center}
+@media (max-width:700px){.review{grid-template-columns:minmax(0,1fr)}}
+.check{display:flex;gap:12px;align-items:flex-start;font-weight:600}
+.check input{width:20px;height:20px;accent-color:var(--violet);margin-top:2px;flex:none}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:11px 18px;border-radius:30px;font-weight:700;font-size:14.5px;z-index:20;max-width:calc(100% - 32px)}
+/* paciente */
+.pac{max-width:720px;margin:0 auto;padding-block:24px 60px;display:grid;gap:16px}
+.hero{border-radius:26px;padding:24px;background:var(--violet);color:var(--violet-ink);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:var(--lime);right:-70px;bottom:-110px}
+.hero > *{position:relative;z-index:1}
+.hero h1{font-size:clamp(30px,6vw,44px);font-weight:800;line-height:1}
+.hero p{margin:10px 0 0;opacity:.92;max-width:460px}
+.codebox{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.codebox input{flex:1 1 200px;text-transform:uppercase;font-weight:800;letter-spacing:.06em;border:0;border-radius:30px;padding:12px 18px;background:var(--surface);color:var(--fg)}
+.pmeal{border-radius:22px;background:var(--surface);border:1.5px solid var(--line);padding:16px 18px}
+.pmeal .t{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.pmeal h3{font-size:21px}
+.pmeal .h{font-weight:800;color:var(--violet-text);font-variant-numeric:tabular-nums}
+.pmeal ul{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.pmeal li{display:flex;gap:10px;justify-content:space-between;font-size:15.5px;border-bottom:1px dashed var(--line);padding-bottom:8px}
+.pmeal li:last-child{border-bottom:0;padding-bottom:0}
+.pmeal li .q{color:var(--mute);text-align:right}
+.signed{border-radius:18px;padding:14px 16px;background:var(--lime-soft);color:var(--lime-text);font-weight:600;font-size:14.5px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:no-preference){.btn,.tab{transition:background-color .15s,transform .15s}.btn:active{transform:scale(.97)}}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="dot" aria-hidden="true"></span>Prato Planejado</div>
+    <span class="proto">Protótipo</span>
+    <div class="tabs" role="tablist" aria-label="Área">
+      <button class="tab" role="tab" id="tab-nutri" aria-selected="true" aria-controls="view-nutri">Nutricionista</button>
+      <button class="tab" role="tab" id="tab-pac" aria-selected="false" aria-controls="view-pac">Paciente</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- NUTRICIONISTA -->
+<section id="view-nutri" role="tabpanel" aria-labelledby="tab-nutri">
+  <div class="wrap">
+    <p class="notice"><b>Use dados fictícios neste protótipo.</b> A IA sugere o cardápio, mas o plano só vale depois de revisado e liberado pelo nutricionista, que é quem pode prescrever (Lei 8.234/1991).</p>
+    <div class="nutri">
+      <aside class="side">
+        <div class="card">
+          <h2>Seus dados</h2>
+          <div style="display:grid;gap:10px;margin-top:12px">
+            <div class="f"><label for="nutri-nome">Nome do nutricionista</label><input type="text" id="nutri-nome" placeholder="Ex.: Mylena Almeida"></div>
+            <div class="f"><label for="nutri-crn">CRN</label><input type="text" id="nutri-crn" placeholder="Ex.: CRN-6 00000"></div>
+            <button class="btn ghost sm" id="save-nutri">Salvar meus dados</button>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:8px"><h2 style="flex:1">Planos</h2><button class="btn sm" id="new-plan">Novo plano</button></div>
+          <div class="plist" id="plist"></div>
+          <p class="empty" id="plist-empty">Nenhum plano salvo ainda. Preencha a ficha ao lado e toque em Salvar plano.</p>
+        </div>
+      </aside>
+
+      <div class="editor">
+        <div class="head">
+          <h1 id="ed-title">Ana Souza</h1>
+          <span class="chip ex" id="ed-chip">Exemplo, não salvo</span>
+          <span class="code" id="ed-code" hidden></span>
+          <span class="sp"></span>
+          <button class="btn lime" id="save-plan">Salvar plano</button>
+        </div>
+
+        <!-- 1 ficha -->
+        <section class="card">
+          <div class="step"><span class="num">1</span><div><h2>Ficha do paciente</h2><p>Dados para o cálculo e para a IA montar o cardápio.</p></div></div>
+          <div class="form">
+            <div class="f w3"><label for="p-nome">Nome</label><input type="text" id="p-nome"></div>
+            <div class="f w1"><label for="p-sexo">Sexo</label><select id="p-sexo"><option value="f">Feminino</option><option value="m">Masculino</option></select></div>
+            <div class="f w1"><label for="p-idade">Idade</label><input type="number" id="p-idade" min="10" max="100" inputmode="numeric"></div>
+            <div class="f w1"><label for="p-ref">Refeições</label><select id="p-ref"><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+            <div class="f"><label for="p-peso">Peso (kg)</label><input type="number" id="p-peso" step="0.1" inputmode="decimal"></div>
+            <div class="f"><label for="p-alt">Altura (cm)</label><input type="number" id="p-alt" inputmode="numeric"></div>
+            <div class="f"><label for="p-ativ">Nível de atividade</label><select id="p-ativ">
+              <option value="1.2">Sedentário</option><option value="1.375">Leve (1–3x/sem)</option><option value="1.55">Moderado (3–5x/sem)</option><option value="1.725">Intenso (6–7x/sem)</option><option value="1.9">Muito intenso</option></select></div>
+            <div class="f w3"><label for="p-obj">Objetivo</label><select id="p-obj"><option value="perda">Perda de peso</option><option value="manter">Manutenção</option><option value="ganho">Ganho de massa</option></select></div>
+            <div class="f w3"><label for="p-restr">Restrições e alergias</label><input type="text" id="p-restr" placeholder="Ex.: intolerância à lactose"></div>
+            <div class="f w6"><label for="p-pref">Preferências, rotina e o que não gosta</label><textarea id="p-pref" rows="2"></textarea></div>
+          </div>
+        </section>
+
+        <!-- 2 metas -->
+        <section class="card">
+          <div class="step"><span class="num">2</span><div><h2>Metas calculadas</h2><p>Atualizam sozinhas quando a ficha muda. Ajuste se precisar.</p></div></div>
+          <div class="metas">
+            <div class="m vi"><div class="v" id="m-kcal">0</div><div class="k">kcal por dia</div><div class="s" id="m-kcal-s"></div></div>
+            <div class="m li"><div class="v" id="m-ptn">0 g</div><div class="k">Proteínas</div><div class="s" id="m-ptn-s"></div></div>
+            <div class="m or"><div class="v" id="m-cho">0 g</div><div class="k">Carboidratos</div><div class="s" id="m-cho-s"></div></div>
+            <div class="m pk"><div class="v" id="m-lip">0 g</div><div class="k">Gorduras</div><div class="s" id="m-lip-s"></div></div>
+          </div>
+          <div class="tweaks">
+            <span>TMB <b id="m-tmb">0</b> kcal</span><span>GET <b id="m-get">0</b> kcal</span><span>IMC <b id="m-imc">0</b> <span id="m-imc-c"></span></span>
+          </div>
+          <div class="tweaks">
+            <div class="f"><label for="t-kcal">Meta de kcal</label><input type="number" id="t-kcal" step="10" placeholder="auto"></div>
+            <div class="f"><label for="t-ptn">Proteína (g/kg)</label><input type="number" id="t-ptn" step="0.1" placeholder="auto"></div>
+            <div class="f"><label for="t-lip">Gorduras (% kcal)</label><input type="number" id="t-lip" step="1" placeholder="28"></div>
+          </div>
+          <p class="formula">Mifflin-St Jeor: TMB = 10 × peso + 6,25 × altura − 5 × idade + 5 (homens) ou − 161 (mulheres). GET = TMB × fator de atividade. Perda de peso: −15%; ganho de massa: +10%.</p>
+        </section>
+
+        <!-- 3 cardapio -->
+        <section class="card">
+          <div class="step"><span class="num">3</span><div><h2>Cardápio</h2><p>Gerado pela IA a partir da ficha e das metas. Edite qualquer item.</p></div></div>
+          <div class="ai-box" id="ai-box">
+            <h3>Montar cardápio com IA</h3>
+            <p>A IA usa alimentos comuns no Brasil, medidas caseiras e valores aproximados da Tabela TACO, respeitando restrições e preferências. Confira os valores antes de liberar.</p>
+            <div class="act">
+              <button class="btn lime" id="gen-menu">Gerar cardápio</button>
+              <button class="btn ghost sm" id="stop-ai" hidden>Parar</button>
+              <span class="status" id="ai-status" role="status"></span>
+            </div>
+          </div>
+          <div class="bars" id="bars" style="margin-top:16px"></div>
+          <div class="meals" id="meals"></div>
+          <div class="mf" style="padding:12px 0 0"><button class="btn ghost sm" id="add-meal">Adicionar refeição</button></div>
+          <div class="f obs"><label for="obs">Orientações ao paciente</label><textarea id="obs" rows="3"></textarea></div>
+        </section>
+
+        <!-- 4 compras -->
+        <section class="card">
+          <div class="step"><span class="num">4</span><div><h2>Lista de compras</h2><p>Quantidades para uma semana seguindo o cardápio.</p></div><span class="sp"></span><button class="btn sm" id="gen-shop">Gerar lista</button></div>
+          <span class="status" id="shop-status" role="status"></span>
+          <div class="shop" id="shop"></div>
+        </section>
+
+        <!-- 5 revisar -->
+        <section class="card">
+          <div class="step"><span class="num">5</span><div><h2>Revisar e liberar</h2><p>O paciente só vê o plano depois de liberado.</p></div></div>
+          <div class="review">
+            <label class="check" for="rev"><input type="checkbox" id="rev"><span>Revisei o cardápio, as quantidades e as substituições e assumo a prescrição deste plano.</span></label>
+            <div class="actions">
+              <button class="btn" id="release">Liberar ao paciente</button>
+              <button class="btn ghost" id="pdf-n">Baixar PDF</button>
+            </div>
+          </div>
+          <p class="status" id="rel-status" role="status" style="margin:12px 0 0"></p>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACIENTE -->
+<section id="view-pac" role="tabpanel" aria-labelledby="tab-pac" hidden>
+  <div class="wrap">
+    <div class="pac">
+      <div class="hero">
+        <h1>Seu plano alimentar</h1>
+        <p>Digite o código que seu nutricionista enviou para ver o cardápio, as substituições e a lista de compras.</p>
+        <form class="codebox" id="code-form">
+          <input type="text" id="code-in" placeholder="Ex.: ANA-7K3P" aria-label="Código do plano" autocomplete="off">
+          <button class="btn lime" type="submit">Ver meu plano</button>
+        </form>
+      </div>
+      <p class="status" id="pac-status" role="status"></p>
+      <div id="pac-plan" style="display:grid;gap:14px"></div>
+    </div>
+  </div>
+</section>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(() => {
+"use strict";
+const $ = (id) => document.getElementById(id);
+const el = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v;
+    else if (k === "text") e.textContent = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null) e.append(c);
+  return e;
+};
+const num = (v) => { const n = parseFloat(String(v).replace(",", ".")); return Number.isFinite(n) ? n : 0; };
+const fmt = (n, d = 0) => (Math.round(n * 10 ** d) / 10 ** d).toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d });
+let toastT;
+const toast = (msg) => { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 3200); };
+
+/* ---------- exemplo inicial (marcado como exemplo) ---------- */
+const EXEMPLO = {
+  codigo: null, status: "exemplo",
+  paciente: { nome: "Ana Souza", sexo: "f", idade: 28, peso: 65, altura: 165, atividade: "1.55", objetivo: "perda", refeicoes: "5",
+    restricoes: "Nenhuma", preferencias: "Trabalha das 9h às 18h, treina musculação à noite. Não gosta de peixe cru nem de jiló." },
+  ajustes: { kcal: "", ptn: "", lip: "" },
+  cardapio: { refeicoes: [
+    { nome: "Café da manhã", horario: "07:00", itens: [
+      { alimento: "Pão integral", quantidade: "2 fatias (50 g)", kcal: 125, ptn: 6, cho: 23, lip: 1.7 },
+      { alimento: "Ovo mexido", quantidade: "2 unidades (100 g)", kcal: 150, ptn: 12.5, cho: 1, lip: 10 },
+      { alimento: "Mamão papaia", quantidade: "1/2 unidade (150 g)", kcal: 60, ptn: 0.7, cho: 15, lip: 0.1 },
+      { alimento: "Café sem açúcar", quantidade: "1 xícara (100 ml)", kcal: 3, ptn: 0, cho: 0.5, lip: 0 } ],
+      substituicoes: "Pão integral por 3 col. sopa de tapioca ou 1 cuscuz pequeno (100 g). Mamão por 1 fatia de melão." },
+    { nome: "Lanche da manhã", horario: "10:00", itens: [
+      { alimento: "Iogurte natural desnatado", quantidade: "1 pote (170 g)", kcal: 70, ptn: 7, cho: 10, lip: 0.3 },
+      { alimento: "Aveia em flocos", quantidade: "2 col. sopa (20 g)", kcal: 79, ptn: 2.8, cho: 13, lip: 1.7 },
+      { alimento: "Banana prata", quantidade: "1 unidade (70 g)", kcal: 69, ptn: 0.9, cho: 18, lip: 0.1 },
+      { alimento: "Pasta de amendoim", quantidade: "1 col. sopa (15 g)", kcal: 88, ptn: 3.9, cho: 2.6, lip: 7.4 } ],
+      substituicoes: "Banana por 1 maçã ou 10 morangos. Aveia por 1 col. sopa de chia." },
+    { nome: "Almoço", horario: "12:30", itens: [
+      { alimento: "Arroz integral cozido", quantidade: "6 col. sopa (150 g)", kcal: 186, ptn: 3.9, cho: 39, lip: 1.5 },
+      { alimento: "Feijão carioca cozido", quantidade: "1 concha (86 g)", kcal: 66, ptn: 4.1, cho: 12, lip: 0.4 },
+      { alimento: "Peito de frango grelhado", quantidade: "1 filé (120 g)", kcal: 190, ptn: 38, cho: 0, lip: 3 },
+      { alimento: "Abóbora cabotiá cozida", quantidade: "3 col. sopa (80 g)", kcal: 38, ptn: 1, cho: 9, lip: 0.5 },
+      { alimento: "Salada de folhas e tomate", quantidade: "1 prato raso (100 g)", kcal: 20, ptn: 1, cho: 3.5, lip: 0.2 },
+      { alimento: "Azeite de oliva extravirgem", quantidade: "1 col. sobremesa (5 ml)", kcal: 44, ptn: 0, cho: 0, lip: 5 } ],
+      substituicoes: "Frango por 1 bife de patinho (100 g) ou 2 ovos. Arroz por 1 batata-inglesa média (150 g)." },
+    { nome: "Lanche da tarde", horario: "16:00", itens: [
+      { alimento: "Tapioca (goma)", quantidade: "2 col. sopa (30 g)", kcal: 100, ptn: 0, cho: 25, lip: 0 },
+      { alimento: "Queijo minas frescal", quantidade: "1 fatia (30 g)", kcal: 79, ptn: 5.2, cho: 1, lip: 6 },
+      { alimento: "Maçã", quantidade: "1 unidade (130 g)", kcal: 73, ptn: 0.4, cho: 20, lip: 0 },
+      { alimento: "Castanha-do-pará", quantidade: "2 unidades (8 g)", kcal: 52, ptn: 1.1, cho: 1, lip: 5 } ],
+      substituicoes: "Tapioca por 1 fatia de pão integral. Queijo por 2 col. sopa de ricota." },
+    { nome: "Jantar", horario: "19:30", itens: [
+      { alimento: "Batata-doce cozida", quantidade: "1 unidade média (150 g)", kcal: 116, ptn: 0.9, cho: 28, lip: 0.1 },
+      { alimento: "Tilápia grelhada", quantidade: "1 filé (120 g)", kcal: 154, ptn: 31, cho: 0, lip: 3 },
+      { alimento: "Brócolis cozido", quantidade: "1 xícara (90 g)", kcal: 23, ptn: 1.9, cho: 4, lip: 0.4 },
+      { alimento: "Azeite de oliva extravirgem", quantidade: "1 col. sobremesa (5 ml)", kcal: 44, ptn: 0, cho: 0, lip: 5 } ],
+      substituicoes: "Tilápia por frango grelhado (120 g). Batata-doce por 4 col. sopa de arroz integral." } ],
+    observacoes: "Beba de 2,3 a 2,5 litros de água por dia. Nos dias de treino, o lanche da tarde pode ser feito 1 hora antes da academia." },
+  compras: { categorias: [
+    { nome: "Hortifrúti", itens: [ { item: "Mamão papaia", quantidade: "4 unidades" }, { item: "Banana prata", quantidade: "1 dúzia" }, { item: "Maçã", quantidade: "7 unidades" }, { item: "Batata-doce", quantidade: "1,2 kg" }, { item: "Abóbora cabotiá", quantidade: "1 kg" }, { item: "Brócolis", quantidade: "2 maços" }, { item: "Folhas e tomate", quantidade: "para 7 saladas" } ] },
+    { nome: "Carnes e ovos", itens: [ { item: "Peito de frango", quantidade: "900 g" }, { item: "Filé de tilápia", quantidade: "900 g" }, { item: "Ovos", quantidade: "15 unidades" } ] },
+    { nome: "Laticínios", itens: [ { item: "Iogurte natural desnatado", quantidade: "7 potes" }, { item: "Queijo minas frescal", quantidade: "250 g" } ] },
+    { nome: "Mercearia", itens: [ { item: "Pão integral", quantidade: "1 pacote" }, { item: "Arroz integral", quantidade: "1 kg" }, { item: "Feijão carioca", quantidade: "500 g" }, { item: "Aveia em flocos", quantidade: "200 g" }, { item: "Goma de tapioca", quantidade: "500 g" }, { item: "Pasta de amendoim", quantidade: "1 pote" }, { item: "Castanha-do-pará", quantidade: "100 g" }, { item: "Azeite extravirgem", quantidade: "1 garrafa" }, { item: "Café", quantidade: "1 pacote" } ] } ] }
+};
+const clone = (o) => JSON.parse(JSON.stringify(o));
+let plan = clone(EXEMPLO);
+let dirty = false;
+let nutri = { nome: "", crn: "" };
+
+/* ---------- cálculos ---------- */
+function calc(p, aj) {
+  const peso = num(p.peso), alt = num(p.altura), idade = num(p.idade);
+  const tmb = peso && alt && idade ? 10 * peso + 6.25 * alt - 5 * idade + (p.sexo === "m" ? 5 : -161) : 0;
+  const get = tmb * num(p.atividade || 1.2);
+  const fat = p.objetivo === "perda" ? 0.85 : p.objetivo === "ganho" ? 1.1 : 1;
+  const auto = Math.round((get * fat) / 10) * 10;
+  const kcal = num(aj.kcal) || auto;
+  const gkg = num(aj.ptn) || (p.objetivo === "perda" ? 1.6 : p.objetivo === "ganho" ? 1.8 : 1.2);
+  const ptn = Math.round(gkg * peso);
+  const lipPct = num(aj.lip) || 28;
+  const lip = Math.round((kcal * lipPct) / 100 / 9);
+  const cho = Math.max(0, Math.round((kcal - ptn * 4 - lip * 9) / 4));
+  const imc = alt ? peso / (alt / 100) ** 2 : 0;
+  const imcC = !imc ? "" : imc < 18.5 ? "baixo peso" : imc < 25 ? "eutrofia" : imc < 30 ? "sobrepeso" : "obesidade";
+  return { tmb: Math.round(tmb), get: Math.round(get), kcal, ptn, cho, lip, gkg, lipPct, imc, imcC, auto };
+}
+const totals = (refs) => refs.reduce((t, r) => { for (const i of r.itens || []) { t.kcal += num(i.kcal); t.ptn += num(i.ptn); t.cho += num(i.cho); t.lip += num(i.lip); } return t; }, { kcal: 0, ptn: 0, cho: 0, lip: 0 });
+const mealTot = (r) => totals([r]);
+
+/* ---------- ficha <-> estado ---------- */
+const FIELDS = { nome: "p-nome", sexo: "p-sexo", idade: "p-idade", peso: "p-peso", altura: "p-alt", atividade: "p-ativ", objetivo: "p-obj", refeicoes: "p-ref", restricoes: "p-restr", preferencias: "p-pref" };
+function fillForm() {
+  for (const [k, id] of Object.entries(FIELDS)) $(id).value = plan.paciente[k] ?? "";
+  $("t-kcal").value = plan.ajustes?.kcal ?? ""; $("t-ptn").value = plan.ajustes?.ptn ?? ""; $("t-lip").value = plan.ajustes?.lip ?? "";
+  $("obs").value = plan.cardapio?.observacoes ?? "";
+  $("rev").checked = plan.status === "liberado";
+}
+function readForm() {
+  for (const [k, id] of Object.entries(FIELDS)) plan.paciente[k] = $(id).value;
+  plan.ajustes = { kcal: $("t-kcal").value, ptn: $("t-ptn").value, lip: $("t-lip").value };
+}
+function markDirty() { dirty = true; renderHead(); }
+
+function renderHead() {
+  $("ed-title").textContent = plan.paciente.nome || "Novo paciente";
+  const chip = $("ed-chip");
+  if (plan.status === "exemplo") { chip.className = "chip ex"; chip.textContent = "Exemplo, não salvo"; }
+  else if (plan.status === "liberado") { chip.className = "chip ok"; chip.textContent = dirty ? "Liberado, com alterações não salvas" : "Liberado ao paciente"; }
+  else { chip.className = "chip draft"; chip.textContent = dirty || !plan.codigo ? "Rascunho não salvo" : "Rascunho"; }
+  const code = $("ed-code"); code.hidden = !plan.codigo; code.textContent = plan.codigo ? "Código " + plan.codigo : "";
+}
+
+function renderMetas() {
+  const m = calc(plan.paciente, plan.ajustes || {});
+  plan.metas = { tmb: m.tmb, get: m.get, kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip, imc: Math.round(m.imc * 10) / 10 };
+  $("m-kcal").textContent = fmt(m.kcal); $("m-kcal-s").textContent = num(plan.ajustes?.kcal) ? "definido por você" : plan.paciente.objetivo === "perda" ? "GET − 15%" : plan.paciente.objetivo === "ganho" ? "GET + 10%" : "igual ao GET";
+  $("m-ptn").textContent = fmt(m.ptn) + " g"; $("m-ptn-s").textContent = fmt(m.gkg, 1) + " g/kg · " + fmt(m.ptn * 4) + " kcal";
+  $("m-cho").textContent = fmt(m.cho) + " g"; $("m-cho-s").textContent = m.kcal ? fmt((m.cho * 4 / m.kcal) * 100) + "% das kcal" : "";
+  $("m-lip").textContent = fmt(m.lip) + " g"; $("m-lip-s").textContent = fmt(m.lipPct) + "% das kcal";
+  $("m-tmb").textContent = fmt(m.tmb); $("m-get").textContent = fmt(m.get); $("m-imc").textContent = m.imc ? fmt(m.imc, 1) : "–"; $("m-imc-c").textContent = m.imcC ? "(" + m.imcC + ")" : "";
+  $("t-kcal").placeholder = m.auto ? String(m.auto) : "auto"; $("t-ptn").placeholder = String(m.gkg);
+  renderBars();
+}
+
+function renderBars() {
+  const t = totals(plan.cardapio.refeicoes), m = plan.metas || {};
+  const box = $("bars"); box.replaceChildren();
+  for (const [k, lab, u] of [["kcal", "Energia", " kcal"], ["ptn", "Proteínas", " g"], ["cho", "Carboidratos", " g"], ["lip", "Gorduras", " g"]]) {
+    const pct = m[k] ? (t[k] / m[k]) * 100 : 0;
+    box.append(el("div", { class: "bar" + (pct > 110 ? " over" : "") },
+      el("div", { class: "l" }, el("span", { text: lab }), el("span", { text: fmt(t[k]) + " / " + fmt(m[k] || 0) + u })),
+      el("div", { class: "t" }, el("i", { style: "width:" + Math.min(100, pct) + "%" }))));
+  }
+}
+
+/* ---------- cardápio ---------- */
+function renderMeals() {
+  const box = $("meals"); box.replaceChildren();
+  plan.cardapio.refeicoes.forEach((r, ri) => {
+    const tot = mealTot(r);
+    const totEl = el("span", { class: "tot", text: fmt(tot.kcal) + " kcal" });
+    const rows = el("div", { class: "rows" },
+      el("div", { class: "row hd" }, el("span", { text: "Alimento" }), el("span", { text: "Quantidade" }), el("span", { text: "kcal", style: "text-align:right" }), el("span", { text: "PTN", style: "text-align:right" }), el("span", { text: "CHO", style: "text-align:right" }), el("span", { text: "LIP", style: "text-align:right" }), el("span")));
+    r.itens.forEach((it, ii) => {
+      const upd = (k, isNum) => (e) => { it[k] = isNum ? num(e.target.value) : e.target.value; if (isNum) { totEl.textContent = fmt(mealTot(r).kcal) + " kcal"; renderBars(); } markDirty(); };
+      rows.append(el("div", { class: "row" },
+        el("input", { type: "text", class: "a", value: it.alimento, "aria-label": "Alimento", oninput: upd("alimento") }),
+        el("input", { type: "text", class: "q", value: it.quantidade, "aria-label": "Quantidade", oninput: upd("quantidade") }),
+        ...["kcal", "ptn", "cho", "lip"].map((k) => el("input", { type: "number", step: k === "kcal" ? "1" : "0.1", value: String(it[k] ?? 0), "aria-label": k.toUpperCase(), oninput: upd(k, true) })),
+        el("button", { class: "x", title: "Remover item", "aria-label": "Remover " + it.alimento, onclick: () => { r.itens.splice(ii, 1); markDirty(); renderMeals(); renderBars(); } }, "×")));
+    });
+    const regen = el("button", { class: "btn ghost sm", onclick: () => regenMeal(ri, regen) }, "Refazer com IA");
+    box.append(el("div", { class: "meal" },
+      el("div", { class: "mh" },
+        el("input", { type: "text", value: r.nome, "aria-label": "Nome da refeição", oninput: (e) => { r.nome = e.target.value; markDirty(); } }),
+        el("input", { type: "text", class: "hr", value: r.horario || "", "aria-label": "Horário", oninput: (e) => { r.horario = e.target.value; markDirty(); } }),
+        totEl,
+        el("button", { class: "x", title: "Remover refeição", "aria-label": "Remover " + r.nome, onclick: () => { plan.cardapio.refeicoes.splice(ri, 1); markDirty(); renderMeals(); renderBars(); } }, "×")),
+      rows,
+      el("div", { class: "subs" }, el("b", { text: "Substituições: " }),
+        el("span", { contenteditable: "true", role: "textbox", "aria-label": "Substituições de " + r.nome, text: r.substituicoes || "Sem substituições ainda.", oninput: (e) => { r.substituicoes = e.target.textContent; markDirty(); } })),
+      el("div", { class: "mf" },
+        el("button", { class: "btn ghost sm", onclick: () => { r.itens.push({ alimento: "", quantidade: "", kcal: 0, ptn: 0, cho: 0, lip: 0 }); markDirty(); renderMeals(); } }, "Adicionar alimento"),
+        regen)));
+  });
+  if (!plan.cardapio.refeicoes.length) box.append(el("p", { class: "empty", text: "Nenhuma refeição ainda. Toque em Gerar cardápio para a IA montar uma proposta a partir da ficha." }));
+}
+
+/* ---------- lista de compras ---------- */
+const checked = new Set();
+function renderShop() {
+  const box = $("shop"); box.replaceChildren();
+  const cats = plan.compras?.categorias || [];
+  if (!cats.length) { box.append(el("p", { class: "empty", text: "Gere a lista depois de montar o cardápio." })); return; }
+  for (const c of cats) box.append(el("div", { class: "cat" }, el("h3", { text: c.nome }),
+    el("ul", {}, (c.itens || []).map((i) => el("li", {}, el("span", { text: i.item }), el("span", { class: "q", text: i.quantidade || "" }))))));
+}
+
+/* ---------- IA ---------- */
+let sample = null, ctl = null;
+const aiCopy = (e) => ({ not_granted: "Você não permitiu o uso do Claude nesta página. A IA fica desligada nesta visita.", sampling_disabled: "O Claude não está disponível nesta conta.", rate_limited: "Muitos pedidos seguidos. Espere um pouco e tente de novo.", invalid_json: "A resposta da IA veio num formato inesperado. Tente gerar de novo.", refused: "A IA recusou esse pedido. Revise a ficha e tente de novo.", session_expired: "Sua sessão expirou. Entre de novo no Claude." }[e?.code] || "A IA não respondeu agora. Tente de novo.");
+const hideAI = () => { for (const id of ["gen-menu", "gen-shop"]) $(id).disabled = true; document.querySelectorAll(".meal .btn.ghost.sm:last-child").forEach((b) => (b.disabled = true)); };
+
+function fichaTexto() {
+  const p = plan.paciente, m = plan.metas;
+  const ativ = $("p-ativ").selectedOptions[0]?.textContent || "";
+  const obj = $("p-obj").selectedOptions[0]?.textContent || "";
+  return `Paciente: ${p.sexo === "m" ? "homem" : "mulher"}, ${p.idade} anos, ${p.peso} kg, ${p.altura} cm. Atividade: ${ativ}. Objetivo: ${obj}.
+Restrições e alergias: ${p.restricoes || "nenhuma"}.
+Preferências e rotina: ${p.preferencias || "não informadas"}.
+Metas diárias: ${m.kcal} kcal, ${m.ptn} g de proteína, ${m.cho} g de carboidrato, ${m.lip} g de gordura.`;
+}
+const ITEM_FMT = `{"alimento": string, "quantidade": string com medida caseira e gramas, "kcal": número, "ptn": número em g, "cho": número em g, "lip": número em g}`;
+function cleanMeal(r) {
+  return { nome: String(r?.nome || "Refeição"), horario: String(r?.horario || ""), substituicoes: String(r?.substituicoes || ""),
+    itens: (Array.isArray(r?.itens) ? r.itens : []).map((i) => ({ alimento: String(i?.alimento || ""), quantidade: String(i?.quantidade || ""), kcal: Math.round(num(i?.kcal)), ptn: Math.round(num(i?.ptn) * 10) / 10, cho: Math.round(num(i?.cho) * 10) / 10, lip: Math.round(num(i?.lip) * 10) / 10 })) };
+}
+function startAI(statusEl) { ctl = new AbortController(); $("stop-ai").hidden = false; statusEl.className = "status"; statusEl.textContent = "Pensando..."; return ctl; }
+function endAI() { $("stop-ai").hidden = true; ctl = null; }
+$("stop-ai").addEventListener("click", () => ctl?.abort());
+
+$("gen-menu").addEventListener("click", async () => {
+  if (!sample) return;
+  readForm(); renderMetas();
+  if (!plan.metas.kcal) { $("ai-status").textContent = "Preencha peso, altura e idade para calcular as metas antes."; return; }
+  const btn = $("gen-menu"); btn.disabled = true; const c = startAI($("ai-status"));
+  const prompt = `Você é assistente de um nutricionista brasileiro. Monte uma PROPOSTA de cardápio de um dia, que o nutricionista vai revisar antes de entregar ao paciente.
+${fichaTexto()}
+Regras: exatamente ${plan.paciente.refeicoes} refeições com horários coerentes com a rotina; alimentos comuns e acessíveis no Brasil; medidas caseiras com gramas; valores nutricionais aproximados com base na Tabela TACO; a soma do dia deve ficar a no máximo 5% das metas; respeite rigorosamente restrições e alergias; inclua de 1 a 2 substituições equivalentes por refeição numa frase curta; nada de suplementos ou medicamentos.
+Responda só com JSON neste formato:
+{"refeicoes":[{"nome": string, "horario": "HH:MM", "itens":[${ITEM_FMT}], "substituicoes": string}], "observacoes": string com 2 ou 3 orientações gerais em português}`;
+  try {
+    const out = await sample.json(prompt, { signal: c.signal, cache: false, onText: () => { $("ai-status").textContent = "Montando o cardápio..."; } });
+    const refs = (Array.isArray(out?.refeicoes) ? out.refeicoes : []).map(cleanMeal).filter((r) => r.itens.length);
+    if (!refs.length) throw { code: "invalid_json" };
+    plan.cardapio = { refeicoes: refs, observacoes: String(out.observacoes || "") };
+    plan.compras = { categorias: [] };
+    $("obs").value = plan.cardapio.observacoes; markDirty(); renderMeals(); renderBars(); renderShop();
+    const t = totals(refs); $("ai-status").textContent = `Pronto: ${fmt(t.kcal)} kcal no dia. Revise os itens abaixo.`;
+  } catch (e) {
+    if (e?.code !== "cancelled") { $("ai-status").className = "status err"; $("ai-status").textContent = aiCopy(e); if (["not_granted", "sampling_disabled"].includes(e?.code)) hideAI(); }
+    else $("ai-status").textContent = "Parado.";
+  } finally { btn.disabled = !sample; endAI(); }
+});
+
+async function regenMeal(ri, btn) {
+  if (!sample) return;
+  readForm(); renderMetas();
+  const r = plan.cardapio.refeicoes[ri]; const t = totals(plan.cardapio.refeicoes), mt = mealTot(r);
+  btn.disabled = true; btn.textContent = "Refazendo..."; const c = startAI($("ai-status"));
+  const prompt = `Você é assistente de um nutricionista brasileiro. Refaça só a refeição "${r.nome}" (${r.horario}) com alimentos diferentes, mantendo energia e macronutrientes parecidos com os atuais: cerca de ${Math.round(mt.kcal)} kcal, ${Math.round(mt.ptn)} g de proteína, ${Math.round(mt.cho)} g de carboidrato e ${Math.round(mt.lip)} g de gordura.
+${fichaTexto()}
+O dia todo soma hoje ${Math.round(t.kcal)} kcal. Alimentos atuais desta refeição: ${r.itens.map((i) => i.alimento).join(", ")}.
+Use alimentos comuns no Brasil, medidas caseiras com gramas e valores aproximados da Tabela TACO; respeite restrições e alergias.
+Responda só com JSON: {"nome": string, "horario": "HH:MM", "itens":[${ITEM_FMT}], "substituicoes": string}`;
+  try {
+    const out = cleanMeal(await sample.json(prompt, { signal: c.signal, cache: false }));
+    if (!out.itens.length) throw { code: "invalid_json" };
+    plan.cardapio.refeicoes[ri] = out; markDirty(); renderMeals(); renderBars();
+    $("ai-status").textContent = `"${out.nome}" refeita.`;
+  } catch (e) {
+    if (e?.code !== "cancelled") { $("ai-status").className = "status err"; $("ai-status").textContent = aiCopy(e); }
+    else $("ai-status").textContent = "Parado.";
+    btn.disabled = false; btn.textContent = "Refazer com IA";
+  } finally { endAI(); }
+}
+
+$("gen-shop").addEventListener("click", async () => {
+  if (!sample) return;
+  if (!plan.cardapio.refeicoes.length) { $("shop-status").textContent = "Monte o cardápio antes."; return; }
+  const btn = $("gen-shop"); btn.disabled = true; const st = $("shop-status"); st.className = "status"; st.textContent = "Montando a lista...";
+  const itens = plan.cardapio.refeicoes.flatMap((r) => r.itens.map((i) => `${i.alimento}: ${i.quantidade}`)).join("\n");
+  const prompt = `Monte uma lista de compras para 7 dias seguindo este cardápio diário (some as quantidades da semana, arredonde para embalagens comuns no Brasil e junte itens repetidos):
+${itens}
+Agrupe por seção do mercado (Hortifrúti, Carnes e ovos, Laticínios, Mercearia, Outros). Responda só com JSON: {"categorias":[{"nome": string, "itens":[{"item": string, "quantidade": string}]}]}`;
+  try {
+    const out = await sample.json(prompt, { modelTier: "quick", cache: false });
+    const cats = (Array.isArray(out?.categorias) ? out.categorias : []).map((c) => ({ nome: String(c?.nome || "Outros"), itens: (Array.isArray(c?.itens) ? c.itens : []).map((i) => ({ item: String(i?.item || ""), quantidade: String(i?.quantidade || "") })).filter((i) => i.item) })).filter((c) => c.itens.length);
+    if (!cats.length) throw { code: "invalid_json" };
+    plan.compras = { categorias: cats }; markDirty(); renderShop(); st.textContent = "";
+  } catch (e) { st.className = "status err"; st.textContent = aiCopy(e); if (["not_granted", "sampling_disabled"].includes(e?.code)) hideAI(); }
+  finally { btn.disabled = !sample; }
+});
+
+/* ---------- PDF ---------- */
+const latin = (s) => String(s ?? "").replace(/[–—]/g, "-").replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/…/g, "...").replace(/[^\x00-\xFF]/g, "");
+function buildPDF(p) {
+  const { jsPDF } = window.jspdf || {};
+  if (!jsPDF) throw new Error("pdf");
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  const W = 210, M = 16; let y = 0;
+  const VIO = [91, 61, 245], LIM = [184, 240, 74], INK = [23, 19, 43], MUT = [93, 89, 115], LIN = [228, 224, 239];
+  const nut = p.nutri || {};
+  const footer = () => { doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(...MUT);
+    doc.text(latin(`Plano elaborado e revisado por ${nut.nome || "Nutricionista"}${nut.crn ? " - " + nut.crn : ""}. Uso individual de ${p.paciente.nome || "paciente"}.`), M, 290); };
+  const need = (h) => { if (y + h > 280) { footer(); doc.addPage(); y = 18; } };
+  doc.setFillColor(...VIO); doc.rect(0, 0, W, 46, "F");
+  doc.setFillColor(...LIM); doc.circle(W - 18, 44, 22, "F");
+  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(24); doc.text("Plano alimentar", M, 20);
+  doc.setFontSize(13); doc.text(latin(p.paciente.nome || ""), M, 30);
+  doc.setFont("helvetica", "normal"); doc.setFontSize(9.5);
+  doc.text(latin(`${nut.nome || "Nutricionista"}${nut.crn ? "  |  " + nut.crn : ""}  |  ${new Date().toLocaleDateString("pt-BR")}${p.codigo ? "  |  Código " + p.codigo : ""}`), M, 38);
+  y = 56;
+  const m = p.metas || {};
+  const boxes = [["Energia", fmt(m.kcal || 0) + " kcal"], ["Proteínas", fmt(m.ptn || 0) + " g"], ["Carboidratos", fmt(m.cho || 0) + " g"], ["Gorduras", fmt(m.lip || 0) + " g"]];
+  const bw = (W - 2 * M - 9) / 4;
+  boxes.forEach(([k, v], i) => { const x = M + i * (bw + 3); doc.setFillColor(...(i === 0 ? VIO : [240, 237, 248])); doc.roundedRect(x, y, bw, 18, 3, 3, "F");
+    doc.setTextColor(...(i === 0 ? [255, 255, 255] : INK)); doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.text(latin(v), x + 4, y + 8);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.text(latin(k + " por dia"), x + 4, y + 14); });
+  y += 28;
+  for (const r of p.cardapio.refeicoes) {
+    const subs = doc.splitTextToSize(latin("Substituições: " + (r.substituicoes || "-")), W - 2 * M - 8);
+    need(16 + r.itens.length * 6.5 + subs.length * 4.6);
+    doc.setFillColor(...LIM); doc.roundedRect(M, y, W - 2 * M, 9, 2.5, 2.5, "F");
+    doc.setTextColor(...INK); doc.setFont("helvetica", "bold"); doc.setFontSize(11.5); doc.text(latin(r.nome), M + 4, y + 6.2);
+    doc.setFontSize(10); doc.text(latin(`${r.horario || ""}   ${fmt(mealTot(r).kcal)} kcal`), W - M - 4, y + 6.2, { align: "right" });
+    y += 14;
+    for (const it of r.itens) {
+      doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(...INK);
+      const nameLines = doc.splitTextToSize(latin(it.alimento), 92);
+      doc.text(nameLines, M + 4, y);
+      doc.setFont("helvetica", "normal"); doc.setTextColor(...MUT); doc.text(latin(it.quantidade), W - M - 4, y, { align: "right" });
+      y += 4.8 * nameLines.length + 1.5; doc.setDrawColor(...LIN); doc.line(M + 4, y - 2.6, W - M - 4, y - 2.6);
+    }
+    doc.setFontSize(9); doc.setTextColor(...MUT); doc.text(subs, M + 4, y + 1); y += subs.length * 4.6 + 6;
+  }
+  if (p.cardapio.observacoes) { const o = doc.splitTextToSize(latin(p.cardapio.observacoes), W - 2 * M - 8); need(14 + o.length * 5);
+    doc.setFillColor(236, 232, 255); doc.roundedRect(M, y, W - 2 * M, 10 + o.length * 5, 3, 3, "F");
+    doc.setTextColor(67, 39, 216); doc.setFont("helvetica", "bold"); doc.setFontSize(10.5); doc.text("Orientações", M + 4, y + 7);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.text(o, M + 4, y + 12.5); y += 16 + o.length * 5; }
+  const cats = p.compras?.categorias || [];
+  if (cats.length) { footer(); doc.addPage(); y = 20;
+    doc.setTextColor(...INK); doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.text("Lista de compras da semana", M, y); y += 10;
+    for (const c of cats) { need(10 + c.itens.length * 6);
+      doc.setFillColor(...VIO); doc.roundedRect(M, y, 60, 7.5, 2, 2, "F"); doc.setTextColor(255, 255, 255); doc.setFontSize(10); doc.text(latin(c.nome), M + 3, y + 5.2); y += 12;
+      for (const i of c.itens) { doc.setDrawColor(...MUT); doc.rect(M + 1, y - 3.2, 3.6, 3.6);
+        doc.setTextColor(...INK); doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.text(latin(i.item), M + 8, y);
+        doc.setTextColor(...MUT); doc.text(latin(i.quantidade), W - M, y, { align: "right" }); y += 6.2; }
+      y += 4; } }
+  footer();
+  return doc.output("blob");
+}
+let downloads = null;
+async function savePDF(p, statusEl) {
+  if (!downloads) { statusEl.textContent = "Baixar arquivos não está disponível nesta visualização."; return; }
+  let blob; try { blob = buildPDF(p); } catch { statusEl.className = "status err"; statusEl.textContent = "Não consegui montar o PDF agora. Recarregue a página e tente de novo."; return; }
+  const name = "Plano alimentar - " + (p.paciente.nome || "paciente") + ".pdf";
+  try { await downloads.save({ filename: name, data: blob }); statusEl.className = "status"; statusEl.textContent = "PDF salvo."; }
+  catch (e) { statusEl.className = "status" + (e?.code === "declined" ? "" : " err"); statusEl.textContent = e?.code === "declined" ? "Download cancelado." : e?.code === "rate_limited" ? "Já existe um download aberto. Conclua ou cancele e tente de novo." : "Não foi possível baixar o PDF aqui."; }
+}
+$("pdf-n").addEventListener("click", () => { readForm(); renderMetas(); plan.nutri = { ...nutri }; savePDF(plan, $("rel-status")); });
+
+/* ---------- banco de dados ---------- */
+let db = null, canWrite = false, plans = [];
+function newCode(nome) {
+  const pre = (String(nome || "PAC").normalize("NFD").replace(/[^A-Za-z]/g, "").toUpperCase() + "PAC").slice(0, 3);
+  const abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; const r = new Uint32Array(4); crypto.getRandomValues(r);
+  return pre + "-" + Array.from(r, (n) => abc[n % abc.length]).join("");
+}
+function renderList() {
+  const box = $("plist"); box.replaceChildren();
+  $("plist-empty").hidden = plans.length > 0;
+  $("plist-empty").textContent = db ? "Nenhum plano salvo ainda. Preencha a ficha ao lado e toque em Salvar plano." : "Salvar planos não está disponível nesta visualização. Você ainda pode montar o plano e baixar o PDF.";
+  for (const d of plans) box.append(el("button", { class: "pitem", "aria-current": d.codigo === plan.codigo ? "true" : "false", onclick: () => openPlan(d) },
+    el("span", { class: "n", text: d.paciente?.nome || "Sem nome" }),
+    el("span", { class: "chip " + (d.status === "liberado" ? "ok" : "draft"), text: d.status === "liberado" ? "Liberado" : "Rascunho" }),
+    el("span", { class: "c", text: d.codigo })));
+}
+function openPlan(d) {
+  if (dirty && plan.status !== "exemplo" && !confirmLeave()) return;
+  plan = clone(d); plan.compras ||= { categorias: [] }; plan.ajustes ||= { kcal: "", ptn: "", lip: "" };
+  dirty = false; fillForm(); renderAll(); window.scrollTo({ top: 0, behavior: "smooth" });
+}
+let leaveArmed = false;
+function confirmLeave() {
+  if (leaveArmed) { leaveArmed = false; return true; }
+  leaveArmed = true; toast("Há alterações não salvas. Toque de novo para descartar."); setTimeout(() => (leaveArmed = false), 4000); return false;
+}
+$("new-plan").addEventListener("click", () => {
+  if (dirty && plan.status !== "exemplo" && !confirmLeave()) return;
+  plan = { codigo: null, status: "rascunho", paciente: { nome: "", sexo: "f", idade: "", peso: "", altura: "", atividade: "1.375", objetivo: "manter", refeicoes: "5", restricoes: "", preferencias: "" }, ajustes: { kcal: "", ptn: "", lip: "" }, cardapio: { refeicoes: [], observacoes: "" }, compras: { categorias: [] } };
+  dirty = false; fillForm(); renderAll(); $("ai-status").textContent = ""; $("p-nome").focus();
+});
+async function persist(statusEl) {
+  if (!db) { statusEl.className = "status err"; statusEl.textContent = "Salvar não está disponível nesta visualização."; return false; }
+  if (!canWrite) { statusEl.className = "status err"; statusEl.textContent = "Só quem edita esta página pode salvar planos."; return false; }
+  readForm(); renderMetas();
+  if (!plan.paciente.nome.trim()) { statusEl.className = "status err"; statusEl.textContent = "Escreva o nome do paciente antes de salvar."; $("p-nome").focus(); return false; }
+  if (plan.status === "exemplo") plan.status = "rascunho";
+  plan.codigo ||= newCode(plan.paciente.nome);
+  plan.cardapio.observacoes = $("obs").value;
+  plan.nutri = { ...nutri }; const now = Date.now(); plan.criadoEm ||= now; plan.atualizadoEm = now;
+  try { await db.doc("planos/" + plan.codigo).set(clone(plan)); dirty = false; renderHead(); return true; }
+  catch (e) { statusEl.className = "status err"; statusEl.textContent = e?.code === "quota_exceeded" ? "O espaço de planos está cheio. Apague planos antigos e tente de novo." : "Não consegui salvar agora. Tente de novo."; if (e?.code === "invalid_argument") canWrite = false; return false; }
+}
+$("save-plan").addEventListener("click", async () => { const ok = await persist($("rel-status")); if (ok) toast("Plano salvo. Código " + plan.codigo); });
+$("release").addEventListener("click", async () => {
+  const st = $("rel-status");
+  if (!$("rev").checked) { st.className = "status err"; st.textContent = "Marque a revisão antes de liberar. O plano só vale depois de revisado por você."; return; }
+  if (!nutri.nome || !nutri.crn) { st.className = "status err"; st.textContent = "Preencha e salve seu nome e CRN em Seus dados antes de liberar."; $("nutri-nome").focus(); return; }
+  if (!plan.cardapio.refeicoes.length) { st.className = "status err"; st.textContent = "Monte o cardápio antes de liberar."; return; }
+  const prev = plan.status; plan.status = "liberado";
+  const ok = await persist(st);
+  if (ok) { st.className = "status"; st.textContent = `Liberado. Envie ao paciente o código ${plan.codigo} e o link desta página; ele abre a aba Paciente.`; toast("Plano liberado"); }
+  else plan.status = prev === "exemplo" ? "rascunho" : prev;
+});
+$("rev").addEventListener("change", () => { if (!$("rev").checked && plan.status === "liberado") { plan.status = "rascunho"; markDirty(); $("rel-status").textContent = "Plano voltou a rascunho. Salve para o paciente deixar de vê-lo."; } });
+$("save-nutri").addEventListener("click", async () => {
+  nutri = { nome: $("nutri-nome").value.trim(), crn: $("nutri-crn").value.trim() };
+  if (!db || !canWrite) { toast("Dados guardados só nesta visita."); return; }
+  try { await db.doc("config/nutri").set(nutri); toast("Seus dados foram salvos"); } catch { toast("Não consegui salvar seus dados agora."); }
+});
+
+/* ---------- paciente ---------- */
+function renderPatient(p) {
+  const box = $("pac-plan"); box.replaceChildren();
+  const m = p.metas || {};
+  box.append(el("div", { class: "metas" },
+    el("div", { class: "m vi" }, el("div", { class: "v", text: fmt(m.kcal || 0) }), el("div", { class: "k", text: "kcal por dia" })),
+    el("div", { class: "m li" }, el("div", { class: "v", text: fmt(m.ptn || 0) + " g" }), el("div", { class: "k", text: "Proteínas" })),
+    el("div", { class: "m or" }, el("div", { class: "v", text: fmt(m.cho || 0) + " g" }), el("div", { class: "k", text: "Carboidratos" })),
+    el("div", { class: "m pk" }, el("div", { class: "v", text: fmt(m.lip || 0) + " g" }), el("div", { class: "k", text: "Gorduras" }))));
+  for (const r of p.cardapio?.refeicoes || []) box.append(el("div", { class: "pmeal" },
+    el("div", { class: "t" }, el("h3", { text: r.nome }), el("span", { class: "h", text: r.horario || "" })),
+    el("ul", {}, r.itens.map((i) => el("li", {}, el("span", { text: i.alimento }), el("span", { class: "q", text: i.quantidade })))),
+    r.substituicoes ? el("div", { class: "subs", style: "margin:12px 0 0" }, el("b", { text: "Pode trocar: " }), r.substituicoes) : null));
+  if (p.cardapio?.observacoes) box.append(el("div", { class: "notice", style: "margin:0" }, el("b", { text: "Orientações: " }), p.cardapio.observacoes));
+  const cats = p.compras?.categorias || [];
+  if (cats.length) box.append(el("div", { class: "card" }, el("h2", { text: "Lista de compras da semana", style: "font-size:22px;margin-bottom:12px" }),
+    el("div", { class: "shop" }, cats.map((c, ci) => el("div", { class: "cat" }, el("h3", { text: c.nome }),
+      el("ul", {}, c.itens.map((i, ii) => { const id = `ck-${ci}-${ii}`; return el("li", {},
+        el("input", { type: "checkbox", id, checked: checked.has(id), onchange: (e) => e.target.checked ? checked.add(id) : checked.delete(id) }),
+        el("label", { for: id, text: i.item, style: "font-size:14.5px;font-weight:500;color:var(--fg)" }), el("span", { class: "q", text: i.quantidade })); })))))));
+  const st = el("p", { class: "status" });
+  box.append(el("div", { class: "signed" }, `Plano prescrito por ${p.nutri?.nome || "seu nutricionista"}${p.nutri?.crn ? ", " + p.nutri.crn : ""}. Siga as quantidades e fale com seu nutricionista antes de mudar o plano.`),
+    el("button", { class: "btn block", onclick: () => savePDF(p, st) }, "Baixar meu plano em PDF"), st);
+}
+$("code-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const code = $("code-in").value.trim().toUpperCase().replace(/\s+/g, "");
+  const st = $("pac-status"); st.className = "status"; $("pac-plan").replaceChildren();
+  if (!/^[A-Z]{3}-[A-Z0-9]{4}$/.test(code)) { st.className = "status err"; st.textContent = "O código tem 3 letras, um hífen e 4 caracteres, como ANA-7K3P."; return; }
+  if (!db) { st.className = "status err"; st.textContent = "Entre na sua conta do Claude para abrir o plano."; return; }
+  st.textContent = "Buscando seu plano...";
+  try {
+    const snap = await db.doc("planos/" + code).get();
+    const d = snap.exists ? snap.data() : null;
+    if (!d) { st.className = "status err"; st.textContent = "Não achei um plano com esse código. Confira com seu nutricionista."; return; }
+    if (d.status !== "liberado") { st.className = "status err"; st.textContent = "Seu plano ainda está sendo revisado pelo nutricionista. Tente mais tarde."; return; }
+    st.textContent = ""; renderPatient(clone(d));
+  } catch { st.className = "status err"; st.textContent = "Não consegui buscar o plano agora. Tente de novo."; }
+});
+
+/* ---------- abas ---------- */
+function showTab(which) {
+  const n = which !== "paciente";
+  $("tab-nutri").setAttribute("aria-selected", String(n)); $("tab-pac").setAttribute("aria-selected", String(!n));
+  $("view-nutri").hidden = !n; $("view-pac").hidden = n;
+}
+$("tab-nutri").addEventListener("click", () => { showTab("nutri"); try { history.replaceState(null, "", "#nutricionista"); } catch {} });
+$("tab-pac").addEventListener("click", () => { showTab("paciente"); try { history.replaceState(null, "", "#paciente"); } catch {} });
+window.addEventListener("hashchange", () => showTab(location.hash === "#paciente" ? "paciente" : "nutri"));
+
+/* ---------- eventos da ficha ---------- */
+for (const id of [...Object.values(FIELDS), "t-kcal", "t-ptn", "t-lip"]) $(id).addEventListener("input", () => { readForm(); renderMetas(); markDirty(); });
+$("obs").addEventListener("input", () => { plan.cardapio.observacoes = $("obs").value; markDirty(); });
+$("add-meal").addEventListener("click", () => { plan.cardapio.refeicoes.push({ nome: "Nova refeição", horario: "", itens: [{ alimento: "", quantidade: "", kcal: 0, ptn: 0, cho: 0, lip: 0 }], substituicoes: "" }); markDirty(); renderMeals(); renderBars(); });
+
+function renderAll() { renderHead(); renderMetas(); renderMeals(); renderShop(); renderList(); $("rel-status").textContent = ""; }
+
+/* ---------- início ---------- */
+fillForm(); renderAll();
+showTab(location.hash === "#paciente" ? "paciente" : "nutri");
+
+(async () => {
+  if (!window.claude?.use) { renderList(); return; }
+  const [s, d, u, dl] = await Promise.all(["sample", "db", "user", "downloads"].map((n) => window.claude.use(n).catch(() => null)));
+  sample = s; db = d; downloads = dl;
+  if (!sample) { hideAI(); $("ai-status").textContent = "A IA não está disponível nesta visualização. Você ainda pode montar o cardápio à mão."; }
+  if (!downloads) { $("pdf-n").disabled = true; }
+  const edit = u ? await u.canEdit() : false;
+  const w = u ? await u.can("data.write") : null;
+  canWrite = edit;
+  if (u && !edit) { showTab(location.hash === "#nutricionista" ? "nutri" : "paciente"); $("tab-nutri").hidden = true; }
+  if (!canWrite) { $("save-plan").disabled = true; $("release").disabled = true; }
+  if (db) {
+    try { const c = await db.doc("config/nutri").get(); if (c.exists) { nutri = { nome: String(c.data().nome || ""), crn: String(c.data().crn || "") }; $("nutri-nome").value = nutri.nome; $("nutri-crn").value = nutri.crn; } } catch {}
+    if (edit || canWrite) db.collection("planos").orderBy("atualizadoEm", "desc").limit(200).onSnapshot((snap) => { plans = snap.docs.map((x) => x.data()); renderList(); }, () => renderList());
+  }
+  renderList();
+})();
+})();
+</script>
