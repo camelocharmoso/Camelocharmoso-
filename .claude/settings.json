@@ -5,10 +5,17 @@
         "source": "github",
         "repo": "anthropics/claude-plugins-official"
       }
+    },
+    "gsap-skills": {
+      "source": {
+        "source": "github",
+        "repo": "greensock/gsap-skills"
+      }
     }
   },
   "enabledPlugins": {
     "figma@claude-plugins-official": true,
-    "expo@claude-plugins-official": true
+    "expo@claude-plugins-official": true,
+    "gsap-skills@gsap-skills": true
   }
 }
