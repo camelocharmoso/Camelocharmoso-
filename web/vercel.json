@@ -1,4 +1,62 @@
 {
-  "functions": { "api/cardapio.js": { "maxDuration": 60, "includeFiles": "{data,lib}/**" } },
-  "headers": [{ "source": "/data/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }] }]
+  "functions": {
+    "api/cardapio.js": {
+      "maxDuration": 60,
+      "includeFiles": "{data,lib}/**"
+    }
+  },
+  "headers": [
+    {
+      "source": "/data/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/p/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    },
+    {
+      "source": "/(.*).webmanifest",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/painel",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/painel",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/p/:token",
+      "destination": "/paciente.html"
+    }
+  ]
 }

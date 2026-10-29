@@ -6,9 +6,9 @@
 <title>Prato Planejado</title>
 <meta name="description" content="Planos alimentares com IA para nutricionistas e seus pacientes.">
 <meta name="theme-color" content="#5B3DF5">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -94,7 +94,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .f.w3{grid-column:span 3}.f.w6{grid-column:span 6}.f.w1{grid-column:span 1}
 @media (max-width:640px){.form{grid-template-columns:repeat(2,minmax(0,1fr))}.f,.f.w3,.f.w6{grid-column:span 2}.f.w1{grid-column:span 1}}
 label{font-size:13.5px;font-weight:700;color:var(--mute)}
-input[type=text],input[type=number],select,textarea{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;min-width:0}
+input[type=text],input[type=number],input[type=date],input[type=tel],select,textarea{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px;min-width:0}
 textarea{resize:vertical;min-height:44px}
 input:focus,select:focus,textarea:focus{border-color:var(--violet);outline:none}
 /* metas */
@@ -204,7 +204,7 @@ body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .bar-title{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.02em;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .back{width:38px;height:38px;border-radius:50%;border:0;background:var(--surface-2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
 .back svg{width:22px;height:22px;fill:none;stroke:var(--fg);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-#view-nutri,#view-pac,#view-perfil{padding:16px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+#view-nutri,#view-ret,#view-perfil{padding:16px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
 .split{display:block}
 .list-pane{display:grid;gap:12px;align-content:start}
 .list-head{display:flex;align-items:center;gap:10px}
@@ -243,7 +243,7 @@ body[data-editing="true"] .list-pane{display:none}
   .nav-brand .dot::after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--violet)}
   .nb{flex:none;max-width:none}
   .back{display:none!important}
-  #view-nutri,#view-pac,#view-perfil{padding:20px max(24px,env(safe-area-inset-right,0px)) 40px 24px}
+  #view-nutri,#view-ret,#view-perfil{padding:20px max(24px,env(safe-area-inset-right,0px)) 40px 24px}
   .split{display:grid;grid-template-columns:300px minmax(0,1fr);gap:22px;align-items:start}
   body[data-editing] .list-pane,body[data-editing] .editor-pane{display:grid}
   .list-pane{position:sticky;top:calc(72px + env(safe-area-inset-top,0px))}
@@ -260,6 +260,17 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
 .auth-row .btn{flex:1}
 .login-hint{border-radius:16px;padding:12px 14px;background:var(--orange-soft);color:var(--orange-text);font-size:14.5px;font-weight:600}
 .login-hint button{margin-top:8px}
+.acesso{margin-top:16px;border-radius:18px;padding:16px;background:var(--violet-soft);color:var(--violet-text);display:grid;gap:10px}
+.acesso h3{font-size:18px}
+.acesso p{margin:0;font-size:14.5px}
+.acesso .link{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;word-break:break-all;background:var(--surface);color:var(--fg);padding:10px 12px;border-radius:12px}
+.hist{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:6px;font-size:14px;color:var(--mute)}
+.hist b{color:var(--fg)}
+.ret{display:grid;gap:8px}
+.ret h2{font-size:18px;margin-top:10px}
+.ret .pitem .d{font-weight:800;font-variant-numeric:tabular-nums}
+.ret .late .d{color:var(--pink-text)}
+.ret .today .d{color:var(--lime-text)}
 .lbl{font-size:13.5px;font-weight:700;color:var(--mute)}
 .tags{display:flex;flex-wrap:wrap;gap:8px}
 .tag{position:relative;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:30px;padding:7px 12px;font-size:14px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--mute)}
@@ -295,9 +306,9 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
     <button class="nb" role="tab" id="tab-nutri" aria-selected="true" aria-controls="view-nutri">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17.5" cy="9" r="2.6"/><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.6"/></svg>
       <span>Pacientes</span></button>
-    <button class="nb" role="tab" id="tab-pac" aria-selected="false" aria-controls="view-pac">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="3"/><path d="M9 3.5h6v3H9z"/><path d="M8.5 11h7M8.5 14.5h7M8.5 18h4"/></svg>
-      <span>Meu plano</span></button>
+    <button class="nb" role="tab" id="tab-ret" aria-selected="false" aria-controls="view-ret">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h3"/></svg>
+      <span>Retornos</span></button>
     <button class="nb" role="tab" id="tab-perfil" aria-selected="false" aria-controls="view-perfil">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="4"/><path d="M4 20.5c1-4 4.2-6 8-6s7 2 8 6"/></svg>
       <span>Perfil</span></button>
@@ -341,10 +352,12 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
           <section class="card panel" data-step="ficha">
             <div class="step"><div><h2>Ficha do paciente</h2><p>Dados para o cálculo e para a IA montar o cardápio.</p></div></div>
             <div class="form">
-              <div class="f w3"><label for="p-nome">Nome</label><input type="text" id="p-nome"></div>
-              <div class="f w1"><label for="p-sexo">Sexo</label><select id="p-sexo"><option value="f">Feminino</option><option value="m">Masculino</option></select></div>
+              <div class="f w3"><label for="p-nome">Nome</label><input type="text" id="p-nome" autocomplete="off"></div>
+              <div class="f w3"><label for="p-tel">WhatsApp do paciente</label><input type="tel" id="p-tel" inputmode="tel" placeholder="(81) 99999-9999" autocomplete="off"></div>
+              <div class="f"><label for="p-nasc">Nascimento</label><input type="date" id="p-nasc"></div>
               <div class="f w1"><label for="p-idade">Idade</label><input type="number" id="p-idade" min="10" max="100" inputmode="numeric"></div>
-              <div class="f w1"><label for="p-ref">Refeições</label><select id="p-ref"><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+              <div class="f w1"><label for="p-sexo">Sexo</label><select id="p-sexo"><option value="f">Feminino</option><option value="m">Masculino</option></select></div>
+              <div class="f"><label for="p-ref">Refeições</label><select id="p-ref"><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
               <div class="f"><label for="p-peso">Peso (kg)</label><input type="number" id="p-peso" step="0.1" inputmode="decimal"></div>
               <div class="f"><label for="p-alt">Altura (cm)</label><input type="number" id="p-alt" inputmode="numeric"></div>
               <div class="f"><label for="p-ativ">Nível de atividade</label><select id="p-ativ">
@@ -406,13 +419,19 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
           </section>
 
           <section class="card panel" data-step="liberar">
-            <div class="step"><div><h2>Revisar e liberar</h2><p>O paciente só vê o plano depois de liberado.</p></div></div>
+            <div class="step"><div><h2>Revisar e liberar</h2><p>O paciente só vê a última versão liberada. Mudanças salvas depois só chegam a ele quando você liberar de novo.</p></div></div>
+            <div class="form" style="margin-bottom:16px">
+              <div class="f"><label for="p-retorno">Próximo retorno</label><input type="date" id="p-retorno"></div>
+              <div class="f w6"><label for="p-sup">Suplementos (um por linha: produto; dose; horário; observação)</label><textarea id="p-sup" rows="3" placeholder="Creatina; 3 g; 08:00; com o café da manhã"></textarea></div>
+            </div>
             <label class="check" for="rev"><input type="checkbox" id="rev"><span>Revisei o cardápio, as quantidades e as substituições e assumo a prescrição deste plano.</span></label>
             <div class="actions" style="margin-top:16px">
               <button class="btn" id="release">Liberar ao paciente</button>
               <button class="btn ghost" id="pdf-n">Baixar PDF</button>
             </div>
             <p class="status" id="rel-status" role="status" style="margin:12px 0 0"></p>
+            <div class="acesso" id="acesso" hidden></div>
+            <ul class="hist" id="hist"></ul>
           </section>
 
           <div class="stepnav">
@@ -423,19 +442,12 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
       </div>
     </section>
 
-    <!-- MEU PLANO (paciente) -->
-    <section id="view-pac" role="tabpanel" aria-labelledby="tab-pac" hidden>
+    <!-- RETORNOS -->
+    <section id="view-ret" role="tabpanel" aria-labelledby="tab-ret" hidden>
       <div class="pac">
-        <div class="hero">
-          <h1>Seu plano alimentar</h1>
-          <p>Digite o código que seu nutricionista enviou para ver o cardápio, as substituições e a lista de compras.</p>
-          <form class="codebox" id="code-form">
-            <input type="text" id="code-in" placeholder="Ex.: ANA-7K3P" aria-label="Código do plano" autocomplete="off">
-            <button class="btn lime" type="submit">Ver meu plano</button>
-          </form>
-        </div>
-        <p class="status" id="pac-status" role="status"></p>
-        <div id="pac-plan" style="display:grid;gap:14px"></div>
+        <div class="list-head"><h1>Retornos</h1></div>
+        <p class="empty" style="margin:0">A data do próximo retorno é definida na etapa Liberar de cada plano e aparece também para o paciente.</p>
+        <div class="ret" id="ret-list"></div>
       </div>
     </section>
 
@@ -445,7 +457,7 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
         <div class="card" id="auth-card">
           <h2 style="font-size:22px">Sua conta</h2>
           <div id="auth-out">
-            <p style="color:var(--mute);margin:4px 0 14px;font-size:14.5px">Entre para salvar planos e liberar ao paciente. O paciente não precisa de conta: ele abre o plano pelo código.</p>
+            <p style="color:var(--mute);margin:4px 0 14px;font-size:14.5px">Entre para salvar planos e liberar ao paciente. O paciente não precisa de conta: ele abre o plano pelo link que você envia e confirma a data de nascimento.</p>
             <form style="display:grid;gap:12px" id="auth-form">
               <div class="f"><label for="au-email">E-mail</label><input type="text" id="au-email" inputmode="email" autocomplete="email" autocapitalize="off"></div>
               <div class="f"><label for="au-pass">Senha (mínimo 6 caracteres)</label><input type="password" id="au-pass" autocomplete="current-password" style="width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 12px"></div>
@@ -464,6 +476,7 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
           <div style="display:grid;gap:12px">
             <div class="f"><label for="nutri-nome">Nome do nutricionista</label><input type="text" id="nutri-nome" placeholder="Ex.: Mylena Almeida"></div>
             <div class="f"><label for="nutri-crn">CRN</label><input type="text" id="nutri-crn" placeholder="Ex.: CRN-6 00000"></div>
+            <div class="f"><label for="nutri-whats">Seu WhatsApp (botão "Falar com meu nutricionista")</label><input type="tel" id="nutri-whats" inputmode="tel" placeholder="(81) 99999-9999"></div>
             <button class="btn" id="save-nutri">Salvar meus dados</button>
           </div>
         </div>
@@ -482,6 +495,7 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script type="module">
 import * as N from "/lib/nutri.mjs";
+import { gerarPDF, baixar } from "/lib/pdf.mjs";
 const taco = N.criarTaco(await (await fetch("/data/taco.json")).json());
 (() => {
 "use strict";
@@ -508,11 +522,11 @@ const EX_REFEICOES = [{"nome": "Café da manhã", "horario": "07:00", "substitui
 const hidratar = (refs) => refs.map((r) => ({ ...r, itens: r.itens.map((i) => N.calcularItem(taco, i)) }));
 const EXEMPLO = {
   codigo: null, status: "exemplo",
-  paciente: { nome: "Ana Souza", sexo: "f", idade: 28, peso: 65, altura: 165, atividade: "1.55", objetivo: "perda", refeicoes: "5",
+  paciente: { nome: "Ana Souza", nascimento: "1998-03-14", telefone: "", sexo: "f", idade: 28, peso: 65, altura: 165, atividade: "1.55", objetivo: "perda", refeicoes: "5",
     restricoesTags: [], padrao: "onivoro", restricoes: "", treino: "Musculação às 19h, 5 vezes por semana", naoGosta: "jiló, peixe cru",
     preferencias: "Trabalha das 9h às 18h e leva marmita. Gosta de cuscuz e tapioca no café." },
-  ajustes: { kcal: "", ptn: "", lip: "" },
-  cardapio: { refeicoes: hidratar(EX_REFEICOES),
+  ajustes: { kcal: "", ptn: "", lip: "" }, proximo_retorno: null,
+  cardapio: { refeicoes: hidratar(EX_REFEICOES), suplementos: "",
     observacoes: "Beba de 2,3 a 2,5 litros de água por dia. Nos dias de treino, faça o lanche da tarde cerca de 1 hora antes da academia." },
   compras: { categorias: [] },
 };
@@ -520,7 +534,8 @@ EXEMPLO.compras = N.listaDeCompras(taco, EXEMPLO.cardapio.refeicoes);
 const clone = (o) => JSON.parse(JSON.stringify(o));
 let plan = clone(EXEMPLO);
 let dirty = false;
-let nutri = { nome: "", crn: "" };
+let nutri = { nome: "", crn: "", whatsapp: "" };
+const idadeDe = (iso) => { if (!iso) return 0; const n = new Date(iso + "T12:00:00"), h = new Date(); let a = h.getFullYear() - n.getFullYear(); if (h.getMonth() < n.getMonth() || (h.getMonth() === n.getMonth() && h.getDate() < n.getDate())) a--; return a > 0 && a < 120 ? a : 0; };
 
 /* ---------- cálculos ---------- */
 function calc(p, aj) {
@@ -543,7 +558,7 @@ const totals = (refs) => N.totais(refs);
 const mealTot = (r) => totals([r]);
 
 /* ---------- ficha <-> estado ---------- */
-const FIELDS = { nome: "p-nome", sexo: "p-sexo", idade: "p-idade", peso: "p-peso", altura: "p-alt", atividade: "p-ativ", objetivo: "p-obj", refeicoes: "p-ref", restricoes: "p-restr", preferencias: "p-pref", padrao: "p-padrao", treino: "p-treino", naoGosta: "p-ngosta" };
+const FIELDS = { nome: "p-nome", telefone: "p-tel", nascimento: "p-nasc", sexo: "p-sexo", idade: "p-idade", peso: "p-peso", altura: "p-alt", atividade: "p-ativ", objetivo: "p-obj", refeicoes: "p-ref", restricoes: "p-restr", preferencias: "p-pref", padrao: "p-padrao", treino: "p-treino", naoGosta: "p-ngosta" };
 $("p-padrao").append(...N.PADROES.map((p) => el("option", { value: p.id, text: p.nome })));
 $("p-tags").append(...N.RESTRICOES.map((r) => el("label", { class: "tag" }, el("input", { type: "checkbox", value: r.id, id: "tag-" + r.id }), r.nome)));
 $("taco-list").append(...taco.lista.map((f) => el("option", { value: f.nome })));
@@ -553,12 +568,20 @@ function fillForm() {
   document.querySelectorAll("#p-tags input").forEach((c) => (c.checked = tags.has(c.value)));
   $("t-kcal").value = plan.ajustes?.kcal ?? ""; $("t-ptn").value = plan.ajustes?.ptn ?? ""; $("t-lip").value = plan.ajustes?.lip ?? "";
   $("obs").value = plan.cardapio?.observacoes ?? "";
-  $("rev").checked = plan.status === "liberado";
+  $("p-retorno").value = plan.proximo_retorno || ""; $("p-sup").value = plan.cardapio?.suplementos || "";
+  $("p-idade").readOnly = !!idadeDe(plan.paciente.nascimento);
+  $("rev").checked = false;
 }
 function readForm() {
   for (const [k, id] of Object.entries(FIELDS)) plan.paciente[k] = $(id).value;
   plan.paciente.restricoesTags = [...document.querySelectorAll("#p-tags input:checked")].map((c) => c.value);
   plan.ajustes = { kcal: $("t-kcal").value, ptn: $("t-ptn").value, lip: $("t-lip").value };
+  // Com a data de nascimento, a idade é calculada e o campo fica só leitura.
+  const idade = idadeDe(plan.paciente.nascimento);
+  $("p-idade").readOnly = !!idade;
+  if (idade) { plan.paciente.idade = String(idade); $("p-idade").value = idade; }
+  plan.proximo_retorno = $("p-retorno").value || null;
+  plan.cardapio.suplementos = $("p-sup").value;
 }
 function markDirty() { dirty = true; renderHead(); }
 
@@ -568,13 +591,13 @@ function renderHead() {
   if (plan.status === "exemplo") { chip.className = "chip ex"; chip.textContent = "Exemplo, não salvo"; }
   else if (plan.status === "liberado") { chip.className = "chip ok"; chip.textContent = dirty ? "Liberado, com alterações não salvas" : "Liberado ao paciente"; }
   else { chip.className = "chip draft"; chip.textContent = dirty || !plan.codigo ? "Rascunho não salvo" : "Rascunho"; }
-  const code = $("ed-code"); code.hidden = !plan.codigo; code.textContent = plan.codigo ? "Código " + plan.codigo : "";
+  const code = $("ed-code"); code.hidden = !plan.versao; code.textContent = plan.versao ? "Versão " + plan.versao + " liberada" : "";
   if (typeof nav !== "undefined") setBar();
 }
 
 function renderMetas() {
   const m = calc(plan.paciente, plan.ajustes || {});
-  plan.metas = { tmb: m.tmb, get: m.get, kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip, imc: Math.round(m.imc * 10) / 10 };
+  plan.metas = { tmb: m.tmb, get: m.get, kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip, imc: Math.round(m.imc * 10) / 10, fib: Math.round((m.kcal / 1000) * 14), agua_ml: Math.round((num(plan.paciente.peso) * 35) / 50) * 50 || 2000 };
   $("m-kcal").textContent = fmt(m.kcal); $("m-kcal-s").textContent = num(plan.ajustes?.kcal) ? "definido por você" : plan.paciente.objetivo === "perda" ? "GET − 15%" : plan.paciente.objetivo === "ganho" ? "GET + 10%" : "igual ao GET";
   $("m-ptn").textContent = fmt(m.ptn) + " g"; $("m-ptn-s").textContent = fmt(m.gkg, 1) + " g/kg · " + fmt(m.ptn * 4) + " kcal";
   $("m-cho").textContent = fmt(m.cho) + " g"; $("m-cho-s").textContent = m.kcal ? fmt((m.cho * 4 / m.kcal) * 100) + "% das kcal" : "";
@@ -637,7 +660,6 @@ function renderMeals() {
 }
 
 /* ---------- lista de compras ---------- */
-const checked = new Set();
 function renderShop() {
   const box = $("shop"); box.replaceChildren();
   const cats = plan.compras?.categorias || [];
@@ -721,86 +743,40 @@ $("gen-shop").addEventListener("click", () => {
   $("shop-status").className = "status"; $("shop-status").textContent = "Lista atualizada a partir do cardápio.";
 });
 
-/* ---------- PDF ---------- */
-const latin = (s) => String(s ?? "").replace(/[–—]/g, "-").replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/…/g, "...").replace(/[^\x00-\xFF]/g, "");
-function buildPDF(p) {
-  const { jsPDF } = window.jspdf || {};
-  if (!jsPDF) throw new Error("pdf");
-  const doc = new jsPDF({ unit: "mm", format: "a4" });
-  const W = 210, M = 16; let y = 0;
-  const VIO = [91, 61, 245], LIM = [184, 240, 74], INK = [23, 19, 43], MUT = [93, 89, 115], LIN = [228, 224, 239];
-  const nut = p.nutri || {};
-  const footer = () => { doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(...MUT);
-    doc.text(latin(`Plano elaborado e revisado por ${nut.nome || "Nutricionista"}${nut.crn ? " - " + nut.crn : ""}. Uso individual de ${p.paciente.nome || "paciente"}.`), M, 290); };
-  const need = (h) => { if (y + h > 280) { footer(); doc.addPage(); y = 18; } };
-  doc.setFillColor(...VIO); doc.rect(0, 0, W, 46, "F");
-  doc.setFillColor(...LIM); doc.circle(W - 18, 44, 22, "F");
-  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(24); doc.text("Plano alimentar", M, 20);
-  doc.setFontSize(13); doc.text(latin(p.paciente.nome || ""), M, 30);
-  doc.setFont("helvetica", "normal"); doc.setFontSize(9.5);
-  doc.text(latin(`${nut.nome || "Nutricionista"}${nut.crn ? "  |  " + nut.crn : ""}  |  ${new Date().toLocaleDateString("pt-BR")}${p.codigo ? "  |  Código " + p.codigo : ""}`), M, 38);
-  y = 56;
-  const m = p.metas || {};
-  const boxes = [["Energia", fmt(m.kcal || 0) + " kcal"], ["Proteínas", fmt(m.ptn || 0) + " g"], ["Carboidratos", fmt(m.cho || 0) + " g"], ["Gorduras", fmt(m.lip || 0) + " g"]];
-  const bw = (W - 2 * M - 9) / 4;
-  boxes.forEach(([k, v], i) => { const x = M + i * (bw + 3); doc.setFillColor(...(i === 0 ? VIO : [240, 237, 248])); doc.roundedRect(x, y, bw, 18, 3, 3, "F");
-    doc.setTextColor(...(i === 0 ? [255, 255, 255] : INK)); doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.text(latin(v), x + 4, y + 8);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.text(latin(k + " por dia"), x + 4, y + 14); });
-  y += 28;
-  for (const r of p.cardapio.refeicoes) {
-    const subs = doc.splitTextToSize(latin("Substituições: " + (r.substituicoes || "-")), W - 2 * M - 8);
-    need(16 + r.itens.length * 6.5 + subs.length * 4.6);
-    doc.setFillColor(...LIM); doc.roundedRect(M, y, W - 2 * M, 9, 2.5, 2.5, "F");
-    doc.setTextColor(...INK); doc.setFont("helvetica", "bold"); doc.setFontSize(11.5); doc.text(latin(r.nome), M + 4, y + 6.2);
-    doc.setFontSize(10); doc.text(latin(`${r.horario || ""}   ${fmt(mealTot(r).kcal)} kcal`), W - M - 4, y + 6.2, { align: "right" });
-    y += 14;
-    for (const it of r.itens) {
-      doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(...INK);
-      const nameLines = doc.splitTextToSize(latin(it.alimento), 92);
-      doc.text(nameLines, M + 4, y);
-      doc.setFont("helvetica", "normal"); doc.setTextColor(...MUT); doc.text(latin(it.quantidade), W - M - 4, y, { align: "right" });
-      y += 4.8 * nameLines.length + 1.5; doc.setDrawColor(...LIN); doc.line(M + 4, y - 2.6, W - M - 4, y - 2.6);
-    }
-    doc.setFontSize(9); doc.setTextColor(...MUT); doc.text(subs, M + 4, y + 1); y += subs.length * 4.6 + 6;
-  }
-  if (p.cardapio.observacoes) { const o = doc.splitTextToSize(latin(p.cardapio.observacoes), W - 2 * M - 8); need(14 + o.length * 5);
-    doc.setFillColor(236, 232, 255); doc.roundedRect(M, y, W - 2 * M, 10 + o.length * 5, 3, 3, "F");
-    doc.setTextColor(67, 39, 216); doc.setFont("helvetica", "bold"); doc.setFontSize(10.5); doc.text("Orientações", M + 4, y + 7);
-    doc.setFont("helvetica", "normal"); doc.setFontSize(9.5); doc.text(o, M + 4, y + 12.5); y += 16 + o.length * 5; }
-  const cats = p.compras?.categorias || [];
-  if (cats.length) { footer(); doc.addPage(); y = 20;
-    doc.setTextColor(...INK); doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.text("Lista de compras da semana", M, y); y += 10;
-    for (const c of cats) { need(10 + c.itens.length * 6);
-      doc.setFillColor(...VIO); doc.roundedRect(M, y, 60, 7.5, 2, 2, "F"); doc.setTextColor(255, 255, 255); doc.setFontSize(10); doc.text(latin(c.nome), M + 3, y + 5.2); y += 12;
-      for (const i of c.itens) { doc.setDrawColor(...MUT); doc.rect(M + 1, y - 3.2, 3.6, 3.6);
-        doc.setTextColor(...INK); doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.text(latin(i.item), M + 8, y);
-        doc.setTextColor(...MUT); doc.text(latin(i.quantidade), W - M, y, { align: "right" }); y += 6.2; }
-      y += 4; } }
-  footer();
-  return doc.output("blob");
+/* ---------- versão para o paciente (snapshot) e PDF ---------- */
+const suplementos = (txt) => String(txt || "").split("\n").map((l) => l.split(";").map((x) => x.trim())).filter(([p]) => p).map(([produto, dose = "", horario = "", obs = ""]) => ({ produto, dose, horario, obs }));
+// O que o paciente recebe: só o necessário para seguir o plano (sem peso, ficha clínica ou telefone).
+function snapshot() {
+  const p = plan.paciente, m = plan.metas || {}, tags = p.restricoesTags || [];
+  return {
+    paciente_nome: p.nome, nutri: { ...nutri }, proximo_retorno: plan.proximo_retorno || null,
+    metas: { kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip, fib: m.fib, agua_ml: m.agua_ml },
+    restricoes: tags, padrao: p.padrao || "onivoro",
+    cardapio: { observacoes: plan.cardapio.observacoes || "", refeicoes: plan.cardapio.refeicoes.map((r) => ({ nome: r.nome, horario: r.horario || "", substituicoes: r.substituicoes || "",
+      itens: r.itens.filter((i) => i.alimento).map((i) => ({ alimento: i.alimento, quantidade: i.quantidade || "", kcal: Math.round(i.kcal || 0),
+        trocas: taco.get(i.taco_id) ? N.substitutos(taco, i, tags, p.padrao, p.naoGosta, 3).map((t) => ({ alimento: t.alimento, quantidade: t.quantidade })) : [] })) })) },
+    compras: plan.compras || { categorias: [] }, suplementos: suplementos(plan.cardapio.suplementos),
+  };
 }
-let downloads = null;
-async function savePDF(p, statusEl) {
-  if (!downloads) { statusEl.textContent = "Baixar arquivos não está disponível nesta visualização."; return; }
-  let blob; try { blob = buildPDF(p); } catch { statusEl.className = "status err"; statusEl.textContent = "Não consegui montar o PDF agora. Recarregue a página e tente de novo."; return; }
-  const name = "Plano alimentar - " + (p.paciente.nome || "paciente") + ".pdf";
-  try { await downloads.save({ filename: name, data: blob }); statusEl.className = "status"; statusEl.textContent = "PDF salvo."; }
-  catch (e) { statusEl.className = "status" + (e?.code === "declined" ? "" : " err"); statusEl.textContent = e?.code === "declined" ? "Download cancelado." : e?.code === "rate_limited" ? "Já existe um download aberto. Conclua ou cancele e tente de novo." : "Não foi possível baixar o PDF aqui."; }
-}
-$("pdf-n").addEventListener("click", () => { readForm(); renderMetas(); plan.nutri = { ...nutri }; savePDF(plan, $("rel-status")); });
+$("pdf-n").addEventListener("click", () => {
+  readForm(); renderMetas();
+  const st = $("rel-status");
+  try { baixar(gerarPDF({ ...snapshot(), versao: plan.versao }), "Plano alimentar - " + (plan.paciente.nome || "paciente") + ".pdf"); st.className = "status"; st.textContent = "PDF gerado."; }
+  catch { st.className = "status err"; st.textContent = "Não consegui montar o PDF agora. Recarregue a página e tente de novo."; }
+});
 
 /* ---------- banco de dados (Supabase) ---------- */
 const SB_URL = "https://flxltpgirbdcimqzjaht.supabase.co", SB_KEY = "sb_publishable_WAPK9_OdhIcwJgFedfcX7Q_fEgus9h3";
 const sb = window.supabase?.createClient ? window.supabase.createClient(SB_URL, SB_KEY) : null;
 let session = null;
-const rowToPlan = (r) => ({ codigo: r.codigo, status: r.status, paciente: r.paciente || {}, ajustes: r.ajustes || {}, metas: r.metas || {},
+const rowToPlan = (r) => ({ id: r.id, paciente_id: r.paciente_id, proximo_retorno: r.proximo_retorno, versao: r.plano_versoes?.[0]?.versao || 0, codigo: r.codigo, status: r.status, paciente: r.paciente || {}, ajustes: r.ajustes || {}, metas: r.metas || {},
   cardapio: r.cardapio || { refeicoes: [], observacoes: "" }, compras: r.compras || { categorias: [] }, criadoEm: Date.parse(r.criado_em), atualizadoEm: Date.parse(r.atualizado_em) });
 async function loadPlans() {
   if (!sb || !session) { plans = []; renderList(); return; }
-  const { data, error } = await sb.from("planos").select("*").order("atualizado_em", { ascending: false }).limit(200);
-  if (!error) { plans = data.map(rowToPlan); renderList(); }
+  const { data, error } = await sb.from("planos").select("*, plano_versoes(versao)").order("versao", { referencedTable: "plano_versoes", ascending: false }).limit(1, { referencedTable: "plano_versoes" }).order("atualizado_em", { ascending: false }).limit(200);
+  if (!error) { plans = data.map(rowToPlan); renderList(); renderRetornos(); }
 }
-let db = null, canWrite = false, plans = [];
+let plans = [];
 function newCode(nome) {
   const pre = (String(nome || "PAC").normalize("NFD").replace(/[^A-Za-z]/g, "").toUpperCase() + "PAC").slice(0, 3);
   const abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; const r = new Uint32Array(4); crypto.getRandomValues(r);
@@ -812,15 +788,28 @@ function renderList() {
     el("span", { class: "n", text: "Ana Souza" }), el("span", { class: "chip ex", text: "Exemplo" }), el("span", { class: "sub", text: "Plano de demonstração, 5 refeições" })));
   $("plist-empty").hidden = plans.length > 0;
   $("plist-empty").textContent = session ? "Seus planos salvos aparecem aqui. Toque em Novo plano para começar." : "Entre na sua conta para ver seus planos salvos.";
-  for (const d of plans) box.append(el("button", { class: "pitem", "aria-current": d.codigo === plan.codigo ? "true" : "false", onclick: () => openPlan(d) },
+  for (const d of plans) box.append(el("button", { class: "pitem", "aria-current": d.id && d.id === plan.id ? "true" : "false", onclick: () => openPlan(d) },
     el("span", { class: "n", text: d.paciente?.nome || "Sem nome" }),
     el("span", { class: "chip " + (d.status === "liberado" ? "ok" : "draft"), text: d.status === "liberado" ? "Liberado" : "Rascunho" }),
-    el("span", { class: "c", text: d.codigo }), el("span", { class: "sub", text: d.atualizadoEm ? "Atualizado em " + new Date(d.atualizadoEm).toLocaleDateString("pt-BR") : "" })));
+    el("span", { class: "c", text: d.versao ? "v" + d.versao : "" }), el("span", { class: "sub", text: d.proximo_retorno ? "Retorno em " + new Date(d.proximo_retorno + "T12:00:00").toLocaleDateString("pt-BR") : d.atualizadoEm ? "Atualizado em " + new Date(d.atualizadoEm).toLocaleDateString("pt-BR") : "" })));
 }
 function openPlan(d) {
   if (dirty && plan.status !== "exemplo" && !confirmLeave()) return;
   plan = clone(d); plan.compras ||= { categorias: [] }; plan.ajustes ||= { kcal: "", ptn: "", lip: "" };
-  dirty = false; fillForm(); renderAll(); openEditor("ficha");
+  dirty = false; fillForm(); renderAll(); openEditor("ficha"); renderAcesso();
+}
+function renderRetornos() {
+  const box = $("ret-list"); box.replaceChildren();
+  if (!session) { box.append(el("p", { class: "empty", text: "Entre na sua conta para ver os retornos." })); return; }
+  const hoje = new Date().toLocaleDateString("sv-SE");
+  const com = plans.filter((d) => d.proximo_retorno).sort((a, b) => a.proximo_retorno.localeCompare(b.proximo_retorno));
+  const grupos = [["Atrasados", com.filter((d) => d.proximo_retorno < hoje), "late"], ["Hoje", com.filter((d) => d.proximo_retorno === hoje), "today"], ["Próximos", com.filter((d) => d.proximo_retorno > hoje), ""]];
+  for (const [nome, lista, cls] of grupos) if (lista.length) box.append(el("h2", { text: nome }), ...lista.map((d) => el("button", { class: "pitem " + cls, onclick: () => { openPlan(d); showTab("nutri"); openEditor("liberar"); } },
+    el("span", { class: "n", text: d.paciente?.nome || "Sem nome" }), el("span", { class: "d", text: new Date(d.proximo_retorno + "T12:00:00").toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit" }) }),
+    el("span", { class: "sub", text: d.versao ? "Plano na versão " + d.versao : "Plano ainda não liberado" }))));
+  const sem = plans.filter((d) => !d.proximo_retorno).length;
+  if (!com.length) box.append(el("p", { class: "empty", text: "Nenhum retorno marcado." }));
+  if (sem) box.append(el("p", { class: "empty", text: `${sem} paciente${sem > 1 ? "s" : ""} sem retorno marcado.` }));
 }
 let leaveArmed = false;
 function confirmLeave() {
@@ -829,8 +818,8 @@ function confirmLeave() {
 }
 $("new-plan").addEventListener("click", () => {
   if (dirty && plan.status !== "exemplo" && !confirmLeave()) return;
-  plan = { codigo: null, status: "rascunho", paciente: { nome: "", sexo: "f", idade: "", peso: "", altura: "", atividade: "1.375", objetivo: "manter", refeicoes: "5", restricoes: "", preferencias: "" }, ajustes: { kcal: "", ptn: "", lip: "" }, cardapio: { refeicoes: [], observacoes: "" }, compras: { categorias: [] } };
-  dirty = false; fillForm(); renderAll(); $("ai-status").textContent = ""; openEditor("ficha"); $("p-nome").focus();
+  plan = { codigo: null, status: "rascunho", proximo_retorno: null, paciente: { nome: "", nascimento: "", telefone: "", sexo: "f", idade: "", peso: "", altura: "", atividade: "1.375", objetivo: "manter", refeicoes: "5", restricoes: "", preferencias: "" }, ajustes: { kcal: "", ptn: "", lip: "" }, cardapio: { refeicoes: [], observacoes: "", suplementos: "" }, compras: { categorias: [] } };
+  dirty = false; fillForm(); renderAll(); $("ai-status").textContent = ""; openEditor("ficha"); renderAcesso(); $("p-nome").focus();
 });
 async function persist(statusEl) {
   if (!sb || !session) { statusEl.className = "status err"; statusEl.textContent = "Entre na sua conta (aba Perfil) para salvar."; toast("Entre na sua conta para salvar"); return false; }
@@ -839,80 +828,96 @@ async function persist(statusEl) {
   if (plan.status === "exemplo") plan.status = "rascunho";
   plan.codigo ||= newCode(plan.paciente.nome);
   plan.cardapio.observacoes = $("obs").value;
-  plan.nutri = { ...nutri }; const now = Date.now(); plan.criadoEm ||= now; plan.atualizadoEm = now;
+  const now = Date.now(); plan.criadoEm ||= now; plan.atualizadoEm = now;
   try {
-    const row = { codigo: plan.codigo, status: plan.status, paciente: plan.paciente, ajustes: plan.ajustes, metas: plan.metas, cardapio: plan.cardapio, compras: plan.compras, atualizado_em: new Date(now).toISOString() };
-    const { error } = await sb.from("planos").upsert(row, { onConflict: "codigo" });
-    if (error) throw error;
+    const pac = { nome: plan.paciente.nome.trim(), nascimento: plan.paciente.nascimento || null, telefone: plan.paciente.telefone || "", atualizado_em: new Date(now).toISOString() };
+    const r1 = plan.paciente_id ? await sb.from("pacientes").update(pac).eq("id", plan.paciente_id).select("id").single() : await sb.from("pacientes").insert(pac).select("id").single();
+    if (r1.error) throw r1.error;
+    plan.paciente_id = r1.data.id;
+    const row = { codigo: plan.codigo, status: plan.status, paciente_id: plan.paciente_id, proximo_retorno: plan.proximo_retorno || null, paciente: plan.paciente, ajustes: plan.ajustes, metas: plan.metas, cardapio: plan.cardapio, compras: plan.compras, atualizado_em: new Date(now).toISOString() };
+    const r2 = await sb.from("planos").upsert(row, { onConflict: "codigo" }).select("id").single();
+    if (r2.error) throw r2.error;
+    plan.id = r2.data.id;
     dirty = false; renderHead(); loadPlans(); return true; }
-  catch (e) { statusEl.className = "status err"; statusEl.textContent = e?.code === "quota_exceeded" ? "O espaço de planos está cheio. Apague planos antigos e tente de novo." : "Não consegui salvar agora. Tente de novo."; if (e?.code === "invalid_argument") canWrite = false; return false; }
+  catch (e) { console.warn("salvar", e?.code); statusEl.className = "status err"; statusEl.textContent = "Não consegui salvar agora. Confira a internet e tente de novo."; return false; }
 }
-$("save-plan").addEventListener("click", async () => { const ok = await persist($("rel-status")); if (ok) toast("Plano salvo. Código " + plan.codigo); });
+$("save-plan").addEventListener("click", async () => { const ok = await persist($("rel-status")); if (ok) toast(plan.versao ? "Salvo. Libere de novo para o paciente ver as mudanças." : "Plano salvo"); });
 $("release").addEventListener("click", async () => {
-  const st = $("rel-status");
-  if (!$("rev").checked) { st.className = "status err"; st.textContent = "Marque a revisão antes de liberar. O plano só vale depois de revisado por você."; return; }
-  if (!nutri.nome || !nutri.crn) { st.className = "status err"; st.textContent = "Preencha e salve seu nome e CRN em Seus dados antes de liberar."; $("nutri-nome").focus(); return; }
-  if (!plan.cardapio.refeicoes.length) { st.className = "status err"; st.textContent = "Monte o cardápio antes de liberar."; return; }
-  const prev = plan.status; plan.status = "liberado";
-  const ok = await persist(st);
-  if (ok) { st.className = "status"; st.textContent = `Liberado. Envie ao paciente o código ${plan.codigo} e o link desta página; ele abre a aba Paciente.`; toast("Plano liberado"); }
-  else plan.status = prev === "exemplo" ? "rascunho" : prev;
+  const st = $("rel-status"); readForm();
+  const erro = (msg, foco) => { st.className = "status err"; st.textContent = msg; if (foco) { foco.focus(); } };
+  if (!$("rev").checked) return erro("Marque a revisão antes de liberar. O plano só vale depois de revisado por você.");
+  if (!nutri.nome || !nutri.crn) return erro("Preencha e salve seu nome e CRN no Perfil antes de liberar.");
+  if (!plan.cardapio.refeicoes.length) return erro("Monte o cardápio antes de liberar.");
+  if (!plan.paciente.nascimento) { openEditor("ficha"); return erro("Preencha a data de nascimento do paciente: ela confirma o acesso dele ao plano.", $("p-nasc")); }
+  $("release").disabled = true;
+  try {
+    plan.status = "liberado";
+    if (!(await persist(st))) return;
+    const { data: ult } = await sb.from("plano_versoes").select("versao").eq("plano_id", plan.id).order("versao", { ascending: false }).limit(1);
+    const versao = (ult?.[0]?.versao || 0) + 1;
+    const { error } = await sb.from("plano_versoes").insert({ plano_id: plan.id, versao, conteudo: snapshot() });
+    if (error) throw error;
+    plan.versao = versao; $("rev").checked = false; renderHead(); loadPlans();
+    st.className = "status"; st.textContent = `Versão ${versao} liberada. O paciente já vê esta versão pelo link.`;
+    toast("Plano liberado");
+    const ativo = await linkAtivo();
+    await renderAcesso(ativo ? null : await novoLink());
+    $("acesso").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  } catch (e) { console.warn("liberar", e?.code); erro("Não consegui liberar agora. Tente de novo."); }
+  finally { $("release").disabled = false; }
 });
-$("rev").addEventListener("change", () => { if (!$("rev").checked && plan.status === "liberado") { plan.status = "rascunho"; markDirty(); $("rel-status").textContent = "Plano voltou a rascunho. Salve para o paciente deixar de vê-lo."; } });
+async function linkAtivo() {
+  if (!sb || !session || !plan.paciente_id) return null;
+  const { data } = await sb.from("acessos_paciente").select("criado_em, ultimo_acesso").eq("paciente_id", plan.paciente_id).is("revogado_em", null).order("criado_em", { ascending: false }).limit(1);
+  return data?.[0] || null;
+}
+async function novoLink() {
+  const { data, error } = await sb.rpc("criar_link_paciente", { p_paciente: plan.paciente_id });
+  if (error) { toast("Não consegui gerar o link agora."); return null; }
+  return location.origin + "/p/" + data;
+}
+// Painel de acesso: o link completo só aparece na hora em que é gerado (o banco guarda apenas o hash).
+async function renderAcesso(link) {
+  const box = $("acesso"), hist = $("hist");
+  hist.replaceChildren();
+  if (!sb || !session || !plan.paciente_id || !plan.versao) { box.hidden = true; return; }
+  const ativo = link ? { criado_em: new Date().toISOString() } : await linkAtivo();
+  box.hidden = false; box.replaceChildren(el("h3", { text: "Acesso do paciente" }));
+  if (link) {
+    const tel = String(plan.paciente.telefone || "").replace(/\D/g, "");
+    const msg = `Olá, ${plan.paciente.nome.split(" ")[0]}! Seu plano alimentar está pronto: ${link}\nPara abrir, confirme sua data de nascimento. Não compartilhe este link.`;
+    box.append(el("p", { text: "Envie este link ao paciente. Por segurança, ele só aparece agora: se perder, gere um novo." }), el("div", { class: "link", text: link }),
+      el("div", { class: "actions" },
+        el("a", { class: "btn lime sm", href: "https://wa.me/" + (tel ? (tel.length <= 11 ? "55" + tel : tel) : "") + "?text=" + encodeURIComponent(msg), target: "_blank", rel: "noopener" }, "Enviar pelo WhatsApp"),
+        el("button", { class: "btn ghost sm", onclick: async () => { try { await navigator.clipboard.writeText(link); toast("Link copiado"); } catch { toast("Selecione o link e copie"); } } }, "Copiar link")));
+  } else if (ativo) {
+    box.append(el("p", { text: `Link ativo desde ${new Date(ativo.criado_em).toLocaleDateString("pt-BR")}. ${ativo.ultimo_acesso ? "Último acesso do paciente: " + new Date(ativo.ultimo_acesso).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) + "." : "O paciente ainda não abriu."}` }));
+  } else box.append(el("p", { text: "Nenhum link ativo. O paciente não consegue abrir o plano até você gerar um link." }));
+  let armado = false;
+  box.append(el("div", { class: "actions" },
+    el("button", { class: "btn sm", onclick: async (e) => {
+      if (ativo && !armado) { armado = true; e.target.textContent = "Toque de novo: o link antigo para de funcionar"; return; }
+      const l = await novoLink(); if (l) { toast("Link novo gerado"); renderAcesso(l); } } }, ativo ? "Gerar novo link" : "Gerar link"),
+    ativo ? el("button", { class: "btn ghost sm", onclick: async () => {
+      const { error } = await sb.rpc("revogar_links_paciente", { p_paciente: plan.paciente_id });
+      toast(error ? "Não consegui revogar agora." : "Acesso revogado"); renderAcesso(); } }, "Revogar acesso") : null));
+  const { data: vs } = await sb.from("plano_versoes").select("versao, liberado_em").eq("plano_id", plan.id).order("versao", { ascending: false }).limit(10);
+  hist.replaceChildren(...(vs || []).map((v) => el("li", {}, el("b", { text: "Versão " + v.versao }), " liberada em " + new Date(v.liberado_em).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }))));
+}
 $("save-nutri").addEventListener("click", async () => {
-  nutri = { nome: $("nutri-nome").value.trim(), crn: $("nutri-crn").value.trim() };
+  nutri = { nome: $("nutri-nome").value.trim(), crn: $("nutri-crn").value.trim(), whatsapp: $("nutri-whats").value.trim() };
   if (!sb || !session) { toast("Entre na sua conta para salvar seus dados."); return; }
-  const { error } = await sb.from("nutricionistas").upsert({ id: session.user.id, nome: nutri.nome, crn: nutri.crn });
+  const { error } = await sb.from("nutricionistas").upsert({ id: session.user.id, nome: nutri.nome, crn: nutri.crn, whatsapp: nutri.whatsapp });
   toast(error ? "Não consegui salvar seus dados agora." : "Seus dados foram salvos");
 });
 
-/* ---------- paciente ---------- */
-function renderPatient(p) {
-  const box = $("pac-plan"); box.replaceChildren();
-  const m = p.metas || {};
-  box.append(el("div", { class: "metas" },
-    el("div", { class: "m vi" }, el("div", { class: "v", text: fmt(m.kcal || 0) }), el("div", { class: "k", text: "kcal por dia" })),
-    el("div", { class: "m li" }, el("div", { class: "v", text: fmt(m.ptn || 0) + " g" }), el("div", { class: "k", text: "Proteínas" })),
-    el("div", { class: "m or" }, el("div", { class: "v", text: fmt(m.cho || 0) + " g" }), el("div", { class: "k", text: "Carboidratos" })),
-    el("div", { class: "m pk" }, el("div", { class: "v", text: fmt(m.lip || 0) + " g" }), el("div", { class: "k", text: "Gorduras" }))));
-  for (const r of p.cardapio?.refeicoes || []) box.append(el("div", { class: "pmeal" },
-    el("div", { class: "t" }, el("h3", { text: r.nome }), el("span", { class: "h", text: r.horario || "" })),
-    el("ul", {}, r.itens.map((i) => el("li", {}, el("span", { text: i.alimento }), el("span", { class: "q", text: i.quantidade })))),
-    r.substituicoes ? el("div", { class: "subs", style: "margin:12px 0 0" }, el("b", { text: "Pode trocar: " }), r.substituicoes) : null));
-  if (p.cardapio?.observacoes) box.append(el("div", { class: "notice", style: "margin:0" }, el("b", { text: "Orientações: " }), p.cardapio.observacoes));
-  const cats = p.compras?.categorias || [];
-  if (cats.length) box.append(el("div", { class: "card" }, el("h2", { text: "Lista de compras da semana", style: "font-size:22px;margin-bottom:12px" }),
-    el("div", { class: "shop" }, cats.map((c, ci) => el("div", { class: "cat" }, el("h3", { text: c.nome }),
-      el("ul", {}, c.itens.map((i, ii) => { const id = `ck-${ci}-${ii}`; return el("li", {},
-        el("input", { type: "checkbox", id, checked: checked.has(id), onchange: (e) => e.target.checked ? checked.add(id) : checked.delete(id) }),
-        el("label", { for: id, text: i.item, style: "font-size:14.5px;font-weight:500;color:var(--fg)" }), el("span", { class: "q", text: i.quantidade })); })))))));
-  const st = el("p", { class: "status" });
-  box.append(el("div", { class: "signed" }, `Plano prescrito por ${p.nutri?.nome || "seu nutricionista"}${p.nutri?.crn ? ", " + p.nutri.crn : ""}. Siga as quantidades e fale com seu nutricionista antes de mudar o plano.`),
-    el("button", { class: "btn block", onclick: () => savePDF(p, st) }, "Baixar meu plano em PDF"), st);
-}
-$("code-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const code = $("code-in").value.trim().toUpperCase().replace(/\s+/g, "");
-  const st = $("pac-status"); st.className = "status"; $("pac-plan").replaceChildren();
-  if (!/^[A-Z]{3}-[A-Z0-9]{4}$/.test(code)) { st.className = "status err"; st.textContent = "O código tem 3 letras, um hífen e 4 caracteres, como ANA-7K3P."; return; }
-  if (!sb) { st.className = "status err"; st.textContent = "Sem conexão com o servidor. Confira sua internet e tente de novo."; return; }
-  st.textContent = "Buscando seu plano...";
-  try {
-    const { data, error } = await sb.rpc("plano_por_codigo", { p_codigo: code });
-    if (error) throw error;
-    const r = Array.isArray(data) ? data[0] : null;
-    if (!r) { st.className = "status err"; st.textContent = "Não achei um plano liberado com esse código. Confira com seu nutricionista."; return; }
-    st.textContent = ""; renderPatient({ codigo: r.codigo, paciente: { nome: r.paciente_nome || "" }, metas: r.metas || {}, cardapio: r.cardapio || { refeicoes: [] }, compras: r.compras || { categorias: [] }, nutri: { nome: r.nutri_nome || "", crn: r.nutri_crn || "" } });
-  } catch { st.className = "status err"; st.textContent = "Não consegui buscar o plano agora. Tente de novo."; }
-});
-
 /* ---------- eventos da ficha ---------- */
-for (const id of [...Object.values(FIELDS), "t-kcal", "t-ptn", "t-lip"]) $(id).addEventListener("input", () => { readForm(); renderMetas(); markDirty(); atualizarIA(); });
+for (const id of [...Object.values(FIELDS), "t-kcal", "t-ptn", "t-lip", "p-retorno", "p-sup"]) $(id).addEventListener("input", () => { readForm(); renderMetas(); markDirty(); atualizarIA(); });
 $("p-tags").addEventListener("change", () => { readForm(); markDirty(); });
 $("obs").addEventListener("input", () => { plan.cardapio.observacoes = $("obs").value; markDirty(); });
 $("add-meal").addEventListener("click", () => { plan.cardapio.refeicoes.push({ nome: "Nova refeição", horario: "", itens: [{ alimento: "", quantidade: "", kcal: 0, ptn: 0, cho: 0, lip: 0 }], substituicoes: "" }); markDirty(); renderMeals(); renderBars(); });
 
-function renderAll() { renderHead(); renderMetas(); renderMeals(); renderShop(); renderList(); $("rel-status").textContent = ""; if (typeof session !== "undefined") atualizarIA(); }
+function renderAll() { renderHead(); renderMetas(); renderMeals(); renderShop(); renderList(); $("acesso").hidden = true; $("hist").replaceChildren(); $("rel-status").textContent = ""; if (typeof session !== "undefined") atualizarIA(); }
 
 /* ---------- navegação do app ---------- */
 const STEPS = ["ficha", "metas", "cardapio", "compras", "liberar"];
@@ -920,13 +925,13 @@ const STEP_NAMES = { ficha: "Ficha", metas: "Metas", cardapio: "Cardápio", comp
 const nav = { tab: "nutri", editing: false, step: "ficha" };
 const wide = () => matchMedia("(min-width: 820px)").matches;
 function setBar() {
-  const t = nav.tab === "pac" ? "Meu plano" : nav.tab === "perfil" ? "Perfil" : (nav.editing && !wide() ? (plan.paciente.nome || "Novo plano") : "Pacientes");
+  const t = nav.tab === "ret" ? "Retornos" : nav.tab === "perfil" ? "Perfil" : (nav.editing && !wide() ? (plan.paciente.nome || "Novo plano") : "Pacientes");
   $("bar-title").textContent = t;
   $("back").hidden = !(nav.tab === "nutri" && nav.editing);
 }
 function layout() {
   document.body.dataset.editing = String(nav.editing);
-  for (const [t, v] of [["nutri", "view-nutri"], ["pac", "view-pac"], ["perfil", "view-perfil"]]) { $(v).hidden = nav.tab !== t; $("tab-" + t).setAttribute("aria-selected", String(nav.tab === t)); }
+  for (const [t, v] of [["nutri", "view-nutri"], ["ret", "view-ret"], ["perfil", "view-perfil"]]) { $(v).hidden = nav.tab !== t; $("tab-" + t).setAttribute("aria-selected", String(nav.tab === t)); }
   document.querySelectorAll(".panel").forEach((p) => (p.hidden = p.dataset.step !== nav.step));
   document.querySelectorAll(".st").forEach((b) => b.setAttribute("aria-current", b.dataset.step === nav.step ? "step" : "false"));
   const i = STEPS.indexOf(nav.step);
@@ -936,12 +941,12 @@ function layout() {
   if (i < STEPS.length - 1) $("next").textContent = "Próximo: " + STEP_NAMES[STEPS[i + 1]];
   setBar();
 }
-function showTab(which) { nav.tab = which === "paciente" ? "pac" : which === "perfil" ? "perfil" : "nutri"; layout(); window.scrollTo(0, 0); }
+function showTab(which) { nav.tab = which === "retornos" ? "ret" : which === "perfil" ? "perfil" : "nutri"; layout(); window.scrollTo(0, 0); }
 function openEditor(step) { nav.editing = true; nav.step = step || "ficha"; layout(); window.scrollTo(0, 0); }
 const setHash = (h) => { try { history.replaceState(null, "", h); } catch {} };
-const fromHash = () => (location.hash === "#paciente" ? "paciente" : location.hash === "#perfil" ? "perfil" : "nutri");
+const fromHash = () => (location.hash === "#retornos" ? "retornos" : location.hash === "#perfil" ? "perfil" : "nutri");
 $("tab-nutri").addEventListener("click", () => { showTab("nutri"); setHash("#pacientes"); });
-$("tab-pac").addEventListener("click", () => { showTab("paciente"); setHash("#paciente"); });
+$("tab-ret").addEventListener("click", () => { showTab("retornos"); setHash("#retornos"); renderRetornos(); });
 $("tab-perfil").addEventListener("click", () => { showTab("perfil"); setHash("#perfil"); });
 $("back").addEventListener("click", () => { nav.editing = false; layout(); window.scrollTo(0, 0); });
 document.querySelectorAll(".st").forEach((b) => b.addEventListener("click", () => openEditor(b.dataset.step)));
@@ -956,13 +961,13 @@ showTab(fromHash());
 
 /* ---------- conta ---------- */
 function setSession(s) {
-  session = s; canWrite = !!s; db = s ? true : null;
+  session = s;
   $("auth-out").hidden = !!s; $("auth-in").hidden = !s; $("au-who").textContent = s?.user?.email || "";
   $("login-hint").hidden = !!s;
   atualizarIA();
   if (s) {
-    sb.from("nutricionistas").select("nome, crn").eq("id", s.user.id).maybeSingle().then(({ data }) => {
-      if (data) { nutri = { nome: data.nome || "", crn: data.crn || "" }; $("nutri-nome").value = nutri.nome; $("nutri-crn").value = nutri.crn; }
+    sb.from("nutricionistas").select("nome, crn, whatsapp").eq("id", s.user.id).maybeSingle().then(({ data }) => {
+      if (data) { nutri = { nome: data.nome || "", crn: data.crn || "", whatsapp: data.whatsapp || "" }; $("nutri-nome").value = nutri.nome; $("nutri-crn").value = nutri.crn; $("nutri-whats").value = nutri.whatsapp; }
     });
   }
   loadPlans();
@@ -989,8 +994,7 @@ $("go-login").addEventListener("click", () => { showTab("perfil"); setHash("#per
 
 (async () => {
   atualizarIA();
-  downloads = { save: async ({ filename, data }) => { const url = URL.createObjectURL(data); const a = document.createElement("a"); a.href = url; a.download = filename; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 10000); return { status: "saved" }; } };
-  if (!sb) { renderList(); return; }
+  if (!sb) { renderList(); renderRetornos(); return; }
   const { data } = await sb.auth.getSession();
   setSession(data.session);
   sb.auth.onAuthStateChange((_ev, s) => { if ((s?.access_token || null) !== (session?.access_token || null)) setSession(s); });

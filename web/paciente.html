@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meu plano alimentar</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#5B3DF5">
+<link rel="manifest" href="/manifest-paciente.webmanifest">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Meu plano">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap">
+<style>
+/* Área do paciente: uma coluna, pensada para celular. Abas Hoje | Compras | Orientações. */
+:root{
+  --bg:#F6F4FB; --surface:#FFFFFF; --surface-2:#F0EDF8; --line:#E4E0EF; --fg:#17132B; --mute:#5D5973; --faint:#8C88A0;
+  --violet:#5B3DF5; --violet-ink:#FFFFFF; --violet-soft:#ECE8FF; --violet-text:#4327D8;
+  --lime:#B8F04A; --lime-ink:#17132B; --lime-soft:#EEFBD4; --lime-text:#4D7A00;
+  --orange-soft:#FFE6DA; --orange-text:#B8400C; --pink-soft:#FFE1EE; --pink-text:#C0145F;
+  --display:"Bricolage Grotesque",ui-rounded,"Segoe UI",system-ui,sans-serif;
+  --body:Figtree,"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#110E1C; --surface:#1C1830; --surface-2:#252040; --line:#332D52; --fg:#F2F0FA; --mute:#B4AFCB; --faint:#8A85A3;
+  --violet:#7A62FF; --violet-soft:#2A2456; --violet-text:#B7A9FF;
+  --lime-soft:#24300F; --lime-text:#C6F46A; --orange-soft:#3A2116; --orange-text:#FF9A6B; --pink-soft:#3A1729; --pink-text:#FF8CBD;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#110E1C; --surface:#1C1830; --surface-2:#252040; --line:#332D52; --fg:#F2F0FA; --mute:#B4AFCB; --faint:#8A85A3;
+  --violet:#7A62FF; --violet-soft:#2A2456; --violet-text:#B7A9FF;
+  --lime-soft:#24300F; --lime-text:#C6F46A; --orange-soft:#3A2116; --orange-text:#FF9A6B; --pink-soft:#3A1729; --pink-text:#FF8CBD;
+  color-scheme:dark}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;margin:0}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.02em;margin:0;text-wrap:balance}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+.page{max-width:640px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(32px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:grid;gap:14px}
+.hero{border-radius:26px;padding:22px;background:var(--violet);color:var(--violet-ink);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;width:200px;height:200px;border-radius:50%;background:var(--lime);right:-70px;bottom:-110px}
+.hero > *{position:relative;z-index:1}
+.hero h1{font-size:clamp(28px,8vw,40px);font-weight:800;line-height:1.02}
+.hero p{margin:8px 0 0;opacity:.92;max-width:440px;font-size:15px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.pill{font-size:13px;font-weight:800;padding:5px 11px;border-radius:30px;background:rgba(255,255,255,.18)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:30px;padding:12px 18px;font-weight:800;cursor:pointer;background:var(--violet);color:var(--violet-ink);text-decoration:none;min-height:44px}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.lime{background:var(--lime);color:var(--lime-ink)}
+.btn.ghost{background:var(--surface-2);color:var(--fg)}
+.btn.sm{padding:7px 13px;font-size:14px;min-height:36px}
+.btn.block{width:100%}
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:22px;padding:18px}
+.gate{display:grid;gap:12px;margin-top:16px}
+.gate label{font-size:14px;font-weight:700}
+.gate input[type=date]{width:100%;border:0;border-radius:16px;padding:12px 14px;background:var(--surface);color:var(--fg);font-weight:700;min-height:48px}
+.gate .lembrar{display:flex;gap:10px;align-items:center;font-weight:600;font-size:14.5px}
+.status{font-size:14.5px;font-weight:700;margin:0}
+.status.err{color:var(--pink-text)}
+.hero .status.err{color:#fff;background:rgba(0,0,0,.22);padding:8px 12px;border-radius:12px}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:4;display:flex;gap:6px;background:var(--surface-2);padding:5px;border-radius:40px}
+.tab{flex:1;border:0;background:transparent;padding:9px 8px;border-radius:30px;font-weight:800;cursor:pointer;color:var(--mute);font-size:14.5px}
+.tab[aria-selected="true"]{background:var(--violet);color:var(--violet-ink)}
+.prog{display:flex;align-items:center;gap:12px}
+.prog .t{flex:1;height:10px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.prog .t i{display:block;height:100%;background:var(--lime);border-radius:6px;transition:width .25s}
+.prog b{font-variant-numeric:tabular-nums;font-size:14px}
+.meal{border-radius:22px;background:var(--surface);border:1.5px solid var(--line);padding:14px 16px}
+.meal.done{border-color:var(--lime-text)}
+.meal .t{display:flex;align-items:center;gap:10px}
+.meal h3{font-size:20px;flex:1;min-width:0}
+.meal .h{font-weight:800;color:var(--violet-text);font-variant-numeric:tabular-nums}
+.comi{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--surface);border-radius:30px;padding:6px 12px;font-weight:800;font-size:14px;cursor:pointer;min-height:36px}
+.comi[aria-pressed="true"]{background:var(--lime);border-color:var(--lime);color:var(--lime-ink)}
+.meal ul{list-style:none;margin:10px 0 0;padding:0;display:grid}
+.meal li button{display:flex;width:100%;gap:10px;justify-content:space-between;align-items:center;text-align:left;border:0;background:none;padding:10px 0;border-bottom:1px dashed var(--line);cursor:pointer;font-size:15.5px}
+.meal li:last-child button{border-bottom:0}
+.meal li .q{color:var(--mute);text-align:right;font-size:14.5px}
+.meal li .tr{color:var(--violet-text);font-size:12.5px;font-weight:800;white-space:nowrap}
+.meal .subs{margin-top:8px;padding:10px 12px;border-radius:14px;background:var(--lime-soft);color:var(--lime-text);font-size:14px}
+.hint{font-size:13.5px;color:var(--mute);margin:0}
+.agua{display:grid;gap:12px}
+.copos{display:flex;flex-wrap:wrap;gap:6px}
+.copo{width:34px;height:42px;border-radius:6px 6px 10px 10px;border:2px solid var(--violet-text);background:transparent;cursor:pointer;padding:0}
+.copo[aria-pressed="true"]{background:var(--violet)}
+.list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.sup{display:flex;gap:12px;align-items:baseline;padding:10px 12px;border-radius:14px;background:var(--surface-2)}
+.sup .h{font-weight:800;color:var(--violet-text);font-variant-numeric:tabular-nums;min-width:48px}
+.obs{white-space:pre-line;font-size:15px}
+.cat{border-radius:18px;padding:14px 16px;background:var(--surface);border:1.5px solid var(--line)}
+.cat h3{font-size:17px;margin-bottom:8px}
+.cat ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.cat li label{display:flex;gap:10px;align-items:center;font-size:15px;padding:6px 0;cursor:pointer}
+.cat li .q{margin-left:auto;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
+.cat input{width:20px;height:20px;accent-color:var(--violet);flex:none}
+.cat li input:checked + span{text-decoration:line-through;color:var(--faint)}
+.signed{border-radius:18px;padding:14px 16px;background:var(--lime-soft);color:var(--lime-text);font-weight:600;font-size:14.5px}
+.acoes{display:grid;gap:10px}
+.sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center;background:rgba(10,8,20,.5)}
+.sheet[hidden]{display:none}
+.sheet .in{background:var(--surface);width:100%;max-width:640px;border-radius:24px 24px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px));max-height:80vh;overflow:auto}
+.sheet h2{font-size:22px}
+.sheet .sub{color:var(--mute);font-size:14.5px;margin:4px 0 12px}
+.sheet ul{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:8px}
+.sheet li{display:flex;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:14px;background:var(--surface-2);font-size:15px}
+.sheet li .q{color:var(--mute);text-align:right}
+[hidden]{display:none !important}
+</style>
+</head>
+<body>
+<main class="page">
+  <section class="hero" id="hero">
+    <h1 id="h-title">Seu plano alimentar</h1>
+    <p id="h-sub">Para proteger seus dados, confirme sua data de nascimento.</p>
+    <form class="gate" id="gate">
+      <label for="nasc">Data de nascimento</label>
+      <input type="date" id="nasc" required autocomplete="bday">
+      <label class="lembrar"><input type="checkbox" id="lembrar" checked> Lembrar neste aparelho</label>
+      <button class="btn lime" type="submit" id="entrar">Ver meu plano</button>
+      <p class="status" id="gate-st" role="status"></p>
+    </form>
+    <div class="meta" id="h-meta" hidden></div>
+  </section>
+
+  <div id="app" hidden style="display:grid;gap:14px">
+    <div class="tabs" role="tablist" aria-label="Seções do plano">
+      <button class="tab" role="tab" id="t-hoje" aria-selected="true" aria-controls="v-hoje">Hoje</button>
+      <button class="tab" role="tab" id="t-compras" aria-selected="false" aria-controls="v-compras">Compras</button>
+      <button class="tab" role="tab" id="t-guia" aria-selected="false" aria-controls="v-guia">Orientações</button>
+    </div>
+
+    <section id="v-hoje" role="tabpanel" aria-labelledby="t-hoje" style="display:grid;gap:12px">
+      <div class="card prog"><span style="font-weight:800">Hoje</span><div class="t" aria-hidden="true"><i id="prog-i" style="width:0"></i></div><b id="prog-t">0 de 0</b></div>
+      <p class="hint">Toque num alimento para ver por quais ele pode ser trocado.</p>
+      <div id="meals" style="display:grid;gap:12px"></div>
+    </section>
+
+    <section id="v-compras" role="tabpanel" aria-labelledby="t-compras" hidden style="display:grid;gap:12px">
+      <p class="hint">Quantidades para 7 dias. Marque o que já está no carrinho.</p>
+      <div id="shop" style="display:grid;gap:12px"></div>
+      <button class="btn ghost sm" id="shop-limpar" style="justify-self:start">Desmarcar tudo</button>
+    </section>
+
+    <section id="v-guia" role="tabpanel" aria-labelledby="t-guia" hidden style="display:grid;gap:12px">
+      <div class="card agua">
+        <h2 style="font-size:20px">Água hoje</h2>
+        <p class="hint" id="agua-meta"></p>
+        <div class="copos" id="copos" role="group" aria-label="Copos de água de 250 ml"></div>
+        <b id="agua-t" style="font-variant-numeric:tabular-nums"></b>
+      </div>
+      <div class="card" id="sup-card" hidden><h2 style="font-size:20px;margin-bottom:10px">Suplementos</h2><ul class="list" id="sup"></ul></div>
+      <div class="card" id="obs-card" hidden><h2 style="font-size:20px;margin-bottom:8px">Orientações</h2><p class="obs" id="obs"></p></div>
+    </section>
+
+    <div class="acoes">
+      <a class="btn lime block" id="whats" target="_blank" rel="noopener" hidden>Falar com meu nutricionista</a>
+      <button class="btn ghost block" id="pdf">Baixar meu plano em PDF</button>
+      <p class="status" id="pdf-st" role="status"></p>
+    </div>
+    <p class="signed" id="signed"></p>
+    <button class="btn ghost sm" id="sair" style="justify-self:center">Sair deste aparelho</button>
+  </div>
+</main>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sh-t">
+  <div class="in">
+    <h2 id="sh-t"></h2>
+    <p class="sub" id="sh-s"></p>
+    <ul id="sh-l"></ul>
+    <button class="btn block" id="sh-x">Fechar</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script type="module">
+import { gerarPDF, baixar } from "/lib/pdf.mjs";
+const SB_URL = "https://flxltpgirbdcimqzjaht.supabase.co", SB_KEY = "sb_publishable_WAPK9_OdhIcwJgFedfcX7Q_fEgus9h3";
+const $ = (id) => document.getElementById(id);
+const el = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v; else if (k === "text") e.textContent = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null) e.append(c);
+  return e;
+};
+const fmt = (n, d = 0) => (Math.round((Number(n) || 0) * 10 ** d) / 10 ** d).toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d });
+const dataBR = (iso) => new Date(iso + (iso.length === 10 ? "T12:00:00" : "")).toLocaleDateString("pt-BR", { day: "numeric", month: "long" });
+const hoje = () => new Date().toLocaleDateString("sv-SE");
+const store = {
+  get: (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del: (k) => { try { localStorage.removeItem(k); } catch {} },
+};
+
+const token = decodeURIComponent(location.pathname.split("/")[2] || "");
+// Chave local curta derivada do token: não guardamos o token em texto no aparelho além da própria URL.
+const chave = "pp:" + Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token)))).slice(0, 8).map((b) => b.toString(16).padStart(2, "0")).join("");
+let plano = null, versao = 0;
+
+const MSG = {
+  link_invalido: "Este link não é válido. Peça um novo ao seu nutricionista.",
+  link_revogado: "Este link foi desativado. Peça o link novo ao seu nutricionista.",
+  sem_plano: "Seu plano ainda não foi liberado. Assim que o nutricionista liberar, ele aparece aqui.",
+};
+async function abrir(nascimento, silencioso) {
+  const st = $("gate-st"); st.className = "status"; st.textContent = silencioso ? "" : "Abrindo seu plano...";
+  $("entrar").disabled = true;
+  try {
+    const r = await fetch(SB_URL + "/rest/v1/rpc/plano_do_paciente", { method: "POST", headers: { apikey: SB_KEY, "Content-Type": "application/json" }, body: JSON.stringify({ p_token: token, p_nascimento: nascimento }) });
+    const d = await r.json();
+    if (!r.ok) throw new Error();
+    if (!d.ok) {
+      if (d.erro !== "sem_plano" && d.erro !== "bloqueado") store.del(chave + ":nasc");
+      st.className = "status err";
+      st.textContent = d.erro === "data_incorreta" ? `A data não confere. ${d.restantes ? `Você tem mais ${d.restantes} tentativa${d.restantes > 1 ? "s" : ""}.` : "Na próxima o link fica bloqueado por 15 minutos."}`
+        : d.erro === "bloqueado" ? `Muitas tentativas. Tente de novo em ${d.minutos} minuto${d.minutos > 1 ? "s" : ""}.` : MSG[d.erro] || "Não consegui abrir seu plano.";
+      return;
+    }
+    if ($("lembrar").checked) store.set(chave + ":nasc", nascimento);
+    plano = d.plano; versao = d.versao;
+    render();
+  } catch { st.className = "status err"; st.textContent = "Sem conexão. Confira a internet e tente de novo."; }
+  finally { $("entrar").disabled = false; }
+}
+$("gate").addEventListener("submit", (e) => { e.preventDefault(); if ($("nasc").value) abrir($("nasc").value); });
+if (!/^[A-Za-z0-9_-]{30,}$/.test(token)) { $("gate").hidden = true; $("h-sub").textContent = MSG.link_invalido; }
+else { const n = store.get(chave + ":nasc", null); if (n) { $("nasc").value = n; abrir(n, true); } }
+
+function render() {
+  const p = plano;
+  $("gate").hidden = true;
+  $("h-title").textContent = "Olá, " + (p.paciente_nome || "").split(" ")[0];
+  $("h-sub").textContent = "Este é o plano que " + (p.nutri?.nome || "seu nutricionista") + " preparou para você.";
+  const m = p.metas || {};
+  $("h-meta").replaceChildren(...[p.proximo_retorno && "Retorno " + dataBR(p.proximo_retorno), "Versão " + versao, m.kcal && fmt(m.kcal) + " kcal por dia"].filter(Boolean).map((t) => el("span", { class: "pill", text: t })));
+  $("h-meta").hidden = false;
+  $("app").hidden = false;
+  renderHoje(); renderCompras(); renderGuia();
+  const w = String(p.nutri?.whatsapp || "").replace(/\D/g, "");
+  if (w) { $("whats").hidden = false; $("whats").href = "https://wa.me/" + (w.length <= 11 ? "55" + w : w) + "?text=" + encodeURIComponent("Olá! Estou com uma dúvida sobre meu plano alimentar."); }
+  $("signed").textContent = `Plano prescrito por ${p.nutri?.nome || "seu nutricionista"}${p.nutri?.crn ? ", " + p.nutri.crn : ""}. Siga as quantidades e fale com seu nutricionista antes de mudar o plano.`;
+}
+
+/* Hoje: refeições com "comi" guardado no aparelho, por dia */
+function renderHoje() {
+  const k = `${chave}:comi:${versao}:${hoje()}`, feitos = new Set(store.get(k, []));
+  const refs = plano.cardapio?.refeicoes || [];
+  const prog = () => { const n = refs.filter((_, i) => feitos.has(i)).length; $("prog-t").textContent = `${n} de ${refs.length}`; $("prog-i").style.width = (refs.length ? (n / refs.length) * 100 : 0) + "%"; };
+  $("meals").replaceChildren(...refs.map((r, ri) => {
+    const card = el("article", { class: "meal" + (feitos.has(ri) ? " done" : "") });
+    const bt = el("button", { class: "comi", "aria-pressed": String(feitos.has(ri)), "aria-label": "Marcar " + r.nome + " como feita", onclick: () => {
+      feitos.has(ri) ? feitos.delete(ri) : feitos.add(ri); store.set(k, [...feitos]);
+      bt.setAttribute("aria-pressed", String(feitos.has(ri))); bt.lastChild.textContent = feitos.has(ri) ? "Comi" : "Comi?"; card.classList.toggle("done", feitos.has(ri)); prog();
+    } }, el("span", { "aria-hidden": "true", text: "✓" }), el("span", { text: feitos.has(ri) ? "Comi" : "Comi?" }));
+    card.append(el("div", { class: "t" }, el("span", { class: "h", text: r.horario || "" }), el("h3", { text: r.nome }), bt),
+      el("ul", {}, (r.itens || []).map((i) => el("li", {}, el("button", { onclick: () => trocas(i), "aria-label": `${i.alimento}, ${i.quantidade}. Ver substituições` },
+        el("span", { text: i.alimento }), el("span", { class: "q" }, i.quantidade || "", i.trocas?.length ? el("br") : null, i.trocas?.length ? el("span", { class: "tr", text: "ver trocas" }) : null))))),
+      r.substituicoes ? el("div", { class: "subs" }, el("b", { text: "Pode trocar: " }), r.substituicoes) : null);
+    return card;
+  }));
+  prog();
+}
+function trocas(i) {
+  $("sh-t").textContent = i.alimento;
+  $("sh-s").textContent = i.trocas?.length ? `Em vez de ${i.quantidade}, você pode comer uma destas opções (mesma energia):` : "Seu nutricionista não indicou trocas para este alimento. Fale com ele se precisar.";
+  $("sh-l").replaceChildren(...(i.trocas || []).map((t) => el("li", {}, el("span", { text: t.alimento }), el("span", { class: "q", text: t.quantidade }))));
+  $("sheet").hidden = false; $("sh-x").focus();
+}
+$("sh-x").addEventListener("click", () => ($("sheet").hidden = true));
+$("sheet").addEventListener("click", (e) => { if (e.target === $("sheet")) $("sheet").hidden = true; });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") $("sheet").hidden = true; });
+
+/* Compras: checklist guardado no aparelho */
+function renderCompras() {
+  const k = `${chave}:compras:${versao}`, ok = new Set(store.get(k, []));
+  const cats = plano.compras?.categorias || [];
+  $("shop").replaceChildren(...(cats.length ? cats.map((c, ci) => el("div", { class: "cat" }, el("h3", { text: c.nome }),
+    el("ul", {}, c.itens.map((i, ii) => { const id = ci + "-" + ii; return el("li", {}, el("label", {},
+      el("input", { type: "checkbox", checked: ok.has(id), onchange: (e) => { e.target.checked ? ok.add(id) : ok.delete(id); store.set(k, [...ok]); } }),
+      el("span", { text: i.item }), el("span", { class: "q", text: i.quantidade }))); })))) : [el("p", { class: "hint", text: "Seu nutricionista ainda não incluiu a lista de compras." })]));
+  $("shop-limpar").onclick = () => { store.del(k); renderCompras(); };
+}
+
+/* Orientações: água, suplementos e texto livre */
+function renderGuia() {
+  const meta = Number(plano.metas?.agua_ml) || 2000, copos = Math.ceil(meta / 250);
+  const k = `${chave}:agua:${hoje()}`; let n = store.get(k, 0);
+  $("agua-meta").textContent = `Meta: ${fmt(meta / 1000, 1)} litros por dia (${copos} copos de 250 ml). Toque num copo a cada um que beber.`;
+  const pinta = () => { [...$("copos").children].forEach((c, i) => c.setAttribute("aria-pressed", String(i < n))); $("agua-t").textContent = `${fmt((n * 250) / 1000, 2)} L de ${fmt(meta / 1000, 1)} L`; };
+  $("copos").replaceChildren(...Array.from({ length: copos }, (_, i) => el("button", { class: "copo", "aria-label": `Copo ${i + 1}`, onclick: () => { n = i + 1 === n ? i : i + 1; store.set(k, n); pinta(); } })));
+  pinta();
+  const sup = (plano.suplementos || []).filter((s) => s.produto);
+  $("sup-card").hidden = !sup.length;
+  $("sup").replaceChildren(...sup.map((s) => el("li", { class: "sup" }, el("span", { class: "h", text: s.horario || "" }), el("span", {}, el("b", { text: s.produto }), s.dose ? " · " + s.dose : "", s.obs ? el("br") : null, s.obs ? el("small", { text: s.obs }) : null))));
+  $("obs-card").hidden = !plano.cardapio?.observacoes;
+  $("obs").textContent = plano.cardapio?.observacoes || "";
+}
+
+/* Abas */
+const ABAS = [["t-hoje", "v-hoje"], ["t-compras", "v-compras"], ["t-guia", "v-guia"]];
+for (const [t] of ABAS) $(t).addEventListener("click", () => { for (const [t2, v2] of ABAS) { $(t2).setAttribute("aria-selected", String(t2 === t)); $(v2).hidden = t2 !== t; } });
+
+$("pdf").addEventListener("click", () => {
+  const st = $("pdf-st");
+  try { baixar(gerarPDF({ ...plano, versao }), "Meu plano alimentar.pdf"); st.className = "status"; st.textContent = ""; }
+  catch { st.className = "status err"; st.textContent = "Não consegui montar o PDF agora. Recarregue a página e tente de novo."; }
+});
+$("sair").addEventListener("click", () => {
+  try { Object.keys(localStorage).filter((k) => k.startsWith(chave)).forEach((k) => localStorage.removeItem(k)); } catch {}
+  location.reload();
+});
+</script>
+</body>
+</html>

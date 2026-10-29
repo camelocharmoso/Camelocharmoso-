@@ -169,21 +169,39 @@ export function ajustarPorcoes(taco, refeicoes, metas) {
 }
 
 // Miúdos, farinhas, pós e frituras não entram como troca automática.
-const NAO_TROCAR_POR = /coracao|figado|moela|lingua|bucho|tripa|mocoto|rim\b|farinha|\bpo\b|em po|frit|empanad|a milanesa|amido|fecula|polvilho/;
+const NAO_TROCAR_POR = /coracao|figado|moela|lingua|bucho|tripa|mocoto|rim\b|farinha|\bpo\b|em po|frit|empanad|a milanesa|amido|fecula|polvilho|quibe|kibe|hamburguer|empada|coxinha|salsicha|linguica|mortadela|presunto|bacon|salame|charque/;
 
 // Trocas preferidas do dia a dia brasileiro.
-const USUAIS = /cuscuz|tapioca|pao de queijo|milho, verde|arroz, .*cozido|batata, doce, cozida|mandioca, cozida|inhame|feijao, .*cozido|ovo, de galinha, inteiro, cozido|frango, peito, sem pele, grelhado|extrato soluvel|banana|mamao|maca/;
+const USUAIS = /cuscuz|tapioca|pao de queijo|arroz, .*cozido|batata, doce, cozida|mandioca, cozida|inhame|feijao, .*cozido|ovo, de galinha, inteiro, cozido|frango, peito, sem pele, grelhado|extrato soluvel|banana|mamao|maca/;
+const TUBERCULO = /batata|mandioca|aipim|macaxeira|inhame|cara\b|baroa|pao de queijo|polenta/;
 
-// Grupos de troca usados na prática (o primeiro grupo é o do próprio alimento).
-const TROCA_POR_GRUPO = {
-  'Leite e derivados': [['Leguminosas e derivados', /extrato|tofu/], ['Ovos e derivados', /cozid|mexid/], ['Frutas e derivados', /crua?\b/]],
-  'Ovos e derivados': [['Carnes e derivados', /grelhad|cozid|assad/], ['Pescados e frutos do mar', /grelhad|cozid|assad/], ['Leguminosas e derivados', /cozid/]],
-  'Carnes e derivados': [['Pescados e frutos do mar', /grelhad|cozid|assad/], ['Ovos e derivados', /cozid|mexid/], ['Leguminosas e derivados', /cozid/]],
-  'Pescados e frutos do mar': [['Carnes e derivados', /grelhad|cozid|assad/], ['Ovos e derivados', /cozid|mexid/], ['Leguminosas e derivados', /cozid/]],
-  'Cereais e derivados': [['Verduras, hortaliças e derivados', /batata|mandioca|inhame|cara|aipim/]],
-  'Nozes e sementes': [['Frutas e derivados', /crua?\b/]],
-  'Leguminosas e derivados': [['Carnes e derivados', /grelhad|cozid|assad/], ['Ovos e derivados', /cozid/]],
+// Papel do alimento no prato (as categorias da TACO nem sempre servem: pão de queijo está em "Verduras").
+export function papel(f) {
+  const n = norm(f.nome);
+  if (f.cat === 'Leite e derivados') return 'laticinio';
+  if (['Carnes e derivados', 'Pescados e frutos do mar', 'Ovos e derivados'].includes(f.cat)) return 'proteina';
+  if (f.cat === 'Leguminosas e derivados') return 'leguminosa';
+  if (f.cat === 'Frutas e derivados') return 'fruta';
+  if (f.cat === 'Gorduras e óleos' || f.cat === 'Nozes e sementes') return 'gordura';
+  if (f.cat === 'Cereais e derivados' || (f.cat === 'Verduras, hortaliças e derivados' && TUBERCULO.test(n)) || /cuscuz|tapioca/.test(n)) return 'carboidrato';
+  if (f.cat === 'Verduras, hortaliças e derivados') return 'hortalica';
+  return 'outro';
+}
+// Papéis aceitos como troca, em ordem de preferência (o primeiro é o próprio papel).
+const TROCAS = {
+  laticinio: [['laticinio'], ['leguminosa', /extrato|tofu/], ['proteina', /ovo, de galinha, inteiro, cozido/], ['fruta', /crua?\b/]],
+  proteina: [['proteina', /grelhad|cozid|assad|mexid/], ['leguminosa', /cozid/]],
+  leguminosa: [['leguminosa', /cozid/], ['proteina', /grelhad|cozid|assad/]],
+  carboidrato: [['carboidrato']],
+  fruta: [['fruta', /crua?\b|polpa/]],
+  hortalica: [['hortalica']],
+  gordura: [['gordura']],
+  outro: [['outro']],
 };
+function grupoDeTroca(f, x) {
+  const n = norm(x.nome), op = TROCAS[papel(f)] || [['outro']];
+  return op.findIndex(([pp, re]) => papel(x) === pp && (!re || re.test(n)));
+}
 
 // Troca alimentos que violam restrições por outro do mesmo grupo, com a mesma energia.
 export function trocarProibidos(taco, refeicoes, restricoes, padrao, naoGosta) {
@@ -196,11 +214,10 @@ export function trocarProibidos(taco, refeicoes, restricoes, padrao, naoGosta) {
       const v = violacoes(f, restricoes, padrao, naoGosta);
       if (!v.length) return i;
       const pf = perfil(f);
-      const grupos = [[f.cat, null], ...(TROCA_POR_GRUPO[f.cat] || [])];
       const cand = taco.lista
-        .filter((x) => x.id !== f.id && !EVITAR_NA_TROCA.has(x.cat) && !NAO_TROCAR_POR.test(norm(x.nome)) && !violacoes(x, restricoes, padrao, naoGosta).length)
+        .filter((x) => x.id !== f.id && (!EVITAR_NA_TROCA.has(x.cat) || /cuscuz|tapioca/.test(norm(x.nome))) && !NAO_TROCAR_POR.test(norm(x.nome)) && !violacoes(x, restricoes, padrao, naoGosta).length)
         .map((x) => {
-          const gi = grupos.findIndex(([cat, re]) => x.cat === cat && (!re || re.test(norm(x.nome))));
+          const gi = grupoDeTroca(f, x);
           if (gi < 0) return null;
           const px = perfil(x);
           const forma = /\bcrua?\b/.test(norm(x.nome)) === /\bcrua?\b/.test(norm(f.nome)) ? 0 : 0.6;
@@ -278,4 +295,39 @@ export function listaDeCompras(taco, refeicoes, dias = 7) {
   }
   const ordem = ['Hortifrúti', 'Açougue e peixaria', 'Laticínios', 'Padaria', 'Mercearia'];
   return { categorias: ordem.filter((s) => setores.has(s)).map((s) => ({ nome: s, itens: setores.get(s).sort((a, b) => a.item.localeCompare(b.item, 'pt-BR')) })) };
+}
+
+// ---------- substituições equivalentes (calculadas, não chutadas) ----------
+// Alimentos do mesmo grupo de troca, com a quantidade que dá a mesma energia do item original.
+export function substitutos(taco, item, restricoes = [], padrao = 'onivoro', naoGosta = '', quantos = 4) {
+  const f = taco.get(item.taco_id);
+  if (!f) return [];
+  const kcalItem = (f.kcal * (Number(item.gramas) || 0)) / 100;
+  const pf = perfil(f);
+  const cozido = /cozid|grelhad|assad|refogad/.test(norm(f.nome));
+  return taco.lista
+    .filter((x) => x.id !== f.id && (!EVITAR_NA_TROCA.has(x.cat) || /cuscuz|tapioca/.test(norm(x.nome))) && !NAO_TROCAR_POR.test(norm(x.nome)) && !violacoes(x, restricoes, padrao, naoGosta).length)
+    .map((x) => {
+      const gi = grupoDeTroca(f, x);
+      if (gi < 0) return null;
+      const px = perfil(x);
+      const cru = /\bcrua?\b/.test(norm(x.nome)) && !['Frutas e derivados', 'Verduras, hortaliças e derivados'].includes(x.cat) && !/\bcrua?\b/.test(norm(f.nome));
+      const forma = (cozido && /\bcrua?\b/.test(norm(x.nome)) && x.cat !== 'Frutas e derivados') || cru ? 1.2 : 0;
+      if (/canjica|mingau|doce|com leite|com acucar|pudim|calda|xarope|cristalizad/.test(norm(x.nome))) return null;
+      const s = gi * 1.2 + Math.hypot(px[0] - pf[0], px[1] - pf[1], px[2] - pf[2]) * 2 + Math.abs(Math.log(x.kcal / f.kcal)) * 0.6 + forma + (USUAIS.test(norm(x.nome)) ? -0.6 : 0);
+      return { x, s };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.s - b.s)
+    .filter(({ x }, _i, arr) => {
+      // Variedade: no máximo 2 opções com o mesmo nome base (ex.: 2 tipos de banana).
+      const base = norm(x.nome).split(',')[0];
+      const antes = arr.slice(0, arr.findIndex((y) => y.x === x)).filter((y) => norm(y.x.nome).split(',')[0] === base).length;
+      return antes < 2 && base !== norm(f.nome).split(',')[0] || (base === norm(f.nome).split(',')[0] && antes < 1);
+    })
+    .slice(0, quantos)
+    .map(({ x }) => {
+      const g = Math.min(limiteGramas(x), Math.max(5, Math.round(((kcalItem / x.kcal) * 100) / 5) * 5));
+      return calcularItem(taco, { taco_id: x.id, alimento: x.nome, gramas: g, unidade: null });
+    });
 }
