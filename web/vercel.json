@@ -1,0 +1,4 @@
+{
+  "functions": { "api/cardapio.js": { "maxDuration": 60, "includeFiles": "{data,lib}/**" } },
+  "headers": [{ "source": "/data/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }] }]
+}

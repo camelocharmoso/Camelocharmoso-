@@ -260,6 +260,31 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
 .auth-row .btn{flex:1}
 .login-hint{border-radius:16px;padding:12px 14px;background:var(--orange-soft);color:var(--orange-text);font-size:14.5px;font-weight:600}
 .login-hint button{margin-top:8px}
+.lbl{font-size:13.5px;font-weight:700;color:var(--mute)}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{position:relative;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:30px;padding:7px 12px;font-size:14px;font-weight:700;cursor:pointer;background:var(--surface);color:var(--mute)}
+.tag input{position:absolute;opacity:0;pointer-events:none}
+.tag:has(input:checked){background:var(--pink-soft);border-color:var(--pink);color:var(--pink-text)}
+.tag:has(input:focus-visible){outline:3px solid var(--violet);outline-offset:2px}
+.why{margin:0;font-size:14px;font-weight:700;background:rgba(255,255,255,.16);border-radius:12px;padding:8px 12px}
+.card .why{background:var(--orange-soft);color:var(--orange-text);margin:6px 0}
+.ai-box .why{background:rgba(255,255,255,.16);color:var(--violet-ink)}
+.status ul{margin:6px 0 0;padding-left:18px;font-weight:600}
+.adeq{position:sticky;top:calc(env(safe-area-inset-top,0px) + 62px);z-index:3;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin:14px 0;padding:8px;border-radius:16px;background:var(--surface);border:1.5px solid var(--line)}
+@media (min-width:820px){.adeq{top:12px}}
+@media (max-width:640px){.adeq{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ad{border-radius:11px;padding:7px 8px;background:var(--surface-2);min-width:0}
+.ad .k{font-size:11.5px;font-weight:800;color:var(--mute)}
+.ad .v{font-family:var(--display);font-weight:800;font-size:16px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ad .p{font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ad.ok{background:var(--lime-soft)}.ad.ok .p{color:var(--lime-text)}
+.ad.near{background:var(--orange-soft)}.ad.near .p{color:var(--orange-text)}
+.ad.out{background:var(--pink-soft)}.ad.out .p{color:var(--pink-text)}
+.row .q{display:flex;align-items:center;gap:6px;min-width:0}
+.row .q input{width:70px;flex:none}
+.row .q small{font-size:12.5px;color:var(--mute);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row output{text-align:right;font-variant-numeric:tabular-nums;font-size:14.5px;padding:7px 4px}
+@media (max-width:640px){.row output{order:3}}
 </style>
 </head>
 <body>
@@ -325,8 +350,12 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
               <div class="f"><label for="p-ativ">Nível de atividade</label><select id="p-ativ">
                 <option value="1.2">Sedentário</option><option value="1.375">Leve (1–3x/sem)</option><option value="1.55">Moderado (3–5x/sem)</option><option value="1.725">Intenso (6–7x/sem)</option><option value="1.9">Muito intenso</option></select></div>
               <div class="f w3"><label for="p-obj">Objetivo</label><select id="p-obj"><option value="perda">Perda de peso</option><option value="manter">Manutenção</option><option value="ganho">Ganho de massa</option></select></div>
-              <div class="f w3"><label for="p-restr">Restrições e alergias</label><input type="text" id="p-restr" placeholder="Ex.: intolerância à lactose"></div>
-              <div class="f w6"><label for="p-pref">Preferências, rotina e o que não gosta</label><textarea id="p-pref" rows="3"></textarea></div>
+              <div class="f w6"><span class="lbl" id="tags-l">Restrições e alergias</span><div class="tags" id="p-tags" role="group" aria-labelledby="tags-l"></div></div>
+              <div class="f w3"><label for="p-padrao">Padrão alimentar</label><select id="p-padrao"></select></div>
+              <div class="f w3"><label for="p-restr">Outras restrições</label><input type="text" id="p-restr" placeholder="Ex.: não come carne de porco"></div>
+              <div class="f w3"><label for="p-treino">Treino (tipo e horário)</label><input type="text" id="p-treino" placeholder="Ex.: musculação às 19h, 5x/sem"></div>
+              <div class="f w3"><label for="p-ngosta">Não gosta de</label><input type="text" id="p-ngosta" placeholder="Ex.: jiló, fígado"></div>
+              <div class="f w6"><label for="p-pref">Preferências e rotina</label><textarea id="p-pref" rows="3"></textarea></div>
             </div>
           </section>
 
@@ -353,21 +382,25 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
             <div class="step"><div><h2>Cardápio</h2><p>Gerado pela IA a partir da ficha e das metas. Edite qualquer item.</p></div></div>
             <div class="ai-box" id="ai-box">
               <h3>Montar cardápio com IA</h3>
-              <p>Alimentos comuns no Brasil, medidas caseiras e valores aproximados da Tabela TACO, respeitando restrições e preferências.</p>
+              <p>A IA escolhe os alimentos e as refeições; os valores nutricionais saem da Tabela TACO e o sistema ajusta as porções até bater a meta.</p>
               <div class="act">
                 <button class="btn lime" id="gen-menu">Gerar cardápio</button>
                 <button class="btn ghost sm" id="stop-ai" hidden>Parar</button>
-                <span class="status" id="ai-status" role="status"></span>
+                <button class="btn ghost sm" id="retry-ai" hidden>Tentar de novo</button>
               </div>
+              <p class="why" id="ai-why" hidden></p>
+              <div class="status" id="ai-status" role="status"></div>
             </div>
-            <div class="bars" id="bars" style="margin-top:16px"></div>
+            <div class="adeq" id="bars" aria-label="Adequação do dia"></div>
+            <datalist id="taco-list"></datalist>
             <div class="meals" id="meals"></div>
             <div class="mf" style="padding:12px 0 0"><button class="btn ghost sm" id="add-meal">Adicionar refeição</button></div>
             <div class="f obs"><label for="obs">Orientações ao paciente</label><textarea id="obs" rows="3"></textarea></div>
           </section>
 
           <section class="card panel" data-step="compras">
-            <div class="step"><div><h2>Lista de compras</h2><p>Quantidades para uma semana seguindo o cardápio.</p></div><span class="sp"></span><button class="btn sm" id="gen-shop">Gerar lista</button></div>
+            <div class="step"><div><h2>Lista de compras</h2><p>Calculada pelo cardápio: 7 dias, em unidades de compra, por setor do mercado.</p></div><span class="sp"></span><button class="btn sm" id="gen-shop">Gerar lista</button></div>
+            <p class="why" id="shop-why" hidden></p>
             <span class="status" id="shop-status" role="status"></span>
             <div class="shop" id="shop"></div>
           </section>
@@ -447,7 +480,9 @@ html,body{margin:0;-webkit-text-size-adjust:100%}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script>
+<script type="module">
+import * as N from "/lib/nutri.mjs";
+const taco = N.criarTaco(await (await fetch("/data/taco.json")).json());
 (() => {
 "use strict";
 const $ = (id) => document.getElementById(id);
@@ -468,51 +503,20 @@ let toastT;
 const toast = (msg) => { const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => (t.hidden = true), 3200); };
 
 /* ---------- exemplo inicial (marcado como exemplo) ---------- */
+// Itens da TACO com gramas e medida caseira; os valores são calculados ao abrir.
+const EX_REFEICOES = [{"nome": "Café da manhã", "horario": "07:00", "substituicoes": "Pão integral por 3 colheres de sopa de cuscuz ou 1 tapioca pequena. Mamão por 1 fatia de melão.", "itens": [{"taco_id": 52, "gramas": 50, "unidade": {"nome": "fatia", "g": 25}}, {"taco_id": 488, "gramas": 145, "unidade": {"nome": "unidade", "g": 50}}, {"taco_id": 226, "gramas": 155, "unidade": {"nome": "fatia", "g": 75}}, {"taco_id": 471, "gramas": 100, "unidade": {"nome": "xícara", "g": 100}}]}, {"nome": "Lanche da manhã", "horario": "10:00", "substituicoes": "Banana por 1 maçã ou 10 morangos. Aveia por 1 colher de sopa de chia.", "itens": [{"taco_id": 449, "gramas": 175, "unidade": {"nome": "pote", "g": 170}}, {"taco_id": 7, "gramas": 20, "unidade": {"nome": "colher de sopa", "g": 10}}, {"taco_id": 182, "gramas": 70, "unidade": {"nome": "unidade", "g": 70}}, {"taco_id": 558, "gramas": 15, "unidade": {"nome": "colher de sopa", "g": 15}}]}, {"nome": "Almoço", "horario": "12:30", "substituicoes": "Frango por 1 bife de patinho ou 2 ovos. Arroz por 1 batata-doce média.", "itens": [{"taco_id": 1, "gramas": 155, "unidade": {"nome": "colher de sopa", "g": 25}}, {"taco_id": 561, "gramas": 90, "unidade": {"nome": "concha", "g": 86}}, {"taco_id": 410, "gramas": 75, "unidade": {"nome": "filé", "g": 120}}, {"taco_id": 64, "gramas": 80, "unidade": {"nome": "colher de sopa", "g": 27}}, {"taco_id": 78, "gramas": 30, "unidade": {"nome": "folha", "g": 10}}, {"taco_id": 157, "gramas": 70, "unidade": {"nome": "unidade média", "g": 100}}, {"taco_id": 260, "gramas": 7, "unidade": {"nome": "colher de sobremesa", "g": 5}}]}, {"nome": "Lanche da tarde", "horario": "16:00", "substituicoes": "Cuscuz por 1 fatia de pão integral ou 1 tapioca pequena. Queijo por 2 colheres de sopa de ricota.", "itens": [{"taco_id": 533, "gramas": 100, "unidade": {"nome": "colher de sopa", "g": 25}}, {"taco_id": 461, "gramas": 45, "unidade": {"nome": "fatia", "g": 30}}, {"taco_id": 222, "gramas": 135, "unidade": {"nome": "unidade", "g": 130}}]}, {"nome": "Jantar", "horario": "19:30", "substituicoes": "Merluza por frango grelhado (120 g). Batata-doce por 4 colheres de sopa de arroz integral.", "itens": [{"taco_id": 88, "gramas": 155, "unidade": {"nome": "unidade média", "g": 150}}, {"taco_id": 301, "gramas": 75, "unidade": {"nome": "filé", "g": 120}}, {"taco_id": 100, "gramas": 90, "unidade": {"nome": "xícara", "g": 60}}, {"taco_id": 260, "gramas": 7, "unidade": {"nome": "colher de sobremesa", "g": 5}}]}];
+const hidratar = (refs) => refs.map((r) => ({ ...r, itens: r.itens.map((i) => N.calcularItem(taco, i)) }));
 const EXEMPLO = {
   codigo: null, status: "exemplo",
   paciente: { nome: "Ana Souza", sexo: "f", idade: 28, peso: 65, altura: 165, atividade: "1.55", objetivo: "perda", refeicoes: "5",
-    restricoes: "Nenhuma", preferencias: "Trabalha das 9h às 18h, treina musculação à noite. Não gosta de peixe cru nem de jiló." },
+    restricoesTags: [], padrao: "onivoro", restricoes: "", treino: "Musculação às 19h, 5 vezes por semana", naoGosta: "jiló, peixe cru",
+    preferencias: "Trabalha das 9h às 18h e leva marmita. Gosta de cuscuz e tapioca no café." },
   ajustes: { kcal: "", ptn: "", lip: "" },
-  cardapio: { refeicoes: [
-    { nome: "Café da manhã", horario: "07:00", itens: [
-      { alimento: "Pão integral", quantidade: "2 fatias (50 g)", kcal: 125, ptn: 6, cho: 23, lip: 1.7 },
-      { alimento: "Ovo mexido", quantidade: "2 unidades (100 g)", kcal: 150, ptn: 12.5, cho: 1, lip: 10 },
-      { alimento: "Mamão papaia", quantidade: "1/2 unidade (150 g)", kcal: 60, ptn: 0.7, cho: 15, lip: 0.1 },
-      { alimento: "Café sem açúcar", quantidade: "1 xícara (100 ml)", kcal: 3, ptn: 0, cho: 0.5, lip: 0 } ],
-      substituicoes: "Pão integral por 3 col. sopa de tapioca ou 1 cuscuz pequeno (100 g). Mamão por 1 fatia de melão." },
-    { nome: "Lanche da manhã", horario: "10:00", itens: [
-      { alimento: "Iogurte natural desnatado", quantidade: "1 pote (170 g)", kcal: 70, ptn: 7, cho: 10, lip: 0.3 },
-      { alimento: "Aveia em flocos", quantidade: "2 col. sopa (20 g)", kcal: 79, ptn: 2.8, cho: 13, lip: 1.7 },
-      { alimento: "Banana prata", quantidade: "1 unidade (70 g)", kcal: 69, ptn: 0.9, cho: 18, lip: 0.1 },
-      { alimento: "Pasta de amendoim", quantidade: "1 col. sopa (15 g)", kcal: 88, ptn: 3.9, cho: 2.6, lip: 7.4 } ],
-      substituicoes: "Banana por 1 maçã ou 10 morangos. Aveia por 1 col. sopa de chia." },
-    { nome: "Almoço", horario: "12:30", itens: [
-      { alimento: "Arroz integral cozido", quantidade: "6 col. sopa (150 g)", kcal: 186, ptn: 3.9, cho: 39, lip: 1.5 },
-      { alimento: "Feijão carioca cozido", quantidade: "1 concha (86 g)", kcal: 66, ptn: 4.1, cho: 12, lip: 0.4 },
-      { alimento: "Peito de frango grelhado", quantidade: "1 filé (120 g)", kcal: 190, ptn: 38, cho: 0, lip: 3 },
-      { alimento: "Abóbora cabotiá cozida", quantidade: "3 col. sopa (80 g)", kcal: 38, ptn: 1, cho: 9, lip: 0.5 },
-      { alimento: "Salada de folhas e tomate", quantidade: "1 prato raso (100 g)", kcal: 20, ptn: 1, cho: 3.5, lip: 0.2 },
-      { alimento: "Azeite de oliva extravirgem", quantidade: "1 col. sobremesa (5 ml)", kcal: 44, ptn: 0, cho: 0, lip: 5 } ],
-      substituicoes: "Frango por 1 bife de patinho (100 g) ou 2 ovos. Arroz por 1 batata-inglesa média (150 g)." },
-    { nome: "Lanche da tarde", horario: "16:00", itens: [
-      { alimento: "Tapioca (goma)", quantidade: "2 col. sopa (30 g)", kcal: 100, ptn: 0, cho: 25, lip: 0 },
-      { alimento: "Queijo minas frescal", quantidade: "1 fatia (30 g)", kcal: 79, ptn: 5.2, cho: 1, lip: 6 },
-      { alimento: "Maçã", quantidade: "1 unidade (130 g)", kcal: 73, ptn: 0.4, cho: 20, lip: 0 },
-      { alimento: "Castanha-do-pará", quantidade: "2 unidades (8 g)", kcal: 52, ptn: 1.1, cho: 1, lip: 5 } ],
-      substituicoes: "Tapioca por 1 fatia de pão integral. Queijo por 2 col. sopa de ricota." },
-    { nome: "Jantar", horario: "19:30", itens: [
-      { alimento: "Batata-doce cozida", quantidade: "1 unidade média (150 g)", kcal: 116, ptn: 0.9, cho: 28, lip: 0.1 },
-      { alimento: "Tilápia grelhada", quantidade: "1 filé (120 g)", kcal: 154, ptn: 31, cho: 0, lip: 3 },
-      { alimento: "Brócolis cozido", quantidade: "1 xícara (90 g)", kcal: 23, ptn: 1.9, cho: 4, lip: 0.4 },
-      { alimento: "Azeite de oliva extravirgem", quantidade: "1 col. sobremesa (5 ml)", kcal: 44, ptn: 0, cho: 0, lip: 5 } ],
-      substituicoes: "Tilápia por frango grelhado (120 g). Batata-doce por 4 col. sopa de arroz integral." } ],
-    observacoes: "Beba de 2,3 a 2,5 litros de água por dia. Nos dias de treino, o lanche da tarde pode ser feito 1 hora antes da academia." },
-  compras: { categorias: [
-    { nome: "Hortifrúti", itens: [ { item: "Mamão papaia", quantidade: "4 unidades" }, { item: "Banana prata", quantidade: "1 dúzia" }, { item: "Maçã", quantidade: "7 unidades" }, { item: "Batata-doce", quantidade: "1,2 kg" }, { item: "Abóbora cabotiá", quantidade: "1 kg" }, { item: "Brócolis", quantidade: "2 maços" }, { item: "Folhas e tomate", quantidade: "para 7 saladas" } ] },
-    { nome: "Carnes e ovos", itens: [ { item: "Peito de frango", quantidade: "900 g" }, { item: "Filé de tilápia", quantidade: "900 g" }, { item: "Ovos", quantidade: "15 unidades" } ] },
-    { nome: "Laticínios", itens: [ { item: "Iogurte natural desnatado", quantidade: "7 potes" }, { item: "Queijo minas frescal", quantidade: "250 g" } ] },
-    { nome: "Mercearia", itens: [ { item: "Pão integral", quantidade: "1 pacote" }, { item: "Arroz integral", quantidade: "1 kg" }, { item: "Feijão carioca", quantidade: "500 g" }, { item: "Aveia em flocos", quantidade: "200 g" }, { item: "Goma de tapioca", quantidade: "500 g" }, { item: "Pasta de amendoim", quantidade: "1 pote" }, { item: "Castanha-do-pará", quantidade: "100 g" }, { item: "Azeite extravirgem", quantidade: "1 garrafa" }, { item: "Café", quantidade: "1 pacote" } ] } ] }
+  cardapio: { refeicoes: hidratar(EX_REFEICOES),
+    observacoes: "Beba de 2,3 a 2,5 litros de água por dia. Nos dias de treino, faça o lanche da tarde cerca de 1 hora antes da academia." },
+  compras: { categorias: [] },
 };
+EXEMPLO.compras = N.listaDeCompras(taco, EXEMPLO.cardapio.refeicoes);
 const clone = (o) => JSON.parse(JSON.stringify(o));
 let plan = clone(EXEMPLO);
 let dirty = false;
@@ -535,19 +539,25 @@ function calc(p, aj) {
   const imcC = !imc ? "" : imc < 18.5 ? "baixo peso" : imc < 25 ? "eutrofia" : imc < 30 ? "sobrepeso" : "obesidade";
   return { tmb: Math.round(tmb), get: Math.round(get), kcal, ptn, cho, lip, gkg, lipPct, imc, imcC, auto };
 }
-const totals = (refs) => refs.reduce((t, r) => { for (const i of r.itens || []) { t.kcal += num(i.kcal); t.ptn += num(i.ptn); t.cho += num(i.cho); t.lip += num(i.lip); } return t; }, { kcal: 0, ptn: 0, cho: 0, lip: 0 });
+const totals = (refs) => N.totais(refs);
 const mealTot = (r) => totals([r]);
 
 /* ---------- ficha <-> estado ---------- */
-const FIELDS = { nome: "p-nome", sexo: "p-sexo", idade: "p-idade", peso: "p-peso", altura: "p-alt", atividade: "p-ativ", objetivo: "p-obj", refeicoes: "p-ref", restricoes: "p-restr", preferencias: "p-pref" };
+const FIELDS = { nome: "p-nome", sexo: "p-sexo", idade: "p-idade", peso: "p-peso", altura: "p-alt", atividade: "p-ativ", objetivo: "p-obj", refeicoes: "p-ref", restricoes: "p-restr", preferencias: "p-pref", padrao: "p-padrao", treino: "p-treino", naoGosta: "p-ngosta" };
+$("p-padrao").append(...N.PADROES.map((p) => el("option", { value: p.id, text: p.nome })));
+$("p-tags").append(...N.RESTRICOES.map((r) => el("label", { class: "tag" }, el("input", { type: "checkbox", value: r.id, id: "tag-" + r.id }), r.nome)));
+$("taco-list").append(...taco.lista.map((f) => el("option", { value: f.nome })));
 function fillForm() {
-  for (const [k, id] of Object.entries(FIELDS)) $(id).value = plan.paciente[k] ?? "";
+  for (const [k, id] of Object.entries(FIELDS)) $(id).value = plan.paciente[k] ?? (k === "padrao" ? "onivoro" : "");
+  const tags = new Set(plan.paciente.restricoesTags || []);
+  document.querySelectorAll("#p-tags input").forEach((c) => (c.checked = tags.has(c.value)));
   $("t-kcal").value = plan.ajustes?.kcal ?? ""; $("t-ptn").value = plan.ajustes?.ptn ?? ""; $("t-lip").value = plan.ajustes?.lip ?? "";
   $("obs").value = plan.cardapio?.observacoes ?? "";
   $("rev").checked = plan.status === "liberado";
 }
 function readForm() {
   for (const [k, id] of Object.entries(FIELDS)) plan.paciente[k] = $(id).value;
+  plan.paciente.restricoesTags = [...document.querySelectorAll("#p-tags input:checked")].map((c) => c.value);
   plan.ajustes = { kcal: $("t-kcal").value, ptn: $("t-ptn").value, lip: $("t-lip").value };
 }
 function markDirty() { dirty = true; renderHead(); }
@@ -576,12 +586,16 @@ function renderMetas() {
 
 function renderBars() {
   const t = totals(plan.cardapio.refeicoes), m = plan.metas || {};
+  const fibMeta = m.kcal ? Math.round((m.kcal / 1000) * 14) : 0;
   const box = $("bars"); box.replaceChildren();
-  for (const [k, lab, u] of [["kcal", "Energia", " kcal"], ["ptn", "Proteínas", " g"], ["cho", "Carboidratos", " g"], ["lip", "Gorduras", " g"]]) {
-    const pct = m[k] ? (t[k] / m[k]) * 100 : 0;
-    box.append(el("div", { class: "bar" + (pct > 110 ? " over" : "") },
-      el("div", { class: "l" }, el("span", { text: lab }), el("span", { text: fmt(t[k]) + " / " + fmt(m[k] || 0) + u })),
-      el("div", { class: "t" }, el("i", { style: "width:" + Math.min(100, pct) + "%" }))));
+  const itens = [["kcal", "Energia", " kcal", m.kcal, N.TOLERANCIA.kcal], ["ptn", "Proteína", " g", m.ptn, N.TOLERANCIA.macro], ["cho", "Carboidrato", " g", m.cho, N.TOLERANCIA.macro], ["lip", "Gordura", " g", m.lip, N.TOLERANCIA.macro], ["fib", "Fibra", " g", fibMeta, null], ["na", "Sódio", " mg", 2000, null]];
+  for (const [k, lab, u, meta, tol] of itens) {
+    const v = t[k] || 0, pct = meta ? (v / meta) * 100 : 0, d = meta ? Math.abs(v - meta) / meta : 0;
+    // Fibra: mínimo; sódio: limite máximo; demais: alvo com tolerância.
+    const cls = !meta ? "" : k === "fib" ? (v >= meta ? "ok" : v >= meta * 0.8 ? "near" : "out") : k === "na" ? (v <= meta ? "ok" : v <= meta * 1.2 ? "near" : "out") : d <= tol ? "ok" : d <= tol * 2 ? "near" : "out";
+    box.append(el("div", { class: "ad " + cls, title: lab + ": " + fmt(v) + u + " de " + fmt(meta) + u },
+      el("div", { class: "k", text: lab }), el("div", { class: "v", text: fmt(v) + u }),
+      el("div", { class: "p", text: meta ? (k === "na" ? "limite " + fmt(meta) : k === "fib" ? "mín. " + fmt(meta) : fmt(pct) + "% da meta") : "sem meta" })));
   }
 }
 
@@ -589,31 +603,35 @@ function renderBars() {
 function renderMeals() {
   const box = $("meals"); box.replaceChildren();
   plan.cardapio.refeicoes.forEach((r, ri) => {
-    const tot = mealTot(r);
-    const totEl = el("span", { class: "tot", text: fmt(tot.kcal) + " kcal" });
+    const totEl = el("span", { class: "tot", text: fmt(mealTot(r).kcal) + " kcal" });
     const rows = el("div", { class: "rows" },
-      el("div", { class: "row hd" }, el("span", { text: "Alimento" }), el("span", { text: "Quantidade" }), el("span", { text: "kcal", style: "text-align:right" }), el("span", { text: "PTN", style: "text-align:right" }), el("span", { text: "CHO", style: "text-align:right" }), el("span", { text: "LIP", style: "text-align:right" }), el("span")));
+      el("div", { class: "row hd" }, el("span", { text: "Alimento (TACO)" }), el("span", { text: "Quantidade" }), el("span", { text: "kcal", style: "text-align:right" }), el("span", { text: "PTN", style: "text-align:right" }), el("span", { text: "CHO", style: "text-align:right" }), el("span", { text: "LIP", style: "text-align:right" }), el("span")));
     r.itens.forEach((it, ii) => {
-      const upd = (k, isNum) => (e) => { it[k] = isNum ? num(e.target.value) : e.target.value; if (isNum) { totEl.textContent = fmt(mealTot(r).kcal) + " kcal"; renderBars(); } markDirty(); };
-      rows.append(el("div", { class: "row" },
-        el("input", { type: "text", class: "a", value: it.alimento, "aria-label": "Alimento", oninput: upd("alimento") }),
-        el("input", { type: "text", class: "q", value: it.quantidade, "aria-label": "Quantidade", oninput: upd("quantidade") }),
-        ...["kcal", "ptn", "cho", "lip"].map((k) => el("input", { type: "number", step: k === "kcal" ? "1" : "0.1", value: String(it[k] ?? 0), "aria-label": k.toUpperCase(), oninput: upd(k, true) })),
-        el("button", { class: "x", title: "Remover item", "aria-label": "Remover " + it.alimento, onclick: () => { r.itens.splice(ii, 1); markDirty(); renderMeals(); renderBars(); } }, "×")));
+      const outs = ["kcal", "ptn", "cho", "lip"].map((k) => el("output", { text: fmt(it[k] || 0, k === "kcal" ? 0 : 1) }));
+      const medida = el("small", { text: it.taco_id ? (it.quantidade || "").replace(/^\d+ g\s*/, "") : "" });
+      const atualizar = () => {
+        Object.assign(it, N.calcularItem(taco, it));
+        ["kcal", "ptn", "cho", "lip"].forEach((k, j) => (outs[j].textContent = fmt(it[k] || 0, k === "kcal" ? 0 : 1)));
+        medida.textContent = it.taco_id ? it.quantidade.replace(/^\d+ g\s*/, "") : "";
+        totEl.textContent = fmt(mealTot(r).kcal) + " kcal"; renderBars(); markDirty();
+      };
+      const nome = el("input", { type: "text", class: "a", value: it.alimento || it.taco_nome || "", list: "taco-list", placeholder: "Buscar na TACO", "aria-label": "Alimento",
+        onchange: (e) => { const f = taco.lista.find((x) => x.nome === e.target.value); if (f) { it.taco_id = f.id; it.alimento = f.nome; it.gramas = it.gramas || 100; it.unidade = null; gramas.value = it.gramas; } else it.alimento = e.target.value; atualizar(); } });
+      const gramas = el("input", { type: "number", min: "0", step: "5", value: String(Math.round(it.gramas || 0)), "aria-label": "Gramas de " + (it.alimento || "alimento"), oninput: (e) => { it.gramas = num(e.target.value); atualizar(); } });
+      rows.append(el("div", { class: "row" }, nome, el("div", { class: "q" }, gramas, el("small", { text: "g" }), medida), ...outs,
+        el("button", { class: "x", title: "Remover item", "aria-label": "Remover " + (it.alimento || "item"), onclick: () => { r.itens.splice(ii, 1); markDirty(); renderMeals(); renderBars(); } }, "×")));
     });
-    const regen = el("button", { class: "btn ghost sm", onclick: () => regenMeal(ri, regen) }, "Refazer com IA");
     box.append(el("div", { class: "meal" },
       el("div", { class: "mh" },
         el("input", { type: "text", value: r.nome, "aria-label": "Nome da refeição", oninput: (e) => { r.nome = e.target.value; markDirty(); } }),
         el("input", { type: "text", class: "hr", value: r.horario || "", "aria-label": "Horário", oninput: (e) => { r.horario = e.target.value; markDirty(); } }),
         totEl,
-        el("button", { class: "x", title: "Remover refeição", "aria-label": "Remover " + r.nome, onclick: () => { plan.cardapio.refeicoes.splice(ri, 1); markDirty(); renderMeals(); renderBars(); } }, "×")),
+        el("button", { class: "x", title: "Remover refeição", "aria-label": "Remover " + r.nome, onclick: () => { plan.cardapio.refeicoes.splice(ri, 1); markDirty(); renderMeals(); renderBars(); atualizarIA(); } }, "×")),
       rows,
       el("div", { class: "subs" }, el("b", { text: "Substituições: " }),
         el("span", { contenteditable: "true", role: "textbox", "aria-label": "Substituições de " + r.nome, text: r.substituicoes || "Sem substituições ainda.", oninput: (e) => { r.substituicoes = e.target.textContent; markDirty(); } })),
       el("div", { class: "mf" },
-        el("button", { class: "btn ghost sm", onclick: () => { r.itens.push({ alimento: "", quantidade: "", kcal: 0, ptn: 0, cho: 0, lip: 0 }); markDirty(); renderMeals(); } }, "Adicionar alimento"),
-        regen)));
+        el("button", { class: "btn ghost sm", onclick: () => { r.itens.push({ taco_id: null, alimento: "", gramas: 100, kcal: 0, ptn: 0, cho: 0, lip: 0 }); markDirty(); renderMeals(); } }, "Adicionar alimento"))));
   });
   if (!plan.cardapio.refeicoes.length) box.append(el("p", { class: "empty", text: "Nenhuma refeição ainda. Toque em Gerar cardápio para a IA montar uma proposta a partir da ficha." }));
 }
@@ -628,90 +646,79 @@ function renderShop() {
     el("ul", {}, (c.itens || []).map((i) => el("li", {}, el("span", { text: i.item }), el("span", { class: "q", text: i.quantidade || "" }))))));
 }
 
-/* ---------- IA ---------- */
-let sample = null, ctl = null;
-const aiCopy = (e) => ({ not_granted: "Você não permitiu o uso do Claude nesta página. A IA fica desligada nesta visita.", sampling_disabled: "O Claude não está disponível nesta conta.", rate_limited: "Muitos pedidos seguidos. Espere um pouco e tente de novo.", invalid_json: "A resposta da IA veio num formato inesperado. Tente gerar de novo.", refused: "A IA recusou esse pedido. Revise a ficha e tente de novo.", session_expired: "Sua sessão expirou. Entre de novo no Claude." }[e?.code] || "A IA não respondeu agora. Tente de novo.");
-const hideAI = () => { for (const id of ["gen-menu", "gen-shop"]) $(id).disabled = true; document.querySelectorAll(".meal .btn.ghost.sm:last-child").forEach((b) => (b.disabled = true)); };
-
-function fichaTexto() {
-  const p = plan.paciente, m = plan.metas;
-  const ativ = $("p-ativ").selectedOptions[0]?.textContent || "";
-  const obj = $("p-obj").selectedOptions[0]?.textContent || "";
-  return `Paciente: ${p.sexo === "m" ? "homem" : "mulher"}, ${p.idade} anos, ${p.peso} kg, ${p.altura} cm. Atividade: ${ativ}. Objetivo: ${obj}.
-Restrições e alergias: ${p.restricoes || "nenhuma"}.
-Preferências e rotina: ${p.preferencias || "não informadas"}.
-Metas diárias: ${m.kcal} kcal, ${m.ptn} g de proteína, ${m.cho} g de carboidrato, ${m.lip} g de gordura.`;
+/* ---------- IA (rota de servidor /api/cardapio) ---------- */
+let ctl = null;
+// Distribuição padrão da energia por refeição (editável em versão futura).
+const DISTRIBUICAO = {
+  3: [["Café da manhã", "07:00", 30], ["Almoço", "12:30", 40], ["Jantar", "19:30", 30]],
+  4: [["Café da manhã", "07:00", 25], ["Almoço", "12:30", 35], ["Lanche da tarde", "16:00", 15], ["Jantar", "19:30", 25]],
+  5: [["Café da manhã", "07:00", 25], ["Lanche da manhã", "10:00", 10], ["Almoço", "12:30", 30], ["Lanche da tarde", "16:00", 10], ["Jantar", "19:30", 25]],
+  6: [["Café da manhã", "07:00", 20], ["Lanche da manhã", "10:00", 10], ["Almoço", "12:30", 30], ["Lanche da tarde", "16:00", 10], ["Jantar", "19:30", 20], ["Ceia", "21:30", 10]],
+};
+function motivosIA() {
+  const p = plan.paciente, falta = [];
+  if (!session) falta.push("entre na sua conta (aba Perfil)");
+  const campos = [["peso", "peso"], ["altura", "altura"], ["idade", "idade"]].filter(([k]) => !num(p[k])).map(([, n]) => n);
+  if (campos.length) falta.push("preencha " + campos.join(", ").replace(/, ([^,]*)$/, " e $1") + " na Ficha");
+  else if (!plan.metas?.kcal) falta.push("confira as metas na etapa Metas");
+  return falta;
 }
-const ITEM_FMT = `{"alimento": string, "quantidade": string com medida caseira e gramas, "kcal": número, "ptn": número em g, "cho": número em g, "lip": número em g}`;
-function cleanMeal(r) {
-  return { nome: String(r?.nome || "Refeição"), horario: String(r?.horario || ""), substituicoes: String(r?.substituicoes || ""),
-    itens: (Array.isArray(r?.itens) ? r.itens : []).map((i) => ({ alimento: String(i?.alimento || ""), quantidade: String(i?.quantidade || ""), kcal: Math.round(num(i?.kcal)), ptn: Math.round(num(i?.ptn) * 10) / 10, cho: Math.round(num(i?.cho) * 10) / 10, lip: Math.round(num(i?.lip) * 10) / 10 })) };
+function atualizarIA() {
+  const falta = motivosIA(), w = $("ai-why");
+  $("gen-menu").disabled = !!ctl || falta.length > 0;
+  w.hidden = !falta.length || !!ctl;
+  w.textContent = falta.length ? "Para gerar: " + falta.join("; ") + "." : "";
+  const temTaco = plan.cardapio.refeicoes.some((r) => r.itens.some((i) => taco.get(i.taco_id)));
+  $("gen-shop").disabled = !temTaco;
+  $("shop-why").hidden = temTaco;
+  $("shop-why").textContent = temTaco ? "" : "Para gerar a lista: monte o cardápio com alimentos da TACO na etapa Cardápio.";
 }
-function startAI(statusEl) { ctl = new AbortController(); $("stop-ai").hidden = false; statusEl.className = "status"; statusEl.textContent = "Pensando..."; return ctl; }
-function endAI() { $("stop-ai").hidden = true; ctl = null; }
+function statusIA(html, err) { const s = $("ai-status"); s.className = "status" + (err ? " err" : ""); s.replaceChildren(...[].concat(html).filter((x) => x != null)); }
 $("stop-ai").addEventListener("click", () => ctl?.abort());
+$("retry-ai").addEventListener("click", () => $("gen-menu").click());
 
 $("gen-menu").addEventListener("click", async () => {
-  if (!sample) return;
   readForm(); renderMetas();
-  if (!plan.metas.kcal) { $("ai-status").textContent = "Preencha peso, altura e idade para calcular as metas antes."; return; }
-  const btn = $("gen-menu"); btn.disabled = true; const c = startAI($("ai-status"));
-  const prompt = `Você é assistente de um nutricionista brasileiro. Monte uma PROPOSTA de cardápio de um dia, que o nutricionista vai revisar antes de entregar ao paciente.
-${fichaTexto()}
-Regras: exatamente ${plan.paciente.refeicoes} refeições com horários coerentes com a rotina; alimentos comuns e acessíveis no Brasil; medidas caseiras com gramas; valores nutricionais aproximados com base na Tabela TACO; a soma do dia deve ficar a no máximo 5% das metas; respeite rigorosamente restrições e alergias; inclua de 1 a 2 substituições equivalentes por refeição numa frase curta; nada de suplementos ou medicamentos.
-Responda só com JSON neste formato:
-{"refeicoes":[{"nome": string, "horario": "HH:MM", "itens":[${ITEM_FMT}], "substituicoes": string}], "observacoes": string com 2 ou 3 orientações gerais em português}`;
+  if (motivosIA().length) return atualizarIA();
+  const p = plan.paciente, m = plan.metas;
+  const dist = DISTRIBUICAO[num(p.refeicoes)] || DISTRIBUICAO[5];
+  const corpo = {
+    ficha: { sexo: p.sexo, idade: num(p.idade), objetivo: $("p-obj").selectedOptions[0]?.textContent || p.objetivo, restricoes: p.restricoesTags || [], padrao: p.padrao || "onivoro",
+      preferencias: [p.preferencias, p.restricoes && "Outras restrições: " + p.restricoes].filter(Boolean).join("\n"), naoGosta: p.naoGosta || "", treino: p.treino || "" },
+    metas: { kcal: m.kcal, ptn: m.ptn, cho: m.cho, lip: m.lip },
+    refeicoes: dist.map(([nome, horario, pct]) => ({ nome, horario, pct })),
+  };
+  ctl = new AbortController(); atualizarIA();
+  const inicio = Date.now();
+  $("stop-ai").hidden = false; $("retry-ai").hidden = true;
+  const tick = () => statusIA(`Gerando o cardápio... ${Math.round((Date.now() - inicio) / 1000)} s (costuma levar de 20 a 50 segundos)`);
+  tick(); const relogio = setInterval(tick, 1000);
+  const limite = setTimeout(() => ctl?.abort("tempo"), 75000);
   try {
-    const out = await sample.json(prompt, { signal: c.signal, cache: false, onText: () => { $("ai-status").textContent = "Montando o cardápio..."; } });
-    const refs = (Array.isArray(out?.refeicoes) ? out.refeicoes : []).map(cleanMeal).filter((r) => r.itens.length);
-    if (!refs.length) throw { code: "invalid_json" };
-    plan.cardapio = { refeicoes: refs, observacoes: String(out.observacoes || "") };
-    plan.compras = { categorias: [] };
+    const r = await fetch("/api/cardapio", { method: "POST", signal: ctl.signal, headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.access_token }, body: JSON.stringify(corpo) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw { mensagem: d.mensagem || "O servidor não respondeu como esperado.", id: d.requestId, codigo: d.codigo };
+    plan.cardapio = { refeicoes: d.refeicoes, observacoes: d.observacoes || "" };
+    plan.compras = N.listaDeCompras(taco, d.refeicoes);
     $("obs").value = plan.cardapio.observacoes; markDirty(); renderMeals(); renderBars(); renderShop();
-    const t = totals(refs); $("ai-status").textContent = `Pronto: ${fmt(t.kcal)} kcal no dia. Revise os itens abaixo.`;
+    const ok = N.dentroDaMeta(d.totais, m);
+    statusIA([el("b", { text: `Pronto: ${fmt(d.totais.kcal)} kcal no dia (meta ${fmt(m.kcal)}). ${ok ? "Dentro da meta." : "Fora da tolerância em algum nutriente: revise."}` }),
+      d.avisos?.length ? el("ul", {}, d.avisos.map((a) => el("li", { text: a }))) : null]);
   } catch (e) {
-    if (e?.code !== "cancelled") { $("ai-status").className = "status err"; $("ai-status").textContent = aiCopy(e); if (["not_granted", "sampling_disabled"].includes(e?.code)) hideAI(); }
-    else $("ai-status").textContent = "Parado.";
-  } finally { btn.disabled = !sample; endAI(); }
+    const abortado = e?.name === "AbortError" || ctl?.signal.aborted;
+    const porTempo = ctl?.signal.reason === "tempo";
+    statusIA(abortado && !porTempo ? "Parado." : (porTempo ? "Demorou demais para responder." : (e?.mensagem || "Sem conexão com o servidor. Confira a internet.")) + (e?.id ? ` (código ${e.id})` : ""), !abortado || porTempo);
+    if (!abortado || porTempo) $("retry-ai").hidden = false;
+    if (e?.codigo === "sessao_expirada") toast("Entre de novo na aba Perfil");
+  } finally {
+    clearInterval(relogio); clearTimeout(limite); ctl = null; $("stop-ai").hidden = true; atualizarIA();
+  }
 });
 
-async function regenMeal(ri, btn) {
-  if (!sample) return;
-  readForm(); renderMetas();
-  const r = plan.cardapio.refeicoes[ri]; const t = totals(plan.cardapio.refeicoes), mt = mealTot(r);
-  btn.disabled = true; btn.textContent = "Refazendo..."; const c = startAI($("ai-status"));
-  const prompt = `Você é assistente de um nutricionista brasileiro. Refaça só a refeição "${r.nome}" (${r.horario}) com alimentos diferentes, mantendo energia e macronutrientes parecidos com os atuais: cerca de ${Math.round(mt.kcal)} kcal, ${Math.round(mt.ptn)} g de proteína, ${Math.round(mt.cho)} g de carboidrato e ${Math.round(mt.lip)} g de gordura.
-${fichaTexto()}
-O dia todo soma hoje ${Math.round(t.kcal)} kcal. Alimentos atuais desta refeição: ${r.itens.map((i) => i.alimento).join(", ")}.
-Use alimentos comuns no Brasil, medidas caseiras com gramas e valores aproximados da Tabela TACO; respeite restrições e alergias.
-Responda só com JSON: {"nome": string, "horario": "HH:MM", "itens":[${ITEM_FMT}], "substituicoes": string}`;
-  try {
-    const out = cleanMeal(await sample.json(prompt, { signal: c.signal, cache: false }));
-    if (!out.itens.length) throw { code: "invalid_json" };
-    plan.cardapio.refeicoes[ri] = out; markDirty(); renderMeals(); renderBars();
-    $("ai-status").textContent = `"${out.nome}" refeita.`;
-  } catch (e) {
-    if (e?.code !== "cancelled") { $("ai-status").className = "status err"; $("ai-status").textContent = aiCopy(e); }
-    else $("ai-status").textContent = "Parado.";
-    btn.disabled = false; btn.textContent = "Refazer com IA";
-  } finally { endAI(); }
-}
-
-$("gen-shop").addEventListener("click", async () => {
-  if (!sample) return;
-  if (!plan.cardapio.refeicoes.length) { $("shop-status").textContent = "Monte o cardápio antes."; return; }
-  const btn = $("gen-shop"); btn.disabled = true; const st = $("shop-status"); st.className = "status"; st.textContent = "Montando a lista...";
-  const itens = plan.cardapio.refeicoes.flatMap((r) => r.itens.map((i) => `${i.alimento}: ${i.quantidade}`)).join("\n");
-  const prompt = `Monte uma lista de compras para 7 dias seguindo este cardápio diário (some as quantidades da semana, arredonde para embalagens comuns no Brasil e junte itens repetidos):
-${itens}
-Agrupe por seção do mercado (Hortifrúti, Carnes e ovos, Laticínios, Mercearia, Outros). Responda só com JSON: {"categorias":[{"nome": string, "itens":[{"item": string, "quantidade": string}]}]}`;
-  try {
-    const out = await sample.json(prompt, { modelTier: "quick", cache: false });
-    const cats = (Array.isArray(out?.categorias) ? out.categorias : []).map((c) => ({ nome: String(c?.nome || "Outros"), itens: (Array.isArray(c?.itens) ? c.itens : []).map((i) => ({ item: String(i?.item || ""), quantidade: String(i?.quantidade || "") })).filter((i) => i.item) })).filter((c) => c.itens.length);
-    if (!cats.length) throw { code: "invalid_json" };
-    plan.compras = { categorias: cats }; markDirty(); renderShop(); st.textContent = "";
-  } catch (e) { st.className = "status err"; st.textContent = aiCopy(e); if (["not_granted", "sampling_disabled"].includes(e?.code)) hideAI(); }
-  finally { btn.disabled = !sample; }
+$("gen-shop").addEventListener("click", () => {
+  plan.compras = N.listaDeCompras(taco, plan.cardapio.refeicoes);
+  markDirty(); renderShop();
+  $("shop-status").className = "status"; $("shop-status").textContent = "Lista atualizada a partir do cardápio.";
 });
 
 /* ---------- PDF ---------- */
@@ -900,11 +907,12 @@ $("code-form").addEventListener("submit", async (e) => {
 });
 
 /* ---------- eventos da ficha ---------- */
-for (const id of [...Object.values(FIELDS), "t-kcal", "t-ptn", "t-lip"]) $(id).addEventListener("input", () => { readForm(); renderMetas(); markDirty(); });
+for (const id of [...Object.values(FIELDS), "t-kcal", "t-ptn", "t-lip"]) $(id).addEventListener("input", () => { readForm(); renderMetas(); markDirty(); atualizarIA(); });
+$("p-tags").addEventListener("change", () => { readForm(); markDirty(); });
 $("obs").addEventListener("input", () => { plan.cardapio.observacoes = $("obs").value; markDirty(); });
 $("add-meal").addEventListener("click", () => { plan.cardapio.refeicoes.push({ nome: "Nova refeição", horario: "", itens: [{ alimento: "", quantidade: "", kcal: 0, ptn: 0, cho: 0, lip: 0 }], substituicoes: "" }); markDirty(); renderMeals(); renderBars(); });
 
-function renderAll() { renderHead(); renderMetas(); renderMeals(); renderShop(); renderList(); $("rel-status").textContent = ""; }
+function renderAll() { renderHead(); renderMetas(); renderMeals(); renderShop(); renderList(); $("rel-status").textContent = ""; if (typeof session !== "undefined") atualizarIA(); }
 
 /* ---------- navegação do app ---------- */
 const STEPS = ["ficha", "metas", "cardapio", "compras", "liberar"];
@@ -951,6 +959,7 @@ function setSession(s) {
   session = s; canWrite = !!s; db = s ? true : null;
   $("auth-out").hidden = !!s; $("auth-in").hidden = !s; $("au-who").textContent = s?.user?.email || "";
   $("login-hint").hidden = !!s;
+  atualizarIA();
   if (s) {
     sb.from("nutricionistas").select("nome, crn").eq("id", s.user.id).maybeSingle().then(({ data }) => {
       if (data) { nutri = { nome: data.nome || "", crn: data.crn || "" }; $("nutri-nome").value = nutri.nome; $("nutri-crn").value = nutri.crn; }
@@ -979,9 +988,7 @@ $("au-out").addEventListener("click", async () => { await sb?.auth.signOut(); to
 $("go-login").addEventListener("click", () => { showTab("perfil"); setHash("#perfil"); $("au-email").focus(); });
 
 (async () => {
-  hideAI();
-  $("ai-status").textContent = "A IA entra na próxima etapa do app. Por enquanto, edite o exemplo ou monte o cardápio à mão.";
-  $("shop-status").textContent = "A lista automática chega junto com a IA. O exemplo já mostra como fica.";
+  atualizarIA();
   downloads = { save: async ({ filename, data }) => { const url = URL.createObjectURL(data); const a = document.createElement("a"); a.href = url; a.download = filename; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 10000); return { status: "saved" }; } };
   if (!sb) { renderList(); return; }
   const { data } = await sb.auth.getSession();

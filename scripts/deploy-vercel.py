@@ -7,8 +7,15 @@ import base64, json, os, time, urllib.request
 
 token = os.environ["VERCEL_TOKEN"]
 web = os.path.join(os.path.dirname(__file__), "..", "web")
-files = [{"file": f, "data": base64.b64encode(open(os.path.join(web, f), "rb").read()).decode(), "encoding": "base64"}
-         for f in sorted(os.listdir(web)) if f != ".nojekyll"]
+IGNORAR = {".nojekyll", "node_modules", "test", "package-lock.json"}
+files = []
+for raiz, pastas, arquivos in os.walk(web):
+    pastas[:] = [d for d in pastas if d not in IGNORAR]
+    for f in arquivos:
+        if f in IGNORAR:
+            continue
+        caminho = os.path.join(raiz, f)
+        files.append({"file": os.path.relpath(caminho, web), "data": base64.b64encode(open(caminho, "rb").read()).decode(), "encoding": "base64"})
 headers = {"Authorization": "Bearer " + token, "Content-Type": "application/json"}
 body = {"name": "prato-planejado", "files": files, "target": "production",
         "projectSettings": {"framework": None, "buildCommand": None, "outputDirectory": None, "installCommand": None}}
@@ -21,4 +28,4 @@ for _ in range(60):
     if dep.get("readyState") in ("READY", "ERROR", "CANCELED"):
         break
     time.sleep(3)
-print(dep.get("readyState"), "https://prato-planejado.vercel.app")
+print(dep.get("readyState"), "https://prato-planejado.vercel.app", dep.get("errorMessage") or "")
