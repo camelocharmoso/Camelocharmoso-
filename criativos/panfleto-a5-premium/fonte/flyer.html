@@ -1,0 +1,78 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+@page{size:154mm 216mm;margin:0}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{--bg:#0e0d0c;--ivory:#ece5d8;--stone:#b3a38c;--line:rgba(236,229,216,.22)}
+html,body{background:var(--bg)}
+body{color:var(--ivory);font-family:Manrope,sans-serif}
+.p{position:relative;width:1124px;height:1576px;overflow:hidden;background:var(--bg)}
+@media print{.p{zoom:.51784}}
+.cap{font-size:15px;font-weight:600;letter-spacing:4.5px;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",serif;font-weight:400}
+.hero{position:absolute;left:0;top:0;width:1124px;height:930px}
+.ph{position:absolute;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) sepia(.18) contrast(1.12) brightness(.78)}
+.a{left:0;top:0;width:752px;height:930px}
+.a img{object-position:44% 30%;filter:grayscale(1) sepia(.18) contrast(1.25) brightness(.62)}
+.b{left:758px;top:0;width:366px;height:462px}
+.b img{object-position:55% 30%;filter:grayscale(1) sepia(.18) contrast(1.12) brightness(.85)}
+.c{left:758px;top:468px;width:366px;height:462px}
+.c img{object-position:50% 38%;filter:grayscale(1) sepia(.18) contrast(1.2) brightness(1.15)}
+.shade{position:absolute;inset:0;background:
+ radial-gradient(ellipse 70% 60% at 38% 42%,rgba(14,13,12,0) 30%,rgba(14,13,12,.55) 100%),
+ linear-gradient(180deg,rgba(14,13,12,.75) 0%,rgba(14,13,12,0) 16%,rgba(14,13,12,0) 58%,rgba(14,13,12,.9) 86%,#0e0d0c 100%)}
+.top{position:absolute;top:60px;left:68px;right:68px;display:flex;justify-content:space-between;align-items:center;z-index:3}
+.brand{display:flex;align-items:center;gap:18px}
+.brand img{width:64px;opacity:.95}
+.brand .w{font-size:17px;font-weight:700;letter-spacing:7px}
+.top .r{color:var(--ivory);opacity:.85}
+.num{position:absolute;left:68px;top:700px;z-index:3;color:var(--stone)}
+h1{position:absolute;left:62px;top:738px;font-size:124px;line-height:.92;letter-spacing:-2.5px;z-index:3}
+h1 em{color:var(--stone)}
+.rule{position:absolute;left:68px;right:68px;height:1px;background:var(--line)}
+.menu{position:absolute;left:68px;right:68px;top:1058px;display:grid;grid-template-columns:1fr 1fr 1.15fr}
+.m{padding:0 28px;border-left:1px solid var(--line)}
+.m:first-child{padding-left:0;border-left:none}
+.m .n{color:var(--stone)}
+.m .v{font-size:96px;line-height:1;margin-top:14px;letter-spacing:-2px}
+.m .v sup{font-family:Manrope;font-size:17px;font-weight:600;letter-spacing:2px;vertical-align:52px;margin-right:6px;color:var(--stone)}
+.m .note{font-size:15px;margin-top:8px;color:var(--ivory);opacity:.7;letter-spacing:.3px}
+.m .note b{color:var(--ivory);opacity:1;font-weight:600}
+.bot{position:absolute;left:68px;right:68px;top:1300px;display:flex;justify-content:space-between;align-items:flex-end}
+.book{display:flex;gap:26px;align-items:center}
+.qr{width:168px;height:168px;background:var(--ivory);padding:12px}
+.qr img{width:100%;height:100%;display:block}
+.book .t .cap{color:var(--stone)}
+.book .big{font-size:52px;line-height:1;margin-top:12px}
+.book .tel{font-size:30px;font-weight:600;letter-spacing:1px;margin-top:14px}
+.info{text-align:right;font-size:16px;line-height:1.85;opacity:.8;letter-spacing:.4px}
+.info .cap{font-size:13px;color:var(--stone);opacity:1;display:block;margin-bottom:6px}
+.grain{position:absolute;inset:0;background:url(grain.png);background-size:600px;opacity:.18;z-index:9;mix-blend-mode:screen;filter:invert(1)}
+</style></head><body><div class="p">
+<div class="hero">
+ <div class="ph a"><img src="foto.jpg"></div>
+ <div class="ph b"><img src="razor.jpg"></div>
+ <div class="ph c"><img src="beard.jpg"></div>
+ <div class="shade"></div>
+</div>
+<div class="top">
+ <div class="brand"><img src="logo.png"><span class="w">ED BARBEARIA</span></div>
+ <div class="r cap">Casa Amarela · Recife</div>
+</div>
+<div class="num cap">Corte · Barba · Acabamento</div>
+<h1 class="serif">Mais que um corte,<br><em>um ritual.</em></h1>
+<div class="rule" style="top:1018px"></div>
+<div class="menu">
+ <div class="m"><div class="n cap">Cabelo</div><div class="v serif"><sup>R$</sup>50</div></div>
+ <div class="m"><div class="n cap">Barba</div><div class="v serif"><sup>R$</sup>40</div></div>
+ <div class="m"><div class="n cap">Cabelo &amp; Barba</div><div class="v serif"><sup>R$</sup>80</div><div class="note">Você economiza <b>R$10</b></div></div>
+</div>
+<div class="rule" style="top:1258px"></div>
+<div class="bot">
+ <div class="book"><div class="qr"><img src="qr.svg"></div>
+  <div class="t"><div class="cap">Agende pelo WhatsApp</div><div class="big serif">Aponte a câmera.</div><div class="tel">81 9.9942-1727</div></div></div>
+ <div class="info"><span class="cap">Visite</span>Rua Paula Batista, 604<br>Casa Amarela, Recife<br>Fixo 81 2014-1545<br>@edbarbearia</div>
+</div>
+<div class="grain"></div>
+</div></body></html>
