@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pinho Jets | Aluguel de jet ski, lancha e sofá maluco</title>
-<meta name="description" content="Aluguel de jet ski a partir de R$ 200, passeio de lancha, sofá maluco, filmagem com drone e oficina de jet ski. Escolha no site e reserve pelo WhatsApp.">
+<meta name="description" content="Aluguel de jet ski a partir de R$ 200 no Paiva, em Barra de Jangada e em Suape (PE). Passeio de lancha, sofá maluco, filmagem com drone e oficina de jet ski. Reserve pelo WhatsApp.">
 <!-- Prévia hospedada fora do domínio do cliente: remova o noindex quando for para o domínio oficial. -->
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0a2742">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:title" content="Pinho Jets | Vem pilotar">
-<meta property="og:description" content="Jet ski a partir de R$ 200. Lancha, sofá maluco, drone e oficina. Reserve pelo WhatsApp.">
+<meta property="og:description" content="Jet ski a partir de R$ 200 no Paiva, em Barra de Jangada e em Suape. Lancha, sofá maluco, drone e oficina. Reserve pelo WhatsApp.">
 <!-- WhatsApp/Instagram exigem URL absoluta: troque pelo endereço final, ex. https://pinhojets.com.br/assets/og.jpg -->
 <meta property="og:image" content="assets/og.jpg">
 <link rel="icon" type="image/png" href="assets/logo-pinho.png">
@@ -31,6 +31,7 @@
   "telephone": "+55 81 97910-9536",
   "image": "assets/logo-pinho.png",
   "priceRange": "R$ 200 - R$ 600",
+  "areaServed": ["Praia do Paiva, Cabo de Santo Agostinho - PE", "Barra de Jangada, Jaboatão dos Guararapes - PE", "Suape, Cabo de Santo Agostinho - PE"],
   "sameAs": ["https://www.instagram.com/pinho_jets/"]
 }
 </script>
@@ -52,6 +53,7 @@
   </a>
   <nav class="menu" aria-label="Seções">
     <a href="#precos">Preços</a>
+    <a href="#onde">Onde</a>
     <a href="#passeios">Passeios</a>
     <a href="#reservar">Reservar</a>
   </nav>
@@ -102,7 +104,7 @@
     <h1 class="hero-titulo" data-titulo><span class="sr-only">Pinho Jets, aluguel de jet ski: </span>Vem<br> pilotar.</h1>
 
     <div class="hero-lado">
-      <p class="hero-texto">Aluguel de jet ski, passeio de lancha, sofá maluco e filmagem com drone. Você escolhe aqui e a gente confirma no WhatsApp.</p>
+      <p class="hero-texto">Aluguel de jet ski, passeio de lancha, sofá maluco e filmagem com drone no Paiva, em Barra de Jangada e em Suape. Você escolhe aqui e a gente confirma no WhatsApp.</p>
       <p class="hero-preco">Jet ski a partir de <strong>R$&nbsp;200</strong> por 20&nbsp;minutos.</p>
       <div class="acoes">
         <a class="btn btn-zap" data-zap="jet" href="https://wa.me/5581979109536" target="_blank" rel="noopener">
@@ -168,6 +170,34 @@
     <p class="precos-nota">Lancha, sofá maluco, drone e oficina têm orçamento pelo WhatsApp. <a href="#passeios">Ver os passeios</a></p>
   </section>
 
+  <!-- ONDE: os três pontos, de norte a sul, como uma esteira pelo litoral -->
+  <section class="onde" id="onde" aria-labelledby="onde-titulo">
+    <div class="onde-cab">
+      <h2 id="onde-titulo">Três pontos no litoral sul.</h2>
+      <p>Escolha o mais perto de você. O ponto de encontro exato a gente manda no WhatsApp.</p>
+    </div>
+    <div class="rota">
+      <p class="rota-norte"><span aria-hidden="true">↑</span> <span class="sr-only">Mais ao norte fica </span>Recife</p>
+      <ol class="rota-pontos">
+        <li class="ponto">
+          <h3>Barra de Jangada</h3>
+          <p>Jaboatão dos Guararapes</p>
+          <a class="btn btn-zap btn-pequeno" data-zap="jet" data-local="barra" href="https://wa.me/5581979109536" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-zap"/></svg><span>Alugar em Barra de Jangada</span></a>
+        </li>
+        <li class="ponto">
+          <h3>Paiva</h3>
+          <p>Cabo de Santo Agostinho</p>
+          <a class="btn btn-zap btn-pequeno" data-zap="jet" data-local="paiva" href="https://wa.me/5581979109536" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-zap"/></svg><span>Alugar no Paiva</span></a>
+        </li>
+        <li class="ponto">
+          <h3>Suape</h3>
+          <p>Cabo de Santo Agostinho</p>
+          <a class="btn btn-zap btn-pequeno" data-zap="jet" data-local="suape" href="https://wa.me/5581979109536" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-zap"/></svg><span>Alugar em Suape</span></a>
+        </li>
+      </ol>
+    </div>
+  </section>
+
   <!-- PASSEIOS E SERVIÇOS -->
   <section class="passeios" id="passeios" aria-labelledby="passeios-titulo">
     <div class="passeios-cab">
@@ -231,6 +261,15 @@
             <label class="ficha"><input type="radio" name="servico" value="sofa"><span>Sofá maluco</span></label>
             <label class="ficha"><input type="radio" name="servico" value="drone"><span>Drone</span></label>
             <label class="ficha"><input type="radio" name="servico" value="oficina"><span>Oficina</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="grupo" data-sem="oficina">
+          <legend>Onde?</legend>
+          <div class="fichas">
+            <label class="ficha"><input type="radio" name="local" value="paiva"><span>Paiva</span></label>
+            <label class="ficha"><input type="radio" name="local" value="barra"><span>Barra de Jangada</span></label>
+            <label class="ficha"><input type="radio" name="local" value="suape"><span>Suape</span></label>
           </div>
         </fieldset>
 
@@ -353,7 +392,7 @@
 
 <footer class="rodape">
   <a class="marca" href="#topo" aria-label="Pinho Jets, voltar ao início"><span class="marca-pinho">Pinho</span><span class="marca-jets">Jets</span></a>
-  <p>Aluguel de jet ski, passeios de lancha, sofá maluco, filmagem com drone e oficina de jet ski. Pernambuco, Brasil.</p>
+  <p>Aluguel de jet ski, passeios de lancha, sofá maluco, filmagem com drone e oficina de jet ski no Paiva, em Barra de Jangada e em Suape, litoral sul de Pernambuco.</p>
   <ul>
     <li><a href="https://www.instagram.com/pinho_jets/" target="_blank" rel="noopener">Instagram</a></li>
     <li><a data-zap="geral" href="https://wa.me/5581979109536" target="_blank" rel="noopener">WhatsApp</a></li>

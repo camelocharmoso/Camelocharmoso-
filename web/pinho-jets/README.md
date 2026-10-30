@@ -9,15 +9,16 @@ Para ver no computador: `python3 -m http.server` dentro desta pasta e abra `http
 1. **Topo:** o vídeo do mar roda dentro de uma "tela" com cara de reels. Depois de um segundo a tela dá glitch, racha e o jet ski sai dela, voando por cima da página. Cacos de vidro com o quadro do vídeo e gotas de água completam o impacto.
 2. **Travessia:** um segundo jet cruza a faixa azul conforme a pessoa rola a página e vai preenchendo "Navegar é preciso." (o slogan do flyer deles).
 3. **Preços:** uma linha do tempo de 60 minutos, como a barra de um vídeo. O mini-jet anda até 20 min, 30 min ou 1 hora e o botão muda para "Reservar 30 min no WhatsApp". No celular a linha fica vertical.
-4. **Não é só jet:** lancha, sofá maluco, drone e oficina, cada um com o próprio botão de WhatsApp.
-5. **Monte seu passeio:** a pessoa escolhe o serviço, o tempo, o dia, o período e quantas pessoas vão, e vê a mensagem do WhatsApp sendo montada num celular ao lado.
-6. **Instagram, chamada final e rodapé.** No celular, um botão fixo "Reservar no WhatsApp" abre uma lista rápida de serviços.
+4. **Onde:** os três pontos (Barra de Jangada, Paiva e Suape) ligados por uma linha de costa, de norte a sul, cada um com botão que já pede o jet naquele local.
+5. **Não é só jet:** lancha, sofá maluco, drone e oficina, cada um com o próprio botão de WhatsApp.
+6. **Monte seu passeio:** a pessoa escolhe o serviço, o local, o tempo, o dia, o período e quantas pessoas vão, e vê a mensagem do WhatsApp sendo montada num celular ao lado.
+7. **Instagram, chamada final e rodapé.** No celular, um botão fixo "Reservar no WhatsApp" abre uma lista rápida de serviços.
 
 Toda mensagem termina com "(Vim pelo site)", para a equipe saber quantos clientes chegam pela página.
 
 ## Como editar
 
-- **Número, preços e textos das mensagens:** só o objeto `CONFIG` no começo de `app.js`.
+- **Número, preços, locais e textos das mensagens:** só o objeto `CONFIG` no começo de `app.js`. Os locais também aparecem em `index.html` (seção `#onde`, etapa "Onde?" do montador e rodapé).
 - **Preços na tela:** também aparecem em `index.html` (procure por `R$`).
 - **Fotos e vídeo:** troque os arquivos em `assets/` mantendo os nomes. O ideal é usar os vídeos e fotos reais deles:
   - `mar.mp4` / `mar.webm` / `mar-poster.jpg`: vídeo da tela do topo (horizontal, até 15 s, sem som).
@@ -31,7 +32,7 @@ Toda mensagem termina com "(Vim pelo site)", para a equipe saber quantos cliente
 
 - Remover `<meta name="robots" content="noindex">` do `index.html`.
 - Trocar `og:image` por um endereço absoluto (`https://.../assets/og.jpg`), senão a prévia do link não aparece no WhatsApp.
-- Confirmar com o cliente: local exato (praia/marina, para colocar no rodapé e no Google Maps), se a oficina atende as quatro marcas citadas (Sea-Doo, Yamaha, Kawasaki e Can-Am, que estão no logo) e se o preço é por jet ou por pessoa.
+- Confirmar com o cliente: o ponto de encontro em cada local (a página diz que ele vai pelo WhatsApp), se a oficina atende as quatro marcas citadas (Sea-Doo, Yamaha, Kawasaki e Can-Am, que estão no logo) e se o preço é por jet ou por pessoa.
 
 ## Créditos das imagens
 

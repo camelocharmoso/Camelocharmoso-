@@ -13,6 +13,11 @@
       30: { rotulo: '30 minutos', curto: '30 min', preco: 300 },
       60: { rotulo: '1 hora', curto: '1 hora', preco: 600 },
     },
+    locais: {
+      paiva: 'no Paiva',
+      barra: 'em Barra de Jangada',
+      suape: 'em Suape',
+    },
     servicos: {
       jet: { pedido: 'Quero alugar o jet ski', pergunta: 'Quais horários vocês têm?' },
       lancha: { pedido: 'Quero alugar a lancha para um passeio', pergunta: 'Pode me passar os valores?' },
@@ -32,17 +37,21 @@
 
   const linkZap = (texto) => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(texto)}`;
 
-  function pedidoCom(servico, tempo) {
+  function pedidoCom(servico, tempo, local) {
     const s = CONFIG.servicos[servico] || CONFIG.servicos.geral;
-    if (servico !== 'jet' || !tempo) return s.pedido;
-    const t = CONFIG.tempos[tempo];
-    return `${s.pedido} por ${t.rotulo} (${real(t.preco)})`;
+    let pedido = s.pedido;
+    if (servico === 'jet' && tempo) {
+      const t = CONFIG.tempos[tempo];
+      pedido += ` por ${t.rotulo} (${real(t.preco)})`;
+    }
+    if (local && CONFIG.locais[local]) pedido += ` ${CONFIG.locais[local]}`;
+    return pedido;
   }
 
-  function mensagemRapida(servico, tempo) {
+  function mensagemRapida(servico, tempo, local) {
     const s = CONFIG.servicos[servico] || CONFIG.servicos.geral;
     const pergunta = s.pergunta ? ' ' + s.pergunta : '';
-    return `Olá, Pinho Jets! ${pedidoCom(servico, tempo)}.${pergunta}\n${CONFIG.assinatura}`;
+    return `Olá, Pinho Jets! ${pedidoCom(servico, tempo, local)}.${pergunta}\n${CONFIG.assinatura}`;
   }
 
   // Gancho para Meta Pixel / Google Tag Manager, se forem instalados.
@@ -52,8 +61,8 @@
 
   /* ---------- Atalhos de WhatsApp (cada botão leva a sua mensagem) ---------- */
   $$('[data-zap]').forEach((a) => {
-    a.href = linkZap(mensagemRapida(a.dataset.zap));
-    a.addEventListener('click', () => rastrear('whatsapp_clique', { servico: a.dataset.zap, origem: 'atalho' }));
+    a.href = linkZap(mensagemRapida(a.dataset.zap, null, a.dataset.local));
+    a.addEventListener('click', () => rastrear('whatsapp_clique', { servico: a.dataset.zap, local: a.dataset.local, origem: 'atalho' }));
   });
 
   /* ---------- Preços: linha do tempo de 60 minutos ---------- */
@@ -157,7 +166,8 @@
       campoData.hidden = marcado('dia') !== 'outra';
       obs.placeholder = servico === 'oficina' ? 'Modelo do jet e o que está acontecendo' : 'Ex.: é aniversário de alguém';
 
-      const linhas = [`Olá, Pinho Jets! ${pedidoCom(servico, marcado('tempo'))}.`];
+      const local = servico === 'oficina' ? null : marcado('local');
+      const linhas = [`Olá, Pinho Jets! ${pedidoCom(servico, marcado('tempo'), local)}.`];
       if (servico !== 'oficina') linhas.push(`Data: ${descreverDia()}, ${periodos[marcado('periodo')]}`);
       if (servico !== 'drone' && servico !== 'oficina') linhas.push(`Pessoas: ${pessoas}`);
       const nome = form.elements.nome.value.trim();
@@ -191,7 +201,7 @@
     form.addEventListener('submit', (e) => e.preventDefault());
     $('[data-menos]', form).addEventListener('click', () => { pessoas = Math.max(1, pessoas - 1); saidaPessoas.value = pessoas; montar(); pular(); });
     $('[data-mais]', form).addEventListener('click', () => { pessoas = Math.min(20, pessoas + 1); saidaPessoas.value = pessoas; montar(); pular(); });
-    enviar.addEventListener('click', () => rastrear('whatsapp_clique', { servico: marcado('servico'), origem: 'montador' }));
+    enviar.addEventListener('click', () => rastrear('whatsapp_clique', { servico: marcado('servico'), local: marcado('local'), origem: 'montador' }));
     montar();
   }
 
