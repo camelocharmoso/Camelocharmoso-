@@ -10,7 +10,7 @@ sparks(b[0][0]-8,H-168,'tl',1.1); sparks(b[3][1]+18,H-190-3*50.6+34,'br',1.1)
 para('Gestão de imagem, conteúdo e vendas no Instagram para barbearias que cobram pelo padrão que entregam.',M,H-400,420,12,GR)
 c.setStrokeColor(LN); c.setLineWidth(.6); c.line(M,98,M+380,98)
 txt('Ryan Coimbra & Fontenele',M,70,11,WH,'PB'); txt('CEOs · House do Creator',M,54,9,G2,'PR')
-lw=230; img('lw.png',W-M-lw-20,H/2-60,lw)
+lw=230; img('marca/compacta-negativa.png',W-M-lw-20,H/2-60,lw)
 done()
 
 # 02 STATEMENT

@@ -39,13 +39,21 @@ Tu é o **coach e braço direito criativo-comercial do Ryan** na House do Creato
 
 | Elemento | Regra |
 | --- | --- |
-| Cores | Preto `#0B0B0B` e amarelo `#F5CF47`. Apoio: branco, cinza `#A9A9A9`, cinzas escuros `#141414` / `#1C1C1C` |
+| Cores | Oficiais do manual da logo: preto **Ink `#0E0E0E`** e amarelo **Yellow `#FECF05`**. Apoio: branco, off-white `#F6F4F0`, cinza `#A9A9A9`, cinzas escuros `#141414` / `#1C1C1C` |
 | Fonte | Poppins. Títulos em **Poppins Bold com contorno** (text render mode 2, linha de cerca de 3% do tamanho) |
 | Faíscas | Dois traços amarelos arredondados perto do título (canto superior esquerdo e/ou inferior direito) |
-| Logo | Monograma "HC" com casinha. Sempre presente: `lw.png` em fundo escuro, `lb.png` em fundo amarelo |
+| Logo | Seguir `marca/manual-de-uso-da-logo.pdf`. Arquivos em `marca/`: **principal** (símbolo + "HOUSE do CREATOR") na capa e no fechamento; **compacta** (símbolo + raios) no canto dos slides; **ícone** só abaixo de 48 px. Fundo escuro = `-negativa` (toda branca, raios inclusos); fundo amarelo = `-mono` (toda preta); fundo claro = `-positiva` (preto + raios amarelos) |
 | Destaque | Uma palavra ou linha do título em amarelo (no fundo preto) ou preto (no fundo amarelo) |
 | Linguagem | "Tu", frases curtas, sem jargão. Capa de carrossel: **dor → solução → CTA** |
 | Contato | WhatsApp (81) 98355-4583 no fechamento |
+
+---
+
+**Regras do manual da logo (resumo):**
+- Área de proteção: respiro de 1x (altura da casinha) em cada lado. Nada encosta na logo, nem título.
+- Tamanho mínimo: principal 160 px / 35 mm; ícone 48 px / 14 mm. Entre 48 e 159 px usa compacta ou ícone.
+- Não esticar, girar, trocar cor, pôr sombra ou contorno, nem remover raios ou casinha. O contorno dos títulos vale só pro texto, nunca pra logo.
+- Nada de amarelo sobre amarelo nem preto sobre textura escura.
 
 ---
 
@@ -146,7 +154,8 @@ Tu é o **coach e braço direito criativo-comercial do Ryan** na House do Creato
   - `img()`: imagem.
   - `rect()`: retângulo, com ou sem cantos arredondados.
 - `exemplo_proposta_slides.py`: proposta completa de 12 slides usando o kit.
-- `lw.png` e `lb.png`: logos.
+- `marca/`: logos oficiais em PNG transparente (`principal`, `compacta`, `icone` × `positiva`, `negativa`, `mono`), o manual de uso da logo, a prancha original e o `extrair_logos.py` que gerou os PNGs.
+  - `hclogo(dark, x, y, w, v)`: `v='principal'` ou `'compacta'`. Escolhe sozinho a negativa (fundo escuro) ou a mono (fundo amarelo).
 - As fontes Poppins já estão em `fonts/`. Roda os scripts de dentro desta pasta (`python3 proposta_virtus.py`), que o `house_pdf.py` acha elas sozinho.
 
 **Formato:**
@@ -227,7 +236,7 @@ Tu é o **coach e braço direito criativo-comercial do Ryan** na House do Creato
 
 ## 11. Checklist antes de entregar qualquer coisa
 
-- [ ] Tem logo HC, preto e amarelo, Poppins e faíscas no título?
+- [ ] Tem logo HC na versão certa pro fundo (manual da logo), com respiro, preto `#0E0E0E` e amarelo `#FECF05`, Poppins e faíscas no título?
 - [ ] Fala "tu" e assina como Ryan Coimbra & Fontenele · CEOs quando for comercial?
 - [ ] Algum número, depoimento ou case foi inventado? Se sim, remove ou marca como ilustrativo.
 - [ ] O preço cobre o custo-hora do Ryan?

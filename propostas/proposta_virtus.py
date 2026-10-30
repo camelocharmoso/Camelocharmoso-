@@ -13,7 +13,7 @@ def xmark(x,y,col=RED,s=1):
 # 01 CAPA
 N[0]+=1; rect(0,0,W,H,K)
 for i in range(9): c.setStrokeColor(HexColor('#161616')); c.setLineWidth(1); c.line(W*.5+i*48,0,W*.5+i*48+260,H)
-hclogo(True,M,H-70,58)
+hclogo(True,M,H-78,170,'principal')
 txt('PROPOSTA COMERCIAL  ·  VIRTUS ÓTICA  ·  RECIFE',M,H-120,8,Y,'PB',cs=2.4)
 b=title([[('A Virtus já tem',WH)],[('cara de marca.',WH)],[('Agora é hora de',WH)],[('virar venda.',Y)]],M,H-190,46)
 sparks(b[0][0]-8,H-168,'tl',1.1); sparks(b[3][1]+18,H-190-3*50.6+34,'br',1.1)
@@ -391,7 +391,7 @@ done()
 
 # 20 FECHAMENTO
 N[0]+=1; rect(0,0,W,H,K)
-hclogo(True,W/2-40,H-130,80)
+hclogo(True,W/2-110,H-116,220,'principal')
 b=title([[('A Virtus enxerga o Recife.',WH)],[('Agora o Recife',WH)],[('vai enxergar a Virtus.',Y)]],W/2,H-200,40,'c')
 sparks(b[0][0]-14,H-180,'tl',1.1); sparks(b[2][1]+14,H-200-2*44+26,'br',1.1)
 pw=300; rect(W/2-pw/2,140,pw,44,Y,22); txt('WhatsApp  (81) 98355-4583',W/2,157,13,K,'PB','c')

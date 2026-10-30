@@ -1,6 +1,6 @@
 # house_pdf.py — helpers de slides 16:9 (960x540 pt) no padrão House do Creator
 # Uso: OUT='arquivo.pdf'; TITLE='Título'; FOOT='HOUSE DO CREATOR  ·  CLIENTE'; exec(open('house_pdf.py').read())
-# Precisa de lw.png (logo branca) e lb.png (logo preta) na mesma pasta e da fonte Poppins instalada.
+# Precisa da pasta marca/ (logos oficiais) e da pasta fonts/ (Poppins) ao lado.
 # Funções: rect, txt (com letter-spacing cs), heavy/title (Poppins Bold com contorno), para (texto com quebra),
 # spark/sparks (faíscas amarelas), img, hclogo, check, slide(dark, eyebrow), done(). Termine com c.save().
 from reportlab.pdfgen import canvas
@@ -17,7 +17,7 @@ for n,f in [('PB','Poppins-Bold'),('PR','Poppins-Regular'),('PM','Poppins-Medium
     try: pdfmetrics.registerFont(TTFont(n,G+f+'.ttf'))
     except: pdfmetrics.registerFont(TTFont(n,G+'Poppins-Medium.ttf'))
 W,H=960,540; M=56
-Y=HexColor('#F5CF47'); K=HexColor('#0B0B0B'); WH=white; GR=HexColor('#A9A9A9'); G2=HexColor('#6E6E6E')
+Y=HexColor('#FECF05'); K=HexColor('#0E0E0E'); WH=white; GR=HexColor('#A9A9A9'); G2=HexColor('#6E6E6E')
 C1=HexColor('#141414'); C2=HexColor('#1C1C1C'); LN=HexColor('#2A2A2A'); RED=HexColor('#E8705F'); GRN=HexColor('#7BD394')
 import sys
 OUT=globals().get('OUT','saida.pdf'); FOOT=globals().get('FOOT','HOUSE DO CREATOR')
@@ -53,8 +53,11 @@ def img(f,x,y,w=None,h=None):
     if w and not h: h=w*r
     if h and not w: w=h/r
     c.drawImage(f,x,y,w,h,mask='auto'); return w,h
-def hclogo(dark=True,x=None,y=None,w=34):
-    f='lw.png' if dark else 'lb.png'; im=Image.open(f); h=w*im.height/im.width
+# Logos oficiais (manual de uso da logo, v1.0/2026) em marca/:
+# fundo escuro = negativa branca; fundo amarelo = monocromática preta; fundo claro = positiva.
+# v='principal' (com o nome, pra capa e fechamento) ou 'compacta' (canto dos slides).
+def hclogo(dark=True,x=None,y=None,w=46,v='compacta'):
+    f=f"marca/{v}-{'negativa' if dark else 'mono'}.png"; im=Image.open(f); h=w*im.height/im.width
     x=W-M-w if x is None else x; y=H-38-h/2 if y is None else y; c.drawImage(f,x,y,w,h,mask='auto')
 def check(x,y,col=Y,s=1):
     c.setStrokeColor(col); c.setLineWidth(1.8*s); c.setLineCap(1); c.setLineJoin(1); p=c.beginPath(); p.moveTo(x,y); p.lineTo(x+3.5*s,y-3.5*s); p.lineTo(x+10*s,y+4*s); c.drawPath(p,stroke=1,fill=0)
