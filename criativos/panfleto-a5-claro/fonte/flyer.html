@@ -16,11 +16,12 @@ body{color:var(--ink);font-family:Manrope,sans-serif}
 .a{left:0;top:0;width:752px;height:930px}
 .a img{object-position:30% 20%;filter:grayscale(1) sepia(.16) contrast(1.02) brightness(1.04)}
 .b{left:764px;top:0;width:360px;height:461px}
-.b img{object-position:50% 35%;filter:saturate(.6) sepia(.14) contrast(1.04) brightness(1.08)}
+.b img{object-position:75% 40%;transform:scale(1.5);transform-origin:60% 52%;filter:grayscale(1) sepia(.14) contrast(1.05) brightness(1.12)}
 .c{left:764px;top:469px;width:360px;height:461px}
-.c img{object-position:50% 45%;filter:saturate(.6) sepia(.14) contrast(1.04) brightness(1.1)}
+.c img{object-position:55% 30%;filter:grayscale(1) sepia(.14) contrast(1.05) brightness(1.15)}
 .shade{position:absolute;left:0;top:0;width:752px;height:930px;background:
  linear-gradient(180deg,rgba(241,235,225,.55) 0%,rgba(241,235,225,0) 13%,rgba(241,235,225,0) 60%,rgba(241,235,225,.82) 80%,#f1ebe1 94%)}
+.b::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 34% 22% at 100% 0%,#1b1b1b 55%,rgba(27,27,27,0) 100%),radial-gradient(ellipse 40% 14% at 100% 100%,#141414 50%,rgba(20,20,20,0) 100%)}
 .blk{position:absolute;left:752px;top:0;width:372px;height:930px;background:#111}
 .top{position:absolute;top:60px;left:68px;right:410px;display:flex;justify-content:space-between;align-items:center;z-index:3}
 .brand{display:flex;align-items:center;gap:18px}
@@ -53,8 +54,8 @@ h1 em{color:var(--tob)}
 <div class="hero">
  <div class="blk"></div>
  <div class="ph a"><img src="foto.jpg"></div>
- <div class="ph b"><img src="crop-fade.jpg"></div>
- <div class="ph c"><img src="afro-fade.jpg"></div>
+ <div class="ph b"><img src="platinado.jpg"></div>
+ <div class="ph c"><img src="crop.jpg"></div>
  <div class="shade"></div>
  
 </div>
