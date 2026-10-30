@@ -1,0 +1,312 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+@page{size:210mm 297mm;margin:0}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{--pine:#18241d;--pine2:#22322a;--moss:#55684f;--cream:#f4eee3;--paper:#ebe3d4;--ochre:#c98a3d;--ochre2:#e0a95c;--ink:#1b1a17;--mute:#6f6a5f;--line:rgba(27,26,23,.16);--lineL:rgba(244,238,227,.22)}
+html,body{background:#777}
+body{font-family:"DM Sans",sans-serif;color:var(--ink);font-size:11.5px;line-height:1.5}
+.pg{position:relative;width:794px;height:1123px;overflow:hidden;background:var(--cream);page-break-after:always}
+.pg:last-child{page-break-after:auto}
+.serif{font-family:Fraunces,serif;font-optical-sizing:auto}
+.cap{font-size:9.5px;font-weight:700;letter-spacing:2.6px;text-transform:uppercase}
+.grain{position:absolute;inset:0;background:url(grain-d.png);background-size:256px;opacity:.28;pointer-events:none;z-index:20}
+.dark .grain{background-image:url(grain-l.png);opacity:.35}
+.ph{position:absolute;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+/* cabeçalho/rodapé das páginas internas */
+.hd{position:absolute;top:44px;left:56px;right:56px;display:flex;justify-content:space-between;align-items:center;z-index:5}
+.mark{display:flex;align-items:center;gap:10px}
+.mono{width:30px;height:30px;border:1.4px solid currentColor;border-radius:50%;display:grid;place-items:center;font-family:Fraunces;font-style:italic;font-size:13px;letter-spacing:-.5px}
+.ft{position:absolute;bottom:38px;left:56px;right:56px;display:flex;justify-content:space-between;color:var(--mute);z-index:5}
+.dark{background:var(--pine);color:var(--cream)}
+.dark .ft{color:rgba(244,238,227,.6)}
+.kick{color:var(--ochre)}
+h2{font-family:Fraunces;font-weight:300;font-size:50px;line-height:1.02;letter-spacing:-1.4px}
+h2 em{font-style:italic;color:var(--ochre)}
+.lead{font-size:14px;line-height:1.6;color:#3b382f}
+.dark .lead{color:rgba(244,238,227,.82)}
+
+/* ---------- 1 CAPA ---------- */
+.p1 .ph{inset:0}
+.p1 .ph img{object-position:30% 50%}
+.p1 .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,26,21,.72) 0%,rgba(18,26,21,0) 22%,rgba(18,26,21,0) 44%,rgba(18,26,21,.86) 72%,#141e18 100%)}
+.p1 .hd{color:var(--cream)}
+.p1 h1{position:absolute;left:52px;right:52px;top:690px;font-family:Fraunces;font-weight:300;font-size:86px;line-height:.94;letter-spacing:-3px;color:var(--cream);z-index:5}
+.p1 h1 em{font-style:italic;color:var(--ochre2)}
+.p1 .sub{position:absolute;left:56px;top:640px;color:var(--ochre2);z-index:5}
+.p1 .base{position:absolute;left:56px;right:56px;bottom:52px;display:flex;justify-content:space-between;align-items:flex-end;color:var(--cream);z-index:5;border-top:1px solid var(--lineL);padding-top:18px}
+.p1 .base .who{font-family:Fraunces;font-size:22px;font-weight:400}
+.p1 .base .who small{display:block;font-family:"DM Sans";font-size:9.5px;letter-spacing:2.6px;text-transform:uppercase;font-weight:700;color:rgba(244,238,227,.65);margin-top:4px}
+.p1 .base .r{text-align:right;color:rgba(244,238,227,.75)}
+
+/* ---------- 2 MÉTODO ---------- */
+.p2 .ph{left:0;top:0;width:330px;height:1123px}
+.p2 .ph img{object-position:58% 60%}
+.p2 .hd{left:386px}
+.p2 .body{position:absolute;left:386px;right:56px;top:150px}
+.p2 h2{margin:16px 0 26px}
+.p2 .quote{font-family:Fraunces;font-style:italic;font-weight:300;font-size:21px;line-height:1.4;color:var(--pine);border-left:2px solid var(--ochre);padding-left:18px;margin:30px 0 34px}
+.pill{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:18px 0;border-top:1px solid var(--line)}
+.pill:last-child{border-bottom:1px solid var(--line)}
+.pill .n{font-family:Fraunces;font-size:28px;font-weight:300;color:var(--ochre);line-height:1}
+.pill h4{font-family:Fraunces;font-size:19px;font-weight:400;margin-bottom:4px}
+.pill p{color:var(--mute);font-size:12px}
+.p2 .tag{position:absolute;left:28px;bottom:36px;background:var(--cream);padding:12px 16px;z-index:6;max-width:250px}
+.p2 .tag .cap{color:var(--ochre)}
+.p2 .tag p{font-family:Fraunces;font-size:15px;line-height:1.3;margin-top:4px}
+
+/* ---------- 3 COMO FUNCIONA ---------- */
+.p3 .ph{left:0;top:0;width:794px;height:420px}
+.p3 .ph img{object-position:50% 46%}
+.p3 .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(24,36,29,.55),rgba(24,36,29,0) 30%,rgba(24,36,29,0) 70%,var(--pine))}
+.p3 .hd{color:var(--cream)}
+.p3 .body{position:absolute;left:56px;right:56px;top:430px}
+.p3 h2{margin:12px 0 30px;max-width:600px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--lineL)}
+.st{padding:20px 18px 0 0}
+.st+.st{padding-left:18px;border-left:1px solid var(--lineL)}
+.st .n{font-family:Fraunces;font-size:40px;font-weight:300;color:var(--ochre2);line-height:1}
+.st h4{font-family:Fraunces;font-size:17px;font-weight:400;margin:14px 0 8px;line-height:1.15}
+.st p{font-size:11.5px;color:rgba(244,238,227,.72)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);margin-top:44px;background:var(--pine2);border:1px solid var(--lineL)}
+.fa{padding:22px 22px}
+.fa+.fa{border-left:1px solid var(--lineL)}
+.fa .v{font-family:Fraunces;font-size:34px;font-weight:300;line-height:1;color:var(--cream)}
+.fa .v em{font-style:italic;color:var(--ochre2)}
+.fa p{margin-top:8px;color:rgba(244,238,227,.7);font-size:11.5px}
+
+/* ---------- 4 O QUE TRABALHAMOS ---------- */
+.p4 .body{position:absolute;left:56px;right:56px;top:130px}
+.p4 h2{margin:14px 0 14px;max-width:600px;font-size:46px}
+.p4 .lead{max-width:520px}
+.grid{display:grid;grid-template-columns:1fr 1fr;column-gap:40px;margin-top:34px}
+.it{display:grid;grid-template-columns:30px 1fr;gap:12px;padding:16px 0;border-top:1px solid var(--line)}
+.it svg{width:22px;height:22px;stroke:var(--ochre);fill:none;stroke-width:1.5;margin-top:2px}
+.it h4{font-family:Fraunces;font-size:17px;font-weight:400;line-height:1.2}
+.it p{font-size:11.5px;color:var(--mute);margin-top:3px}
+.p4 .ph{left:56px;right:56px;bottom:84px;height:330px;width:auto}
+.p4 .ph img{object-position:50% 78%}
+.p4 .cap-ph{position:absolute;left:80px;bottom:110px;color:var(--cream);z-index:6;font-family:Fraunces;font-style:italic;font-size:22px;line-height:1.15;max-width:300px;text-shadow:0 1px 18px rgba(0,0,0,.35)}
+
+/* ---------- 5 PLANOS ---------- */
+.p5 .body{position:absolute;left:48px;right:48px;top:104px}
+.p5 .intro{display:flex;justify-content:space-between;align-items:flex-end;margin:0 8px 24px}
+.p5 h2{font-size:42px;margin-top:10px;max-width:440px}
+.p5 .intro p{max-width:250px;color:var(--mute);font-size:12px;text-align:right}
+.plans{display:grid;grid-template-columns:1fr 1fr 1.12fr;gap:14px;align-items:end}
+.pl{position:relative;background:#fbf8f2;border:1px solid var(--line);padding:26px 22px 24px}
+.pl .nm{font-family:Fraunces;font-size:24px;font-weight:400;margin-top:8px}
+.pl .ql{color:var(--mute);font-size:11.5px;margin-top:2px}
+.pl .pr{font-family:Fraunces;font-weight:300;font-size:54px;letter-spacing:-2px;line-height:1;margin:22px 0 4px;display:flex;align-items:flex-start;gap:4px}
+.pl .pr sup{font-family:"DM Sans";font-size:12px;font-weight:700;letter-spacing:1px;margin-top:9px;color:var(--mute)}
+.pl .per{font-size:11.5px;color:var(--mute)}
+.pl .per b{color:var(--ink);font-weight:600}
+.pl .eco{display:inline-block;margin-top:12px;font-size:10.5px;font-weight:700;letter-spacing:.6px;padding:5px 9px;background:rgba(201,138,61,.14);color:#8a5a1f}
+.pl ul{list-style:none;margin-top:20px;border-top:1px solid var(--line);padding-top:14px}
+.pl li{display:grid;grid-template-columns:16px 1fr;gap:8px;padding:6px 0;font-size:11.8px;line-height:1.35}
+.pl li svg{width:13px;height:13px;margin-top:2px;stroke:var(--moss);fill:none;stroke-width:2.2}
+.pl li.off{color:#a7a194}
+.pl li.off svg{stroke:#c5bfb2}
+.pl.top{background:var(--pine);color:var(--cream);border-color:var(--pine);padding-top:44px;box-shadow:0 24px 50px -24px rgba(24,36,29,.55)}
+.pl.top .ql,.pl.top .per,.pl.top .pr sup{color:rgba(244,238,227,.7)}
+.pl.top .per b{color:var(--cream)}
+.pl.top .nm{font-size:28px}
+.pl.top .pr{font-size:62px;color:var(--cream)}
+.pl.top ul{border-color:var(--lineL)}
+.pl.top li svg{stroke:var(--ochre2)}
+.pl.top li b{color:var(--ochre2);font-weight:600}
+.pl.top .eco{background:var(--ochre);color:var(--pine)}
+.badge{position:absolute;top:-1px;left:-1px;right:-1px;background:var(--ochre);color:var(--pine);text-align:center;padding:8px 0}
+.p5 .avulsa{margin:20px 8px 0;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0}
+.p5 .avulsa h4{font-family:Fraunces;font-size:20px;font-weight:400}
+.p5 .avulsa p{color:var(--mute);font-size:11.8px;margin-top:2px}
+.p5 .avulsa .v{font-family:Fraunces;font-size:34px;font-weight:300;letter-spacing:-1px}
+.p5 .avulsa .v sup{font-family:"DM Sans";font-size:11px;font-weight:700;color:var(--mute);vertical-align:16px;margin-right:3px}
+.p5 .bar{margin:16px 8px 0}
+.p5 .bar .cap{color:var(--mute);margin-bottom:10px}
+.br{display:grid;grid-template-columns:120px 1fr 74px;align-items:center;gap:12px;margin:5px 0;font-size:11.5px}
+.br .t{height:10px;background:rgba(27,26,23,.07);position:relative}
+.br .t i{position:absolute;left:0;top:0;bottom:0;background:var(--moss)}
+.br.hl .t i{background:var(--ochre)}
+.br .val{text-align:right;font-weight:600}
+.br.hl{font-weight:600}
+
+/* ---------- 6 CONTATO ---------- */
+.p6 .ph{inset:0}
+.p6 .ph img{object-position:50% 38%}
+.p6 .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,26,21,.55) 0%,rgba(18,26,21,0) 20%,rgba(18,26,21,0) 38%,rgba(18,26,21,.9) 62%,#141e18 100%)}
+.p6 .hd{color:var(--cream)}
+.p6 .body{position:absolute;left:56px;right:56px;top:640px;color:var(--cream);z-index:5}
+.p6 h2{font-size:64px;letter-spacing:-2px;margin:12px 0 18px;color:var(--cream)}
+.p6 h2 em{color:var(--ochre2)}
+.p6 .lead{max-width:470px;color:rgba(244,238,227,.82)}
+.cta{display:inline-flex;align-items:center;gap:12px;margin-top:28px;background:var(--ochre);color:var(--pine);padding:16px 26px;font-weight:700;font-size:14px;letter-spacing:.3px}
+.cta svg{width:20px;height:20px}
+.p6 .row{position:absolute;left:56px;right:56px;bottom:52px;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--lineL);padding-top:18px;color:var(--cream);z-index:5}
+.p6 .row div+div{padding-left:20px;border-left:1px solid var(--lineL)}
+.p6 .row .cap{color:rgba(244,238,227,.55);display:block;margin-bottom:5px}
+.p6 .row span.v{font-family:Fraunces;font-size:17px}
+</style></head><body>
+
+<!-- 1 · CAPA -->
+<section class="pg p1 dark">
+ <div class="ph"><img src="capa.jpg"></div><div class="shade"></div>
+ <div class="hd"><div class="mark"><span class="mono">va</span><span class="cap">Vanessa Alcântara</span></div><span class="cap">Adestramento canino</span></div>
+ <div class="sub cap">Guia de planos e valores</div>
+ <h1>Treinamento de cães para a <em>vida real.</em></h1>
+ <div class="base"><div class="who">Vanessa Alcântara<small>Adestradora · Comportamento canino</small></div><div class="r cap">Edição 2026</div></div>
+ <div class="grain"></div>
+</section>
+
+<!-- 2 · MÉTODO -->
+<section class="pg p2">
+ <div class="ph warm"><img src="petisco.jpg"></div>
+ <div class="tag"><span class="cap">Reforço positivo</span><p>Cada acerto vira motivo para repetir.</p></div>
+ <div class="hd"><span class="cap kick">01 · O método</span><span class="cap" style="color:var(--mute)">Vanessa Alcântara</span></div>
+ <div class="body">
+  <span class="cap kick">Como eu trabalho</span>
+  <h2>Não basta treinar o cão. <em>A gente treina a dupla.</em></h2>
+  <p class="lead">Meu processo tem dois objetivos que andam juntos: treinar o seu cachorro e ensinar você, cuidador, a manejar ele do jeito certo. Assim o resultado não fica só na aula — ele continua na sua casa, no passeio e na rotina.</p>
+  <p class="quote">“Um cão educado é aquele que entende o que se espera dele. E isso começa com quem está do outro lado da guia.”</p>
+  <div class="pill"><span class="n">i</span><div><h4>O cão</h4><p>Comportamentos trabalhados com clareza, consistência e motivação, no ritmo dele.</p></div></div>
+  <div class="pill"><span class="n">ii</span><div><h4>O cuidador</h4><p>Você aprende a comunicar, corrigir e recompensar. Quem convive é quem mantém.</p></div></div>
+  <div class="pill"><span class="n">iii</span><div><h4>A rotina</h4><p>Treino aplicado às situações reais do dia a dia, não só ao ambiente controlado.</p></div></div>
+ </div>
+ <div class="ft"><span class="cap">Treinamento para a vida real</span><span class="cap">02</span></div>
+ <div class="grain"></div>
+</section>
+
+<!-- 3 · COMO FUNCIONA -->
+<section class="pg p3 dark">
+ <div class="ph warm"><img src="guia.jpg"></div>
+ <div class="hd"><span class="cap">02 · Como funciona</span><span class="cap" style="opacity:.7">Vanessa Alcântara</span></div>
+ <div class="body">
+  <span class="cap kick" style="color:var(--ochre2)">Passo a passo</span>
+  <h2 style="color:var(--cream)">Da primeira conversa ao <em style="color:var(--ochre2)">passeio tranquilo.</em></h2>
+  <div class="steps">
+   <div class="st"><div class="n">01</div><h4>Conversa inicial</h4><p>Você me conta pelo WhatsApp a rotina, a idade e o que mais incomoda no comportamento do seu cão.</p></div>
+   <div class="st"><div class="n">02</div><h4>Escolha do plano</h4><p>Definimos juntos o pacote ideal para o objetivo de vocês e agendamos as aulas.</p></div>
+   <div class="st"><div class="n">03</div><h4>Aulas práticas</h4><p>Encontros de cerca de 1 hora, com o cão e o cuidador participando ativamente.</p></div>
+   <div class="st"><div class="n">04</div><h4>Mentoria contínua</h4><p>Entre uma aula e outra, suporte direto comigo pelo WhatsApp durante todo o pacote.</p></div>
+  </div>
+  <div class="facts">
+   <div class="fa"><div class="v">~1<em>h</em></div><p>de duração média por aula</p></div>
+   <div class="fa"><div class="v">2 <em>em</em> 1</div><p>treino do cão + orientação do cuidador</p></div>
+   <div class="fa"><div class="v"><em>Inclusa</em></div><p>mentoria via WhatsApp em todos os planos</p></div>
+  </div>
+ </div>
+ <div class="ft"><span class="cap">Treinamento para a vida real</span><span class="cap">03</span></div>
+ <div class="grain"></div>
+</section>
+
+<!-- 4 · O QUE TRABALHAMOS -->
+<section class="pg p4">
+ <div class="hd"><span class="cap kick">03 · O que trabalhamos</span><span class="cap" style="color:var(--mute)">Vanessa Alcântara</span></div>
+ <div class="body">
+  <span class="cap kick">Problemas reais, soluções reais</span>
+  <h2>Se acontece no seu dia a dia,<br><em>a gente treina.</em></h2>
+  <p class="lead">Alguns dos comportamentos que mais aparecem por aqui. Cada caso é avaliado individualmente na primeira aula.</p>
+  <div class="grid">
+   <div class="it"><svg viewBox="0 0 24 24"><path d="M4 20c4-1 6-5 7-9M11 11c2-3 5-5 9-6M15 4l5 1-1 5"/></svg><div><h4>Passeio sem puxar</h4><p>Guia frouxa, atenção em você e menos estresse na rua.</p></div></div>
+   <div class="it"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg><div><h4>Ansiedade e destruição</h4><p>Mais calma quando fica sozinho e menos estrago em casa.</p></div></div>
+   <div class="it"><svg viewBox="0 0 24 24"><path d="M5 12h3l3-6 2 12 3-6h3"/></svg><div><h4>Latidos excessivos</h4><p>Entender o gatilho e ensinar uma resposta alternativa.</p></div></div>
+   <div class="it"><svg viewBox="0 0 24 24"><path d="M4 18h16M7 18V9l5-4 5 4v9"/></svg><div><h4>Xixi e cocô no lugar</h4><p>Rotina e local certo, sem bronca e sem adivinhação.</p></div></div>
+   <div class="it"><svg viewBox="0 0 24 24"><path d="M12 4v8M8 8l4-4 4 4M5 20h14"/></svg><div><h4>Pular nas pessoas</h4><p>Cumprimentos educados com visitas e na rua.</p></div></div>
+   <div class="it"><svg viewBox="0 0 24 24"><path d="M3 12h4l2-3h6l2 3h4M7 12v6M17 12v6"/></svg><div><h4>Comandos e chamado</h4><p>Senta, fica, deita e vir quando é chamado.</p></div></div>
+  </div>
+ </div>
+ <div class="ph warm"><img src="tutora.jpg"></div>
+ <div class="cap-ph">Obediência que funciona fora de casa também.</div>
+ <div class="ft"><span class="cap">Treinamento para a vida real</span><span class="cap">04</span></div>
+ <div class="grain"></div>
+</section>
+
+<!-- 5 · PLANOS -->
+<section class="pg p5">
+ <div class="hd"><span class="cap kick">04 · Planos e valores</span><span class="cap" style="color:var(--mute)">Vanessa Alcântara</span></div>
+ <div class="body">
+  <div class="intro">
+   <div><span class="cap kick">Escolha o seu ritmo</span><h2>Quanto mais constância, <em>mais resultado.</em></h2></div>
+   <p>Comportamento se constrói com repetição. Por isso, nos planos, cada aula sai mais barata e a mentoria já vem inclusa.</p>
+  </div>
+  <div class="plans">
+   <div class="pl">
+    <span class="cap" style="color:var(--mute)">Plano</span>
+    <div class="nm">Essencial</div><div class="ql">4 aulas · ~1h cada</div>
+    <div class="pr"><sup>R$</sup>450</div>
+    <div class="per"><b>R$ 112,50</b> por aula</div>
+    <span class="eco">ECONOMIA DE R$ 150</span>
+    <ul>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>4 aulas práticas</li>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Orientação ao cuidador</li>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Mentoria no WhatsApp durante o pacote</li>
+     <li class="off"><svg viewBox="0 0 24 24"><path d="M6 12h12"/></svg>Aula em ambiente externo</li>
+     <li class="off"><svg viewBox="0 0 24 24"><path d="M6 12h12"/></svg>Suporte após o pacote</li>
+    </ul>
+   </div>
+   <div class="pl">
+    <span class="cap" style="color:var(--mute)">Plano</span>
+    <div class="nm">Evolução</div><div class="ql">8 aulas · ~1h cada</div>
+    <div class="pr"><sup>R$</sup>800</div>
+    <div class="per"><b>R$ 100</b> por aula</div>
+    <span class="eco">ECONOMIA DE R$ 400</span>
+    <ul>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>8 aulas práticas</li>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Orientação ao cuidador</li>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Mentoria no WhatsApp durante o pacote</li>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Aula em ambiente externo</li>
+     <li class="off"><svg viewBox="0 0 24 24"><path d="M6 12h12"/></svg>Suporte após o pacote</li>
+    </ul>
+   </div>
+   <div class="pl top">
+    <div class="badge cap">Mais completo · melhor custo</div>
+    <span class="cap" style="color:var(--ochre2)">Plano</span>
+    <div class="nm">Vida Real</div><div class="ql">12 aulas · ~1h cada</div>
+    <div class="pr"><sup>R$</sup>990</div>
+    <div class="per"><b>R$ 82,50</b> por aula</div>
+    <span class="eco">ECONOMIA DE R$ 810</span>
+    <ul>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg><span><b>12 aulas</b> práticas</span></li>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Orientação ao cuidador</li>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Mentoria no WhatsApp durante o pacote</li>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Aulas em ambiente externo</li>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg><span><b>+30 dias</b> de suporte após o pacote</span></li>
+     <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Prioridade na agenda</li>
+    </ul>
+   </div>
+  </div>
+  <div class="avulsa">
+   <div><h4>Aula avulsa</h4><p>Para uma dúvida pontual ou para conhecer o trabalho antes de fechar um plano. Não inclui mentoria.</p></div>
+   <div class="v"><sup>R$</sup>150</div>
+  </div>
+  <div class="bar">
+   <div class="cap">Valor por aula em cada opção</div>
+   <div class="br"><span>Avulsa</span><span class="t"><i style="width:100%"></i></span><span class="val">R$ 150,00</span></div>
+   <div class="br"><span>Essencial</span><span class="t"><i style="width:75%"></i></span><span class="val">R$ 112,50</span></div>
+   <div class="br"><span>Evolução</span><span class="t"><i style="width:66.7%"></i></span><span class="val">R$ 100,00</span></div>
+   <div class="br hl"><span>Vida Real</span><span class="t"><i style="width:55%"></i></span><span class="val">R$ 82,50</span></div>
+  </div>
+ </div>
+ <div class="ft"><span class="cap">Treinamento para a vida real</span><span class="cap">05</span></div>
+ <div class="grain"></div>
+</section>
+
+<!-- 6 · CONTATO -->
+<section class="pg p6 dark">
+ <div class="ph"><img src="golden.jpg"></div><div class="shade"></div>
+ <div class="hd"><span class="cap">05 · Próximo passo</span><span class="cap" style="opacity:.7">Vanessa Alcântara</span></div>
+ <div class="body">
+  <span class="cap" style="color:var(--ochre2)">Vamos trabalhar juntos?</span>
+  <h2>O seu cão já está <em>pronto.</em> E você?</h2>
+  <p class="lead">Me chama no WhatsApp, me conta como é a rotina de vocês e eu te indico o plano certo para o seu cachorro.</p>
+  <div class="cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1c-1-.4-1.9-1.3-2.3-2.3l1-1-1-2z" fill="currentColor" stroke="none"/></svg>Fale comigo no WhatsApp</div>
+ </div>
+ <div class="row">
+  <div><span class="cap">WhatsApp</span><span class="v">(00) 00000-0000</span></div>
+  <div><span class="cap">Instagram</span><span class="v">@seuperfil</span></div>
+  <div><span class="cap">Atendimento</span><span class="v">Aulas de ~1h</span></div>
+ </div>
+ <div class="grain"></div>
+</section>
+</body></html>
