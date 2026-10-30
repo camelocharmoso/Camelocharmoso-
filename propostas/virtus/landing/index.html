@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtus Ótica · Recife</title>
+<meta name="description" content="Virtus Ótica: óculos de grau, de sol e infantis na Boa Vista e em Iputinga. Virtus Express: óculos em até 1h. Marca teu horário.">
+<meta name="theme-color" content="#15296B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800&family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   VIRTUS ÓTICA — landing page
+   Direção de arte puxada do Instagram @oticavirtus:
+   laranja + azul-marinho, faixas onduladas laranja/menta,
+   tipografia condensada em caixa alta e "tarjas" de texto.
+   ================================================================ */
+:root{
+  --laranja:#F2652F; --laranja-esc:#D9501D;
+  --marinho:#15296B; --marinho-esc:#0C1A47; --marinho-2:#1E3A8A;
+  --menta:#D6F0EE; --creme:#F7F3EC; --lilas:#C9B8F2;
+  --tinta:#0C1A47; --cinza:#5B6483; --branco:#fff;
+  --pele:#C98D66;
+  --raio:22px;
+  --cond:'Barlow Condensed',Impact,sans-serif;
+  --corpo:'Barlow',system-ui,sans-serif;
+  --marca:'Archivo',var(--corpo);
+  --gutter:clamp(16px,4vw,56px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{font-family:var(--corpo);color:var(--tinta);background:var(--creme);line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.wrap{width:100%;max-width:1240px;margin:0 auto;padding:0 var(--gutter)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* tipografia */
+.cond{font-family:var(--cond);text-transform:uppercase;letter-spacing:.01em;line-height:.92}
+.h-xl{font-size:clamp(3.2rem,8.4vw,6.6rem);font-weight:800}
+.h-l{font-size:clamp(2.5rem,6vw,4.8rem);font-weight:800}
+.h-m{font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:700}
+.eyebrow{font-family:var(--cond);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:.9rem}
+.lead{font-size:clamp(1.05rem,1.4vw,1.2rem);color:var(--cinza);max-width:34em}
+
+/* tarjas (como nas artes da Virtus) */
+.tarja{display:inline-block;font-family:var(--cond);font-weight:700;text-transform:uppercase;line-height:1.05;padding:.18em .45em .12em;background:var(--marinho);color:#fff;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.tarja.l{background:var(--laranja)}
+.tarja.b{background:#fff;color:var(--marinho)}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;gap:.6em;font-family:var(--cond);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:1.15rem;padding:.85em 1.4em;border-radius:999px;text-decoration:none;transition:transform .25s cubic-bezier(.2,.8,.2,1),background .25s,box-shadow .25s;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-l{background:var(--laranja);color:#fff;box-shadow:0 8px 24px -10px rgba(242,101,47,.8)}
+.btn-l:hover{background:var(--laranja-esc);transform:translateY(-2px)}
+.btn-o{border:2px solid currentColor}
+.btn-o:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
+.btn svg{width:1.2em;height:1.2em}
+:focus-visible{outline:3px solid var(--laranja);outline-offset:3px}
+
+/* ------------------------------------------------ NAV */
+.nav{position:sticky;top:0;z-index:50;background:var(--marinho);color:#fff;transition:box-shadow .3s}
+.nav.sombra{box-shadow:0 10px 30px -12px rgba(12,26,71,.6)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo svg{width:44px;height:28px}
+.logo span{font-family:var(--marca);font-stretch:125%;font-weight:800;letter-spacing:.18em;font-size:1.15rem}
+.nav ul{display:flex;gap:28px;list-style:none}
+.nav ul a{text-decoration:none;font-family:var(--cond);font-weight:600;text-transform:uppercase;letter-spacing:.1em;font-size:1.05rem;opacity:.85;position:relative}
+.nav ul a::after{content:"";position:absolute;left:0;right:100%;bottom:-6px;height:3px;background:var(--laranja);transition:right .3s}
+.nav ul a:hover{opacity:1}.nav ul a:hover::after{right:0}
+.nav .btn{font-size:1rem;padding:.65em 1.15em}
+.burger{display:none;width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.08);position:relative}
+.burger i{position:absolute;left:12px;right:12px;height:2.5px;background:#fff;border-radius:2px;transition:.3s}
+.burger i:nth-child(1){top:15px}.burger i:nth-child(2){top:21px}.burger i:nth-child(3){top:27px}
+.menu-aberto .burger i:nth-child(1){top:21px;transform:rotate(45deg)}
+.menu-aberto .burger i:nth-child(2){opacity:0}
+.menu-aberto .burger i:nth-child(3){top:21px;transform:rotate(-45deg)}
+
+/* faixa ondulada laranja/menta */
+.ondas{height:clamp(70px,10vw,120px);background:var(--menta);overflow:hidden;position:relative}
+.ondas svg{position:absolute;inset:0;width:200%;height:100%;animation:corre 18s linear infinite}
+@keyframes corre{to{transform:translateX(-50%)}}
+
+/* ------------------------------------------------ HERO */
+.hero{background:var(--marinho);color:#fff;position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,5vw,64px);align-items:center;padding-top:clamp(40px,6vw,80px);padding-bottom:clamp(56px,7vw,96px)}
+.hero h1{margin:18px 0 22px}
+.hero h1 em{font-style:normal;color:var(--laranja);display:inline-block}
+.hero .lead{color:#C9D2F0}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0 26px}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:8px 14px;border-radius:999px;font-weight:600;font-size:.95rem}
+.chip b{color:var(--laranja)}
+.letra{display:inline-block;opacity:0;transform:translateY(.4em) rotate(4deg);animation:sobe .7s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes sobe{to{opacity:1;transform:none}}
+
+/* lente que revela a foto nítida */
+.lente{position:relative;aspect-ratio:4/5;border-radius:28px;overflow:hidden;background:var(--marinho-esc);touch-action:pan-y;cursor:none;box-shadow:0 30px 60px -30px rgba(0,0,0,.6);--x:50%;--y:42%;--r:56px;--d:90px}
+.lente img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lente .borrada{filter:blur(11px) saturate(.7) brightness(.9);transform:scale(1.08)}
+.lente .nitida{-webkit-mask-image:radial-gradient(circle var(--r) at calc(var(--x) - var(--d)) var(--y),#000 96%,transparent 100%),radial-gradient(circle var(--r) at calc(var(--x) + var(--d)) var(--y),#000 96%,transparent 100%);mask-image:radial-gradient(circle var(--r) at calc(var(--x) - var(--d)) var(--y),#000 96%,transparent 100%),radial-gradient(circle var(--r) at calc(var(--x) + var(--d)) var(--y),#000 96%,transparent 100%)}
+.lente .armacao{position:absolute;left:var(--x);top:var(--y);width:calc(var(--d)*2 + var(--r)*2 + var(--r)*.75);transform:translate(-50%,-54%);color:var(--laranja);pointer-events:none;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
+.lente .armacao svg{width:100%;height:auto;display:block}
+.lente figcaption{position:absolute;left:16px;right:16px;bottom:16px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;pointer-events:none}
+.lente .dica{background:rgba(12,26,71,.82);backdrop-filter:blur(6px);padding:8px 12px;border-radius:12px;font-size:.88rem;font-weight:600;max-width:15em;line-height:1.3}
+.lente .grau{font-family:var(--cond);font-weight:800;font-size:2.4rem;line-height:1;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+.hero .selo{position:absolute;right:calc(var(--gutter) - 8px);top:clamp(24px,4vw,48px);width:118px;height:118px;animation:gira 16s linear infinite;z-index:2}
+@keyframes gira{to{transform:rotate(360deg)}}
+
+/* ------------------------------------------------ ÓCULOS PASSANDO (marquee) */
+.esteiras{overflow:hidden;padding:14px 0 18px;margin:-14px 0 -18px;position:relative;z-index:2}
+.esteira{overflow:hidden;position:relative;padding:18px 0;background:var(--laranja);color:var(--marinho)}
+.esteira.b{background:var(--marinho);color:#fff;transform:rotate(-2deg) scale(1.04);margin-top:-12px;z-index:2}
+.esteira.a{transform:rotate(1.5deg) scale(1.04);margin-top:-6px;z-index:3}
+.trilho{display:flex;width:max-content;animation:corre 32s linear infinite}
+.esteira.b .trilho{animation-direction:reverse;animation-duration:38s}
+.esteira:hover .trilho{animation-play-state:paused}
+.item{display:flex;align-items:center;gap:26px;padding-right:26px;font-family:var(--cond);font-weight:800;font-size:clamp(1.6rem,3.2vw,2.6rem);text-transform:uppercase;white-space:nowrap}
+.item svg{width:clamp(88px,9vw,126px);height:auto;transition:transform .4s}
+.item svg:hover{transform:rotate(-8deg) scale(1.12)}
+.esteira.a .item svg{color:#fff}
+.esteira.b .item svg{color:var(--laranja)}
+
+/* ------------------------------------------------ SEÇÕES */
+section{position:relative}
+.sec{padding:clamp(72px,10vw,128px) 0}
+.topo-sec{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(32px,4vw,52px)}
+.topo-sec .eyebrow{color:var(--laranja);display:block;margin-bottom:12px}
+
+/* reveal ao rolar */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.rv.on{opacity:1;transform:none}
+
+/* ------------------------------------------------ EXPRESS */
+.express{background:var(--creme);overflow:hidden}
+.express .grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(32px,6vw,80px);align-items:center}
+.relogio{position:relative;width:min(100%,420px);aspect-ratio:1;margin:0 auto}
+.relogio svg{width:100%;height:100%;transform:rotate(-90deg)}
+.relogio .meio{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.relogio .min{font-family:var(--cond);font-weight:800;font-size:clamp(4.4rem,10vw,7rem);line-height:.85;color:var(--marinho)}
+.relogio .min small{font-size:.32em;color:var(--laranja);margin-left:4px}
+.relogio .leg{font-family:var(--cond);font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--cinza);margin-top:8px}
+.passos{list-style:none;display:grid;gap:12px;margin-top:32px}
+.passo{display:grid;grid-template-columns:56px 1fr;gap:16px;align-items:center;padding:16px 18px;border-radius:18px;background:#fff;border:2px solid transparent;transition:border-color .4s,transform .4s,background .4s}
+.passo .n{width:56px;height:56px;border-radius:50%;display:grid;place-content:center;font-family:var(--cond);font-weight:800;font-size:1.6rem;background:var(--menta);color:var(--marinho);transition:background .4s,color .4s}
+.passo h3{font-family:var(--cond);text-transform:uppercase;font-size:1.35rem;line-height:1.1}
+.passo p{color:var(--cinza);font-size:.97rem}
+.passo.on{border-color:var(--laranja);transform:translateX(6px)}
+.passo.on .n{background:var(--laranja);color:#fff}
+.voa{position:absolute;top:clamp(40px,8vw,90px);left:0;width:clamp(220px,34vw,460px);color:var(--marinho);opacity:.07;pointer-events:none;will-change:transform}
+.nota{font-size:.85rem;color:var(--cinza);margin-top:14px}
+
+/* ------------------------------------------------ COLEÇÕES */
+.colecoes{background:var(--marinho);color:#fff;overflow:hidden}
+.colecoes .lead{color:#C9D2F0}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{position:relative;border-radius:var(--raio);overflow:hidden;aspect-ratio:3/4.2;text-decoration:none;color:#fff;isolation:isolate;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.card::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(12,26,71,0) 40%,rgba(12,26,71,.92))}
+.card:hover img{transform:scale(1.07)}
+.card .tit{position:absolute;left:16px;right:16px;bottom:18px}
+.card .tit .tarja{font-size:clamp(1.5rem,2.3vw,2rem)}
+.card .tit p{margin-top:10px;font-size:.95rem;color:#DCE3FA;line-height:1.35}
+.card .ir{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;background:var(--laranja);display:grid;place-content:center;transform:scale(.6) rotate(-45deg);opacity:0;transition:.4s cubic-bezier(.2,.8,.2,1)}
+.card:hover .ir,.card:focus-visible .ir{opacity:1;transform:none}
+.card .ir svg{width:20px;height:20px}
+
+/* ------------------------------------------------ PROVADOR / QUIZ */
+.provador{background:var(--menta)}
+.prov{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,64px);align-items:start}
+.palco{position:sticky;top:96px;background:var(--creme);border-radius:32px;padding:18px;box-shadow:0 30px 60px -36px rgba(12,26,71,.55)}
+.palco svg.rosto{width:100%;height:auto;display:block;border-radius:22px;background:var(--laranja)}
+.rosto path,.rosto ellipse{transition:d .6s cubic-bezier(.2,.8,.2,1),fill .4s}
+.rosto .oculos{transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.rosto .oculos.troca{opacity:0;transform:translateY(-14px)}
+.palco .rot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+.palco .rot b{font-family:var(--cond);text-transform:uppercase;font-size:1.4rem;color:var(--marinho)}
+.provas{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.provas button{width:64px;height:44px;border-radius:12px;background:#fff;border:2px solid transparent;color:var(--marinho);display:grid;place-content:center;transition:.25s}
+.provas button svg{width:46px}
+.provas button[aria-pressed=true]{border-color:var(--laranja);background:#FFF1EA}
+.passo-quiz{background:#fff;border-radius:24px;padding:clamp(18px,3vw,28px);margin-bottom:14px}
+.passo-quiz h3{font-family:var(--cond);text-transform:uppercase;font-size:1.5rem;line-height:1.05;margin-bottom:14px;display:flex;gap:10px;align-items:baseline}
+.passo-quiz h3 span{color:var(--laranja)}
+.opcoes{display:flex;flex-wrap:wrap;gap:8px}
+.op{padding:10px 16px;border-radius:999px;border:2px solid #D7DCEB;font-weight:600;transition:.2s;background:#fff}
+.op:hover{border-color:var(--marinho)}
+.op[aria-pressed=true]{background:var(--marinho);border-color:var(--marinho);color:#fff}
+.resultado{background:var(--marinho);color:#fff;border-radius:24px;padding:clamp(20px,3vw,30px);display:none}
+.resultado.on{display:block;animation:sobe .6s cubic-bezier(.2,.8,.2,1)}
+.resultado .tarja{font-size:1.7rem;margin-bottom:12px}
+.resultado p{color:#DCE3FA;margin-bottom:18px}
+
+/* ------------------------------------------------ NÚMEROS */
+.numeros{background:var(--laranja);color:#fff}
+.numeros .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-top:56px;padding-bottom:56px}
+.num b{display:block;font-family:var(--cond);font-weight:800;font-size:clamp(3rem,6vw,4.6rem);line-height:.9}
+.num>span{font-weight:600;font-size:1rem;color:#FFE4D8}
+
+/* ------------------------------------------------ LOJAS */
+.lojas .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.loja{background:#fff;border-radius:28px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 50px -36px rgba(12,26,71,.5)}
+.loja .mapa{aspect-ratio:16/9;background:var(--menta);position:relative}
+.loja iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:saturate(.9)}
+.loja .info{padding:clamp(18px,3vw,28px);display:flex;flex-direction:column;gap:14px;flex:1}
+.loja .linha{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.status{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;padding:6px 12px;border-radius:999px;background:#EEF1F8;color:var(--cinza)}
+.status i{width:9px;height:9px;border-radius:50%;background:#9AA3BF}
+.status.aberta{background:#E3F6EA;color:#1F7A44}.status.aberta i{background:#2DB665;box-shadow:0 0 0 0 rgba(45,182,101,.6);animation:pulsa 1.8s infinite}
+@keyframes pulsa{70%{box-shadow:0 0 0 10px rgba(45,182,101,0)}100%{box-shadow:0 0 0 0 rgba(45,182,101,0)}}
+.loja h3{font-family:var(--cond);text-transform:uppercase;font-size:2.2rem;line-height:1;color:var(--marinho)}
+.loja .end{display:flex;gap:10px;align-items:flex-start;font-weight:600}
+.loja .end svg{flex:none;width:20px;height:20px;color:var(--laranja);margin-top:2px}
+.horas{list-style:none;display:grid;gap:4px;font-size:.97rem;color:var(--cinza)}
+.horas li{display:flex;justify-content:space-between;border-bottom:1px dashed #E1E5F0;padding:4px 0}
+.horas li.hoje{color:var(--marinho);font-weight:700}
+.loja .acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+.loja .btn{font-size:1rem;padding:.75em 1.2em}
+.btn-m{background:var(--marinho);color:#fff}.btn-m:hover{background:var(--marinho-2);transform:translateY(-2px)}
+
+/* ------------------------------------------------ AGENDAMENTO */
+.agenda{background:var(--marinho);color:#fff;overflow:hidden}
+.agenda .grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(28px,5vw,72px);align-items:start}
+.agenda .lead{color:#C9D2F0}
+.form{background:#fff;color:var(--tinta);border-radius:28px;padding:clamp(20px,3.4vw,36px);display:grid;gap:18px;box-shadow:0 40px 80px -40px rgba(0,0,0,.6)}
+.campo label,.campo legend{display:block;font-family:var(--cond);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:1rem;margin-bottom:8px;color:var(--marinho)}
+.campo input,.campo select{width:100%;font:inherit;font-size:1.05rem;padding:14px 16px;border-radius:14px;border:2px solid #D7DCEB;background:#FBFBFD;color:var(--tinta);transition:border-color .2s;min-height:52px}
+.campo input:focus,.campo select:focus{border-color:var(--laranja);outline:none}
+fieldset.campo{border:0;min-width:0}
+.duas{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.unidades{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.unidades label{margin:0;cursor:pointer}
+.unidades input{position:absolute;opacity:0}
+.unidades .u{display:block;border:2px solid #D7DCEB;border-radius:16px;padding:14px;transition:.2s;text-transform:none;letter-spacing:0;font-family:var(--corpo)}
+.unidades .u b{display:block;font-family:var(--cond);text-transform:uppercase;font-size:1.3rem;color:var(--marinho)}
+.unidades .u small{color:var(--cinza);font-weight:500;font-size:.85rem}
+.unidades input:checked+.u{border-color:var(--laranja);background:#FFF1EA}
+.unidades input:focus-visible+.u{outline:3px solid var(--laranja);outline-offset:2px}
+.form .opcoes .op{font-size:.95rem}
+.form .aviso{font-size:.88rem;color:var(--cinza)}
+.erro{color:#C0392B;font-size:.9rem;font-weight:600;min-height:1.2em}
+.form .btn{justify-content:center;width:100%;font-size:1.25rem}
+
+/* ------------------------------------------------ FAQ */
+.faq details{border-bottom:2px solid #E1E5F0;padding:20px 0}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;align-items:center;font-family:var(--cond);font-weight:700;text-transform:uppercase;font-size:clamp(1.3rem,2.2vw,1.7rem);color:var(--marinho)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary i{flex:none;width:36px;height:36px;border-radius:50%;background:var(--menta);position:relative;transition:transform .3s,background .3s}
+.faq summary i::before,.faq summary i::after{content:"";position:absolute;left:11px;right:11px;top:17px;height:2.5px;background:var(--marinho);border-radius:2px}
+.faq summary i::after{transform:rotate(90deg);transition:transform .3s}
+.faq details[open] summary i{background:var(--laranja)}
+.faq details[open] summary i::before,.faq details[open] summary i::after{background:#fff}
+.faq details[open] summary i::after{transform:rotate(0)}
+.faq details p{color:var(--cinza);margin-top:12px;max-width:44em}
+
+/* ------------------------------------------------ RODAPÉ */
+.rodape{background:var(--marinho-esc);color:#C9D2F0;padding:56px 0 110px}
+.rodape .grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px}
+.rodape h4{font-family:var(--cond);text-transform:uppercase;color:#fff;font-size:1.2rem;letter-spacing:.08em;margin-bottom:12px}
+.rodape a{text-decoration:none}.rodape a:hover{color:#fff;text-decoration:underline}
+.rodape .fim{margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);font-size:.82rem;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.grande{font-family:var(--cond);font-weight:800;text-transform:uppercase;color:#fff;font-size:clamp(2.4rem,5vw,3.6rem);line-height:.9;margin-bottom:16px}
+.grande em{font-style:normal;color:var(--laranja)}
+
+/* botão flutuante e barra mobile */
+.fab{position:fixed;right:20px;bottom:20px;z-index:60;width:62px;height:62px;border-radius:50%;background:#25D366;color:#fff;display:grid;place-content:center;box-shadow:0 12px 28px -8px rgba(0,0,0,.45);transition:transform .3s}
+.fab:hover{transform:scale(1.08) rotate(-6deg)}
+.fab svg{width:32px;height:32px}
+.barra{display:none}
+.toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,30px);opacity:0;background:var(--tinta);color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;z-index:80;transition:.4s;max-width:calc(100% - 32px);text-align:center;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ------------------------------------------------ RESPONSIVO */
+@media (max-width:1000px){
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .numeros .wrap{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:860px){
+  .nav ul,.nav .btn-agendar{display:none}
+  .burger{display:block}
+  .menu-aberto .nav ul{display:flex;position:absolute;top:72px;left:0;right:0;flex-direction:column;gap:0;background:var(--marinho);padding:8px var(--gutter) 24px;box-shadow:0 20px 30px -20px rgba(0,0,0,.6)}
+  .menu-aberto .nav ul a{display:block;padding:14px 0;font-size:1.5rem;border-bottom:1px solid rgba(255,255,255,.1)}
+  .hero .wrap,.express .grid,.prov,.agenda .grid,.lojas .grid{grid-template-columns:1fr}
+  .hero .selo{display:none}
+  .lente{max-width:480px;width:100%;margin:0 auto}
+  .palco{position:relative;top:0}
+  .rodape .grid{grid-template-columns:1fr}
+  .fab{display:none}
+  .barra{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:60;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(12,26,71,.94);backdrop-filter:blur(10px)}
+  .barra .btn{justify-content:center;font-size:1.05rem;padding:.8em 1em}
+  .barra .btn-o{color:#fff}
+  .toast{bottom:88px}
+}
+@media (max-width:520px){
+  .cards{grid-template-columns:1fr 1fr;gap:10px}
+  .card{aspect-ratio:3/4.4}
+  .card .tit{left:12px;right:12px;bottom:12px}
+  .card .tit p{display:none}
+  .duas,.unidades{grid-template-columns:1fr}
+  .hero-ctas .btn{flex:1 1 100%;justify-content:center}
+  .passo{grid-template-columns:46px 1fr;padding:14px}
+  .passo .n{width:46px;height:46px;font-size:1.35rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .rv{opacity:1;transform:none}.letra{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SÍMBOLOS: armações de óculos ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="g-redondo" viewBox="0 0 120 52"><g fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"><circle cx="33" cy="28" r="17" fill="var(--lente,none)"/><circle cx="87" cy="28" r="17" fill="var(--lente,none)"/><path d="M50 25q10-8 20 0M16 23 4 17M104 23l12-6"/></g></symbol>
+    <symbol id="g-quadrado" viewBox="0 0 120 52"><g fill="none" stroke="currentColor" stroke-width="4.2" stroke-linejoin="round" stroke-linecap="round"><rect x="12" y="12" width="40" height="31" rx="7" fill="var(--lente,none)"/><rect x="68" y="12" width="40" height="31" rx="7" fill="var(--lente,none)"/><path d="M52 23q8-6 16 0M12 18 3 14M108 18l9-4"/></g></symbol>
+    <symbol id="g-retangular" viewBox="0 0 120 52"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"><rect x="10" y="16" width="43" height="22" rx="4" fill="var(--lente,none)"/><rect x="67" y="16" width="43" height="22" rx="4" fill="var(--lente,none)"/><path d="M53 24q7-5 14 0M10 20 2 16M110 20l8-4"/></g></symbol>
+    <symbol id="g-gatinho" viewBox="0 0 120 52"><g fill="none" stroke="currentColor" stroke-width="4.2" stroke-linejoin="round" stroke-linecap="round"><path d="M9 14q4-6 16-4l23 3q7 1 5 10-3 18-21 18-17 0-20-13-2-9-3-14z" fill="var(--lente,none)"/><path d="M111 14q-4-6-16-4l-23 3q-7 1-5 10 3 18 21 18 17 0 20-13 2-9 3-14z" fill="var(--lente,none)"/><path d="M53 21q7-5 14 0"/></g></symbol>
+    <symbol id="g-aviador" viewBox="0 0 120 52"><g fill="none" stroke="currentColor" stroke-width="3.6" stroke-linejoin="round" stroke-linecap="round"><path d="M13 13h37q5 0 3 9-4 22-22 22-17 0-18-17-1-14 0-14z" fill="var(--lente,none)"/><path d="M107 13H70q-5 0-3 9 4 22 22 22 17 0 18-17 1-14 0-14z" fill="var(--lente,none)"/><path d="M50 13h20M53 21q7-4 14 0M13 15 3 12M107 15l10-3"/></g></symbol>
+    <symbol id="g-hexagonal" viewBox="0 0 120 52"><g fill="none" stroke="currentColor" stroke-width="3.8" stroke-linejoin="round" stroke-linecap="round"><path d="M22 10h20l10 17-10 17H22L12 27z" fill="var(--lente,none)"/><path d="M78 10h20l10 17-10 17H78L68 27z" fill="var(--lente,none)"/><path d="M52 25q8-6 16 0M12 22 3 18M108 22l9-4"/></g></symbol>
+    <symbol id="i-wpp" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></symbol>
+    <symbol id="i-seta" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></g></symbol>
+    <!-- Marca provisória: trocar pelo arquivo oficial da Virtus (SVG) antes de publicar -->
+    <symbol id="logo-olho" viewBox="0 0 44 28"><path d="M2 14C8 4 15 1 22 1s14 3 20 13c-6 10-13 13-20 13S8 24 2 14z" fill="#F2652F"/><path d="M8 14c4-5 8-7 14-7s10 2 14 7c-4 5-8 7-14 7S12 19 8 14z" fill="#fff"/><path d="M15 9l7 13 7-13" fill="none" stroke="#F2652F" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="#topo" aria-label="Virtus Ótica, início"><svg><use href="#logo-olho"/></svg><span>VIRTUS</span></a>
+    <nav aria-label="Principal">
+      <ul id="menu">
+        <li><a href="#colecoes">Coleções</a></li>
+        <li><a href="#express">Express</a></li>
+        <li><a href="#provador">Provador</a></li>
+        <li><a href="#lojas">Lojas</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-l btn-agendar" href="#agendar"><svg><use href="#i-cal"/></svg>Marcar horário</a>
+    <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><i></i><i></i><i></i></button>
+  </div>
+</header>
+
+<main id="topo">
+<!-- faixa ondulada, como nas artes da Virtus -->
+<div class="ondas" aria-hidden="true">
+  <svg viewBox="0 0 1600 120" preserveAspectRatio="none">
+    <g fill="none" stroke="#F2652F" stroke-width="26" stroke-linecap="round">
+      <path d="M-40 30 C 120 -10, 240 90, 400 50 S 680 -10, 800 30 S 1080 90, 1200 50 S 1480 -10, 1640 30"/>
+      <path d="M-40 92 C 120 52, 240 150, 400 110 S 680 50, 800 92 S 1080 150, 1200 110 S 1480 50, 1640 92"/>
+    </g>
+  </svg>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <svg class="selo" viewBox="0 0 120 120" aria-hidden="true">
+    <defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs>
+    <circle cx="60" cy="60" r="59" fill="#F2652F"/>
+    <text font-family="Barlow Condensed" font-weight="700" font-size="13.5" letter-spacing="3.2" fill="#fff"><textPath href="#circ">VIRTUS EXPRESS · ÓCULOS EM ATÉ 1H ·</textPath></text>
+    <use href="#g-redondo" x="30" y="46" width="60" height="26" color="#15296B"/>
+  </svg>
+  <div class="wrap">
+    <div>
+      <span class="tarja l eyebrow" style="font-size:1rem">Ótica conceito · Recife</span>
+      <h1 class="cond h-xl" id="titulo" aria-label="A gente te enxerga.">A gente<br>te <em>enxerga.</em></h1>
+      <p class="lead">Óculos de grau, de sol e infantis com estilo de verdade. Na Boa Vista e em Iputinga. E com o <b style="color:#fff">Virtus Express</b>, teu óculos pode ficar pronto em até 1 hora.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-l" href="#agendar"><svg><use href="#i-cal"/></svg>Marcar meu horário</a>
+        <a class="btn btn-o" href="#provador">Descobrir meu óculos</a>
+      </div>
+      <div class="chips">
+        <span class="chip"><b>⚡</b> Virtus Express: até 1h</span>
+        <span class="chip"><svg width="16" height="16" style="color:var(--laranja)"><use href="#i-pin"/></svg> Boa Vista e Iputinga</span>
+      </div>
+    </div>
+
+    <figure class="lente" id="lente" aria-label="Foto que fica nítida através de uma lente em forma de óculos">
+      <img class="borrada" src="https://images.unsplash.com/photo-1525786210598-d527194d3e9a?auto=format&fit=crop&w=900&q=60" alt="" aria-hidden="true">
+      <img class="nitida" src="https://images.unsplash.com/photo-1525786210598-d527194d3e9a?auto=format&fit=crop&w=900&q=80" alt="Mulher usando óculos de armação preta">
+      <div class="armacao" aria-hidden="true"><svg viewBox="0 0 120 52"><use href="#g-redondo"/></svg></div>
+      <figcaption>
+        <span class="dica" id="dica">Passa o mouse na foto: é assim que a gente te enxerga.</span>
+        <span class="grau" aria-hidden="true">20/20</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ ÓCULOS PASSANDO NA TELA ============ -->
+<div aria-hidden="true" class="esteiras">
+  <div class="esteira a"><div class="trilho" id="trilhoA"></div></div>
+  <div class="esteira b"><div class="trilho" id="trilhoB"></div></div>
+</div>
+
+<!-- ============ COLEÇÕES ============ -->
+<section class="colecoes sec" id="colecoes">
+  <div class="wrap">
+    <div class="topo-sec rv">
+      <div>
+        <span class="eyebrow">Coleções</span>
+        <h2 class="cond h-l">Teu rosto, tua<br>personalidade, <span style="color:var(--laranja)">teu Virtus.</span></h2>
+      </div>
+      <p class="lead">Toca numa coleção e já chama a gente pedindo os modelos disponíveis.</p>
+    </div>
+    <div class="cards">
+      <a class="card rv" data-msg="Oi, Virtus! Quero ver os modelos de óculos de GRAU disponíveis." href="#">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1656074520589-bd325dc7aa4f?auto=format&fit=crop&w=700&q=70" alt="Pessoa usando óculos de grau">
+        <span class="ir"><svg><use href="#i-seta"/></svg></span>
+        <div class="tit"><span class="tarja">De grau</span><p>Armações que transformam o olhar, do clássico ao ousado.</p></div>
+      </a>
+      <a class="card rv" data-msg="Oi, Virtus! Quero ver os modelos de óculos de SOL disponíveis." href="#">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1592245734204-6561336cbc6f?auto=format&fit=crop&w=700&q=70" alt="Homem usando óculos de sol">
+        <span class="ir"><svg><use href="#i-seta"/></svg></span>
+        <div class="tit"><span class="tarja l">De sol</span><p>Pro sol do Recife, pro Carnaval e pro dia a dia.</p></div>
+      </a>
+      <a class="card rv" data-msg="Oi, Virtus! Quero ver os modelos de óculos INFANTIS disponíveis." href="#">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1593194777536-e155e6d100b2?auto=format&fit=crop&w=700&q=70" alt="Criança usando óculos rosa">
+        <span class="ir"><svg><use href="#i-seta"/></svg></span>
+        <div class="tit"><span class="tarja">Infantil</span><p>O primeiro óculos merece ser escolhido com carinho.</p></div>
+      </a>
+      <a class="card rv" data-msg="Oi, Virtus! Quero saber mais sobre as LENTES (antirreflexo, filtro azul, fotossensível)." href="#">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1540162875225-3f6b56d69fe8?auto=format&fit=crop&w=700&q=70" alt="Mão segurando óculos com lentes">
+        <span class="ir"><svg><use href="#i-seta"/></svg></span>
+        <div class="tit"><span class="tarja l">Lentes</span><p>Antirreflexo, filtro de luz azul e lentes que escurecem no sol.</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIRTUS EXPRESS ============ -->
+<section class="express sec" id="express">
+  <svg class="voa" id="voa" viewBox="0 0 120 52" aria-hidden="true"><use href="#g-aviador"/></svg>
+  <div class="wrap grid">
+    <div class="relogio rv" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="88" fill="#fff"/>
+        <circle cx="100" cy="100" r="88" fill="none" stroke="#D6F0EE" stroke-width="14"/>
+        <circle id="arco" cx="100" cy="100" r="88" fill="none" stroke="#F2652F" stroke-width="14" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="553"/>
+        <g id="tracos" stroke="#15296B" stroke-width="2" stroke-linecap="round"></g>
+      </svg>
+      <div class="meio"><div class="min"><span id="minutos">0</span><small>min</small></div><div class="leg">da receita ao óculos</div></div>
+    </div>
+    <div>
+      <div class="topo-sec rv" style="margin-bottom:0">
+        <div>
+          <span class="eyebrow">Virtus Express</span>
+          <h2 class="cond h-l">Óculos em<br><span class="tarja l" style="font-size:.9em">até 1 hora.</span></h2>
+        </div>
+      </div>
+      <ol class="passos" id="passos">
+        <li class="passo"><span class="n">1</span><div><h3>Traz tua receita</h3><p>Pode chegar com a receita do oftalmologista na mão ou mandar foto antes no WhatsApp.</p></div></li>
+        <li class="passo"><span class="n">2</span><div><h3>Escolhe a armação</h3><p>A equipe te ajuda a achar a que combina com teu rosto e teu estilo.</p></div></li>
+        <li class="passo"><span class="n">3</span><div><h3>A gente monta</h3><p>As lentes são cortadas e montadas enquanto tu espera.</p></div></li>
+        <li class="passo"><span class="n">4</span><div><h3>Sai enxergando</h3><p>Ajuste final no rosto e pronto: tu já sai usando.</p></div></li>
+      </ol>
+      <p class="nota">O prazo de até 1h vale para as lentes que a loja tem disponíveis. Manda tua receita no WhatsApp que a gente confirma na hora.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROVADOR / QUIZ ============ -->
+<section class="provador sec" id="provador">
+  <div class="wrap">
+    <div class="topo-sec rv">
+      <div>
+        <span class="eyebrow">Provador Virtus</span>
+        <h2 class="cond h-l">Qual óculos<br>combina com <span class="tarja">teu rosto?</span></h2>
+      </div>
+      <p class="lead">Responde 3 perguntas e vê as armações no rosto. Na loja a gente confirma com o espelho.</p>
+    </div>
+    <div class="prov">
+      <div class="palco rv">
+        <svg class="rosto" id="rosto" viewBox="0 0 300 340" role="img" aria-label="Ilustração de rosto usando a armação escolhida">
+          <circle cx="150" cy="150" r="140" fill="#15296B"/>
+          <circle cx="62" cy="120" r="56" fill="#15296B"/><circle cx="238" cy="120" r="56" fill="#15296B"/>
+          <path d="M60 340c6-46 44-70 90-70s84 24 90 70z" fill="#D6F0EE"/>
+          <rect x="128" y="252" width="44" height="40" rx="12" fill="#B07653"/>
+          <path id="formaRosto" fill="#C98D66" d="M150 62C222 62 246 118 246 190C246 268 206 316 150 316C94 316 54 268 54 190C54 118 78 62 150 62Z" transform="translate(0,-26) scale(1,.93)"/>
+          <ellipse cx="108" cy="172" rx="7" ry="8" fill="#0C1A47"/><ellipse cx="192" cy="172" rx="7" ry="8" fill="#0C1A47"/>
+          <path d="M150 182q-7 22 0 26" fill="none" stroke="#9C6447" stroke-width="4" stroke-linecap="round"/>
+          <path d="M126 236q24 16 48 0" fill="none" stroke="#7A3E2A" stroke-width="5" stroke-linecap="round"/>
+          <g class="oculos" id="oculosRosto" style="color:#15296B;--lente:rgba(214,240,238,.35)">
+            <use id="usoRosto" href="#g-redondo" x="46" y="130" width="208" height="90"/>
+          </g>
+        </svg>
+        <div class="rot"><b id="nomeArmacao">Redondo</b><span class="aviso" style="color:var(--cinza);font-size:.9rem">Ilustração · experimenta as armações</span></div>
+        <div class="provas" id="provas" role="group" aria-label="Experimentar armações"></div>
+      </div>
+
+      <div>
+        <div class="passo-quiz rv">
+          <h3><span>01</span>Formato do teu rosto</h3>
+          <div class="opcoes" data-grupo="rosto">
+            <button class="op" data-v="oval">Oval</button>
+            <button class="op" data-v="redondo">Redondo</button>
+            <button class="op" data-v="quadrado">Quadrado</button>
+            <button class="op" data-v="coracao">Coração</button>
+            <button class="op" data-v="naosei">Não sei</button>
+          </div>
+        </div>
+        <div class="passo-quiz rv">
+          <h3><span>02</span>Teu estilo</h3>
+          <div class="opcoes" data-grupo="estilo">
+            <button class="op" data-v="classico">Clássico</button>
+            <button class="op" data-v="ousado">Ousado</button>
+            <button class="op" data-v="discreto">Discreto</button>
+          </div>
+        </div>
+        <div class="passo-quiz rv">
+          <h3><span>03</span>Pra que tu precisa?</h3>
+          <div class="opcoes" data-grupo="uso">
+            <button class="op" data-v="grau">Grau</button>
+            <button class="op" data-v="sol">Sol</button>
+            <button class="op" data-v="ambos">Os dois</button>
+          </div>
+        </div>
+        <div class="resultado" id="resultado" aria-live="polite">
+          <span class="tarja l cond" id="resTitulo">Teu match</span>
+          <p id="resTexto"></p>
+          <a class="btn btn-l" id="resBtn" href="#"><svg><use href="#i-wpp"/></svg>Quero ver esses modelos</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NÚMEROS ============ -->
+<section class="numeros" aria-label="A Virtus em números">
+  <div class="wrap">
+    <div class="num rv"><b data-conta="7">0</b><span>anos cuidando do olhar do Recife</span></div>
+    <div class="num rv"><b data-conta="2">0</b><span>lojas: Boa Vista e Iputinga</span></div>
+    <div class="num rv"><b><span data-conta="1">0</span>h</b><span>pro óculos ficar pronto no Express</span></div>
+    <div class="num rv"><b><span data-conta="8">0</span> mil+</b><span>seguidores no @oticavirtus</span></div>
+  </div>
+</section>
+
+<!-- ============ LOJAS ============ -->
+<section class="lojas sec" id="lojas">
+  <div class="wrap">
+    <div class="topo-sec rv">
+      <div>
+        <span class="eyebrow">Nossas lojas</span>
+        <h2 class="cond h-l">Vem ver a gente<br><span class="tarja">de pertinho.</span></h2>
+      </div>
+      <p class="lead">O status de aberta ou fechada é calculado agora, no horário do Recife.</p>
+    </div>
+    <div class="grid" id="gridLojas"></div>
+  </div>
+</section>
+
+<!-- ============ AGENDAMENTO ============ -->
+<section class="agenda sec" id="agendar">
+  <div class="wrap grid">
+    <div class="rv">
+      <span class="eyebrow" style="color:var(--laranja)">Agendamento</span>
+      <h2 class="cond h-l" style="margin:12px 0 18px">Marca teu<br><span class="tarja l">horário.</span></h2>
+      <p class="lead">Escolhe a loja, o dia e o horário. A mensagem vai prontinha pro nosso WhatsApp e a equipe confirma contigo.</p>
+      <div class="chips" style="margin-top:26px">
+        <span class="chip">Sem fila na hora de escolher</span>
+        <span class="chip">Atendimento com calma</span>
+      </div>
+    </div>
+    <form class="form rv" id="form" novalidate>
+      <div class="campo">
+        <label for="nome">Teu nome</label>
+        <input id="nome" name="nome" autocomplete="name" placeholder="Como a gente te chama?" required>
+      </div>
+      <fieldset class="campo">
+        <legend>Loja</legend>
+        <div class="unidades">
+          <label><input type="radio" name="loja" value="boavista" checked><span class="u"><b>Boa Vista</b><small>Rua da Conceição, 200</small></span></label>
+          <label><input type="radio" name="loja" value="iputinga"><span class="u"><b>Iputinga</b><small>Av. Maurício de Nassau, 487 A</small></span></label>
+        </div>
+      </fieldset>
+      <div class="campo">
+        <span id="lblMotivo" class="sr">Motivo</span>
+        <label aria-hidden="true">O que tu precisa?</label>
+        <div class="opcoes" data-grupo="motivo" role="group" aria-labelledby="lblMotivo">
+          <button type="button" class="op" data-v="Escolher armação de grau" aria-pressed="true">Escolher armação</button>
+          <button type="button" class="op" data-v="Já tenho receita (Virtus Express)">Tenho receita · Express</button>
+          <button type="button" class="op" data-v="Óculos de sol">Óculos de sol</button>
+          <button type="button" class="op" data-v="Óculos infantil">Infantil</button>
+          <button type="button" class="op" data-v="Ajuste ou manutenção">Ajuste</button>
+        </div>
+      </div>
+      <div class="duas">
+        <div class="campo"><label for="dia">Dia</label><input type="date" id="dia" required></div>
+        <div class="campo"><label for="hora">Horário</label><select id="hora" required></select></div>
+      </div>
+      <p class="aviso" id="avisoHorario"></p>
+      <p class="erro" id="erro" role="alert"></p>
+      <button class="btn btn-l" type="submit"><svg><use href="#i-wpp"/></svg>Enviar pelo WhatsApp</button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="faq sec">
+  <div class="wrap" style="max-width:920px">
+    <div class="topo-sec rv"><div><span class="eyebrow">Dúvidas</span><h2 class="cond h-l">Pergunta que<br>a gente responde.</h2></div></div>
+    <div class="rv">
+      <details><summary>Preciso levar receita?<i></i></summary><p>Pra óculos de grau, sim: traz a receita do teu oftalmologista (pode ser foto). Pra óculos de sol sem grau, é só vir escolher.</p></details>
+      <details><summary>O Virtus Express vale pra qualquer lente?<i></i></summary><p>O prazo de até 1h vale para as lentes disponíveis na loja. Manda a foto da tua receita no WhatsApp que a equipe confirma antes de tu sair de casa.</p></details>
+      <details><summary>Qual loja abre no sábado?<i></i></summary><p>A unidade Boa Vista abre no sábado, das 8h30 às 13h. A de Iputinga funciona de segunda a sexta, das 8h30 às 16h30.</p></details>
+      <details><summary>Não sei qual armação combina comigo. E agora?<i></i></summary><p>Faz o <a href="#provador" style="color:var(--laranja);font-weight:700">Provador Virtus</a> aqui na página e depois vem experimentar na loja. A equipe te ajuda a escolher com o espelho na frente.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ RODAPÉ ============ -->
+<footer class="rodape">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <p class="grande">A gente<br>te <em>enxerga.</em></p>
+        <a class="logo" href="#topo" style="color:#fff"><svg><use href="#logo-olho"/></svg><span>VIRTUS</span></a>
+      </div>
+      <div>
+        <h4>Lojas</h4>
+        <p><b style="color:#fff">Boa Vista</b><br>Rua da Conceição, 200 · Recife<br>Seg a sex 8h30–17h · Sáb 8h30–13h</p>
+        <p style="margin-top:12px"><b style="color:#fff">Iputinga</b><br>Av. Maurício de Nassau, 487 A · Recife<br>Seg a sex 8h30–16h30</p>
+      </div>
+      <div>
+        <h4>Fala com a gente</h4>
+        <p><a href="https://www.instagram.com/oticavirtus/" target="_blank" rel="noopener">Instagram @oticavirtus</a></p>
+        <p><a href="https://beacons.ai/virtusotica" target="_blank" rel="noopener">beacons.ai/virtusotica</a></p>
+        <p><a href="#" class="js-wpp">WhatsApp</a></p>
+      </div>
+    </div>
+    <div class="fim">
+      <span>© Virtus Ótica · Recife/PE</span>
+      <span>Fotos ilustrativas: Unsplash (Vinicius Wiesehofer, Lance Reis, José Pinto, Zahra Amiri, Nathan Dumlao).</span>
+    </div>
+  </div>
+</footer>
+
+<a class="fab js-wpp" href="#" aria-label="Falar com a Virtus no WhatsApp"><svg><use href="#i-wpp"/></svg></a>
+<div class="barra">
+  <a class="btn btn-o js-wpp" href="#"><svg><use href="#i-wpp"/></svg>Chamar</a>
+  <a class="btn btn-l" href="#agendar"><svg><use href="#i-cal"/></svg>Marcar horário</a>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ================================================================
+   CONFIGURAÇÃO — preencher antes de publicar
+   whatsapp: só números, com 55 + DDD (ex.: '5581999999999').
+   Enquanto estiver vazio, o site copia a mensagem e abre o direct
+   do Instagram da Virtus.
+   ================================================================ */
+const CONFIG = {
+  whatsapp: { boavista: '', iputinga: '' },
+  instagramDM: 'https://ig.me/m/oticavirtus'
+};
+
+const LOJAS = {
+  boavista: {
+    nome: 'Boa Vista', endereco: 'Rua da Conceição, 200 · Boa Vista, Recife',
+    busca: 'Rua da Conceição, 200, Boa Vista, Recife - PE',
+    // dia da semana (0 = domingo) -> [abre, fecha] em minutos
+    horario: { 1: [510, 1020], 2: [510, 1020], 3: [510, 1020], 4: [510, 1020], 5: [510, 1020], 6: [510, 780] }
+  },
+  iputinga: {
+    nome: 'Iputinga', endereco: 'Av. Maurício de Nassau, 487 A · Iputinga, Recife',
+    busca: 'Av. Maurício de Nassau, 487, Iputinga, Recife - PE',
+    horario: { 1: [510, 990], 2: [510, 990], 3: [510, 990], 4: [510, 990], 5: [510, 990] }
+  }
+};
+const DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const hm = m => `${String(Math.floor(m / 60)).padStart(2, '0')}h${String(m % 60).padStart(2, '0')}`.replace('h00', 'h');
+
+/* hora atual no Recife, independente do fuso de quem abre */
+function agoraRecife() {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Recife', hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', weekday: 'short' }).formatToParts(new Date()).map(x => [x.type, x.value]));
+  const dow = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(p.weekday);
+  return { iso: `${p.year}-${p.month}-${p.day}`, dow, min: (+p.hour % 24) * 60 + +p.minute };
+}
+
+/* ---------- toast ---------- */
+let tt;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('on'), 3800); }
+
+/* ---------- WhatsApp (com plano B pelo direct do Instagram) ---------- */
+async function enviar(texto, loja = 'boavista') {
+  const num = CONFIG.whatsapp[loja] || CONFIG.whatsapp.boavista || CONFIG.whatsapp.iputinga;
+  if (num) { window.open(`https://wa.me/${num}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener'); return; }
+  try { await navigator.clipboard.writeText(texto); toast('Mensagem copiada! É só colar no direct da Virtus.'); }
+  catch { toast('Abrindo o direct da Virtus no Instagram…'); }
+  setTimeout(() => window.open(CONFIG.instagramDM, '_blank', 'noopener'), 500);
+}
+$$('.js-wpp').forEach(a => a.addEventListener('click', e => { e.preventDefault(); enviar('Oi, Virtus! Vim pelo site e quero tirar uma dúvida.'); }));
+$$('.card[data-msg]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); enviar(a.dataset.msg); }));
+
+/* ---------- menu mobile + sombra da nav ---------- */
+const burger = $('#burger');
+burger.addEventListener('click', () => { const on = document.body.classList.toggle('menu-aberto'); burger.setAttribute('aria-expanded', on); });
+$$('#menu a').forEach(a => a.addEventListener('click', () => { document.body.classList.remove('menu-aberto'); burger.setAttribute('aria-expanded', false); }));
+addEventListener('scroll', () => $('#nav').classList.toggle('sombra', scrollY > 10), { passive: true });
+
+/* ---------- título com letras subindo ---------- */
+(() => {
+  const h = $('#titulo'); if (reduz) return;
+  let i = 0;
+  const parte = node => {
+    [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const f = document.createDocumentFragment();
+        [...n.textContent].forEach(ch => { const s = document.createElement('span'); s.className = 'letra'; s.setAttribute('aria-hidden', 'true'); s.textContent = ch === ' ' ? ' ' : ch; s.style.animationDelay = `${120 + i++ * 38}ms`; f.appendChild(s); });
+        n.replaceWith(f);
+      } else if (n.nodeName !== 'BR') parte(n);
+    });
+  };
+  parte(h);
+})();
+
+/* ---------- lente: foto desfocada que fica nítida dentro do óculos ---------- */
+(() => {
+  const el = $('#lente'); if (!el) return;
+  let alvo = { x: .5, y: .42 }, pos = { ...alvo }, ultimo = 0, t0 = performance.now();
+  const medir = () => {
+    const w = el.clientWidth, r = Math.max(30, Math.min(64, w * .125));
+    el.style.setProperty('--r', r + 'px'); el.style.setProperty('--d', (r * 54 / 34) + 'px');
+  };
+  medir(); addEventListener('resize', medir);
+  const mover = (cx, cy) => { const b = el.getBoundingClientRect(); alvo = { x: (cx - b.left) / b.width, y: (cy - b.top) / b.height }; ultimo = performance.now(); };
+  el.addEventListener('pointermove', e => mover(e.clientX, e.clientY));
+  el.addEventListener('pointerdown', e => mover(e.clientX, e.clientY));
+  if (matchMedia('(hover: none)').matches) $('#dica').textContent = 'Arrasta o dedo na foto: é assim que a gente te enxerga.';
+  const loop = now => {
+    if (now - ultimo > 2200) { // sem interação: a lente passeia sozinha
+      const t = (now - t0) / 1000;
+      alvo = { x: .5 + Math.sin(t * .7) * .2, y: .38 + Math.sin(t * 1.1) * .12 };
+    }
+    pos.x += (alvo.x - pos.x) * .12; pos.y += (alvo.y - pos.y) * .12;
+    el.style.setProperty('--x', (pos.x * 100).toFixed(2) + '%');
+    el.style.setProperty('--y', (pos.y * 100).toFixed(2) + '%');
+    requestAnimationFrame(loop);
+  };
+  if (reduz) { el.style.setProperty('--x', '50%'); el.style.setProperty('--y', '38%'); el.addEventListener('pointermove', () => { el.style.setProperty('--x', (alvo.x * 100) + '%'); el.style.setProperty('--y', (alvo.y * 100) + '%'); }); }
+  else requestAnimationFrame(loop);
+})();
+
+/* ---------- esteiras de óculos passando ---------- */
+(() => {
+  const formas = ['redondo', 'gatinho', 'quadrado', 'aviador', 'hexagonal', 'retangular'];
+  const palavrasA = ['De grau', 'De sol', 'Infantil', 'Lentes'];
+  const palavrasB = ['Virtus Express', 'Óculos em até 1h', 'Boa Vista', 'Iputinga'];
+  const monta = (id, palavras, desloc) => {
+    let html = '';
+    for (let k = 0; k < 2; k++) palavras.forEach((p, i) => {
+      html += `<div class="item"><svg viewBox="0 0 120 52"><use href="#g-${formas[(i + desloc) % formas.length]}"/></svg>${p}</div>`;
+    });
+    $(id).innerHTML = html + html;
+  };
+  monta('#trilhoA', palavrasA, 0); monta('#trilhoB', palavrasB, 3);
+})();
+
+/* ---------- aparecer ao rolar ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } }), { threshold: .15 });
+$$('.rv').forEach((el, i) => { el.style.transitionDelay = `${(i % 4) * 80}ms`; io.observe(el); });
+
+/* ---------- números contando ---------- */
+const ioN = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return; ioN.unobserve(e.target);
+  const fim = +e.target.dataset.conta, t0 = performance.now(), d = reduz ? 1 : 1200;
+  const passo = now => { const p = Math.min(1, (now - t0) / d); e.target.textContent = Math.round(fim * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(passo); };
+  requestAnimationFrame(passo);
+}), { threshold: .6 });
+$$('[data-conta]').forEach(el => ioN.observe(el));
+
+/* ---------- Express: relógio e óculos voando ligados à rolagem ---------- */
+(() => {
+  const sec = $('#express'), arco = $('#arco'), min = $('#minutos'), voa = $('#voa'), passos = $$('#passos .passo');
+  const tr = $('#tracos'); let s = '';
+  for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6, r1 = 70, r2 = i % 3 ? 74 : 78; s += `<line x1="${100 + Math.cos(a) * r1}" y1="${100 + Math.sin(a) * r1}" x2="${100 + Math.cos(a) * r2}" y2="${100 + Math.sin(a) * r2}"/>`; }
+  tr.innerHTML = s;
+  const L = 2 * Math.PI * 88;
+  const atualiza = () => {
+    const b = sec.getBoundingClientRect(), vh = innerHeight;
+    const p = Math.min(1, Math.max(0, (vh * .85 - b.top) / (b.height * .75)));
+    arco.style.strokeDashoffset = L * (1 - p);
+    min.textContent = Math.round(p * 60);
+    passos.forEach((el, i) => el.classList.toggle('on', p >= (i + .5) / 4 - .02));
+    voa.style.transform = `translateX(${-30 + p * 130}vw) rotate(${-8 + p * 16}deg)`;
+  };
+  addEventListener('scroll', atualiza, { passive: true }); addEventListener('resize', atualiza); atualiza();
+})();
+
+/* ---------- Provador ---------- */
+(() => {
+  const ROSTOS = {
+    oval: 'M150 62C222 62 246 118 246 190C246 268 206 316 150 316C94 316 54 268 54 190C54 118 78 62 150 62Z',
+    redondo: 'M150 78C232 78 262 128 262 196C262 266 222 310 150 310C78 310 38 266 38 196C38 128 68 78 150 78Z',
+    quadrado: 'M150 72C238 72 252 88 252 190C252 290 238 312 150 312C62 312 48 290 48 190C48 88 62 72 150 72Z',
+    coracao: 'M150 70C240 70 258 100 258 150C258 225 200 292 150 316C100 292 42 225 42 150C42 100 60 70 150 70Z'
+  };
+  const NOMES = { redondo: 'Redondo', quadrado: 'Quadrado', retangular: 'Retangular', gatinho: 'Gatinho', aviador: 'Aviador', hexagonal: 'Hexagonal' };
+  const MATCH = {
+    redondo: { f: ['quadrado', 'retangular'], t: 'Rosto redondo pede linhas retas: armações quadradas e retangulares dão estrutura e alongam o rosto.' },
+    quadrado: { f: ['redondo', 'aviador'], t: 'Rosto quadrado fica lindo com curvas: armações redondas e aviador suavizam o maxilar marcado.' },
+    oval: { f: ['gatinho', 'quadrado', 'hexagonal'], t: 'Rosto oval é o coringa: quase tudo combina, então dá pra ousar no gatinho ou no hexagonal.' },
+    coracao: { f: ['aviador', 'redondo'], t: 'Rosto coração pede equilíbrio embaixo: aviador e redondo compensam a testa mais larga.' },
+    naosei: { f: ['redondo', 'quadrado', 'gatinho'], t: 'Sem problema: na loja a gente olha teu rosto no espelho e te mostra as três famílias que mais funcionam.' }
+  };
+  const COR = { classico: '#15296B', ousado: '#F2652F', discreto: '#8A7F72' };
+  const LENTE = { grau: 'rgba(214,240,238,.35)', sol: 'rgba(12,26,71,.82)', ambos: 'rgba(242,101,47,.45)' };
+  const st = { rosto: null, estilo: null, uso: null, armacao: 'redondo' };
+  const forma = $('#formaRosto'), oc = $('#oculosRosto'), uso = $('#usoRosto'), nome = $('#nomeArmacao'), provas = $('#provas');
+
+  provas.innerHTML = Object.keys(NOMES).map(k => `<button type="button" data-f="${k}" aria-label="${NOMES[k]}" aria-pressed="${k === 'redondo'}"><svg viewBox="0 0 120 52"><use href="#g-${k}"/></svg></button>`).join('');
+  const veste = f => {
+    st.armacao = f; oc.classList.add('troca');
+    setTimeout(() => { uso.setAttribute('href', '#g-' + f); nome.textContent = NOMES[f]; oc.classList.remove('troca'); }, reduz ? 0 : 220);
+    $$('button', provas).forEach(b => b.setAttribute('aria-pressed', b.dataset.f === f));
+  };
+  provas.addEventListener('click', e => { const b = e.target.closest('button'); if (b) veste(b.dataset.f); });
+
+  const atualiza = () => {
+    if (st.rosto && ROSTOS[st.rosto]) forma.setAttribute('d', ROSTOS[st.rosto]);
+    if (st.estilo) oc.style.color = COR[st.estilo];
+    if (st.uso) oc.style.setProperty('--lente', LENTE[st.uso]);
+    if (st.rosto && st.estilo && st.uso) {
+      const m = MATCH[st.rosto]; veste(m.f[0]);
+      $('#resTitulo').textContent = 'Teu match: ' + m.f.map(f => NOMES[f]).join(' ou ');
+      $('#resTexto').textContent = m.t + (st.uso === 'sol' ? ' Em versão de sol, com lente escura.' : st.uso === 'ambos' ? ' Pergunta pelas opções de grau com clip-on ou lente que escurece no sol.' : '');
+      const r = $('#resultado'); r.classList.add('on');
+      const txt = `Oi, Virtus! Fiz o Provador no site.\nRosto: ${st.rosto}\nEstilo: ${st.estilo}\nPreciso de: ${st.uso}\nQuero ver armações ${m.f.map(f => NOMES[f]).join(' / ')}.`;
+      $('#resBtn').onclick = e => { e.preventDefault(); enviar(txt); };
+    }
+  };
+  $$('#provador .opcoes').forEach(g => g.addEventListener('click', e => {
+    const b = e.target.closest('.op'); if (!b) return;
+    $$('.op', g).forEach(x => x.setAttribute('aria-pressed', x === b));
+    st[g.dataset.grupo] = b.dataset.v; atualiza();
+  }));
+  $$('#provador .op').forEach(b => b.setAttribute('aria-pressed', 'false'));
+})();
+
+/* ---------- Lojas: cards com mapa e status ao vivo ---------- */
+(() => {
+  const now = agoraRecife();
+  $('#gridLojas').innerHTML = Object.entries(LOJAS).map(([id, l]) => {
+    const h = l.horario[now.dow], aberta = h && now.min >= h[0] && now.min < h[1];
+    let st = aberta ? `Aberta agora · fecha às ${hm(h[1])}` : 'Fechada agora';
+    if (!aberta) { for (let k = 0; k < 7; k++) { const d = (now.dow + k) % 7, hh = l.horario[d]; if (hh && (k > 0 || now.min < hh[0])) { st += ` · abre ${k === 0 ? 'hoje' : k === 1 ? 'amanhã' : DIAS[d].toLowerCase()} às ${hm(hh[0])}`; break; } } }
+    const linhas = [1, 2, 3, 4, 5, 6, 0].map(d => `<li class="${d === now.dow ? 'hoje' : ''}"><span>${DIAS[d]}</span><span>${l.horario[d] ? hm(l.horario[d][0]) + ' – ' + hm(l.horario[d][1]) : 'Fechada'}</span></li>`).join('');
+    const q = encodeURIComponent(l.busca);
+    return `<article class="loja rv">
+      <div class="mapa"><iframe loading="lazy" title="Mapa da loja ${l.nome}" src="https://www.google.com/maps?q=${q}&z=16&output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+      <div class="info">
+        <div class="linha"><h3>${l.nome}</h3><span class="status ${aberta ? 'aberta' : ''}"><i></i>${st}</span></div>
+        <p class="end"><svg><use href="#i-pin"/></svg>${l.endereco}</p>
+        <ul class="horas">${linhas}</ul>
+        <div class="acoes">
+          <a class="btn btn-m" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${q}"><svg><use href="#i-pin"/></svg>Como chegar</a>
+          <a class="btn btn-l" href="#agendar" data-loja="${id}"><svg><use href="#i-cal"/></svg>Marcar aqui</a>
+        </div>
+      </div></article>`;
+  }).join('');
+  $$('#gridLojas .rv').forEach(el => io.observe(el));
+  $$('#gridLojas [data-loja]').forEach(a => a.addEventListener('click', () => { $(`input[name=loja][value=${a.dataset.loja}]`).checked = true; montaHorarios(); }));
+})();
+
+/* ---------- Agendamento ---------- */
+const dia = $('#dia'), hora = $('#hora'), aviso = $('#avisoHorario');
+const lojaAtual = () => $('input[name=loja]:checked').value;
+function montaHorarios() {
+  const l = LOJAS[lojaAtual()], now = agoraRecife();
+  dia.min = now.iso;
+  if (!dia.value) {
+    // sugere o próximo dia com horário livre
+    const base = new Date(now.iso + 'T12:00:00');
+    for (let k = 0; k < 8; k++) { const d = new Date(base); d.setDate(d.getDate() + k); const h = l.horario[d.getDay()]; if (h && (k > 0 || now.min < h[1] - 30)) { dia.value = d.toISOString().slice(0, 10); break; } }
+  }
+  const d = new Date(dia.value + 'T12:00:00'), h = l.horario[d.getDay()];
+  hora.innerHTML = '';
+  if (!h) { aviso.textContent = `A loja ${l.nome} não abre ${DIAS[d.getDay()].toLowerCase()}. Escolhe outro dia.`; hora.innerHTML = '<option value="">Sem horários</option>'; return; }
+  const hoje = dia.value === now.iso;
+  for (let m = h[0]; m <= h[1] - 30; m += 30) if (!hoje || m > now.min + 20) hora.add(new Option(hm(m), hm(m)));
+  if (!hora.options.length) { hora.innerHTML = '<option value="">Sem horários hoje</option>'; aviso.textContent = 'Hoje não tem mais horário nessa loja. Escolhe outro dia.'; return; }
+  aviso.textContent = `${l.nome}: ${DIAS[d.getDay()].toLowerCase()} das ${hm(h[0])} às ${hm(h[1])}.`;
+}
+$$('input[name=loja]').forEach(r => r.addEventListener('change', montaHorarios));
+dia.addEventListener('change', montaHorarios);
+montaHorarios();
+$$('[data-grupo=motivo] .op').forEach((b, _, all) => b.addEventListener('click', () => all.forEach(x => x.setAttribute('aria-pressed', x === b))));
+$('#form').addEventListener('submit', e => {
+  e.preventDefault();
+  const nome = $('#nome').value.trim(), erro = $('#erro');
+  if (!nome) { erro.textContent = 'Coloca teu nome pra gente te chamar certinho.'; $('#nome').focus(); return; }
+  if (!hora.value) { erro.textContent = 'Escolhe um dia com horário disponível.'; dia.focus(); return; }
+  erro.textContent = '';
+  const l = LOJAS[lojaAtual()], d = new Date(dia.value + 'T12:00:00');
+  const motivo = $('[data-grupo=motivo] .op[aria-pressed=true]').dataset.v;
+  const txt = `Oi, Virtus! Quero marcar um horário 👓\n\nNome: ${nome}\nLoja: ${l.nome}\nMotivo: ${motivo}\nDia: ${DIAS[d.getDay()]}, ${d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })} às ${hora.value}\n\n(Enviado pelo site)`;
+  enviar(txt, lojaAtual());
+});
+</script>
+</body>
+</html>
