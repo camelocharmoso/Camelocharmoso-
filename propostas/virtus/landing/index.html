@@ -65,7 +65,7 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 .nav.sombra{box-shadow:0 10px 30px -12px rgba(12,26,71,.6)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo svg{width:44px;height:28px}
+.logo svg{width:42px;height:42px;flex:none}
 .logo span{font-family:var(--marca);font-stretch:125%;font-weight:800;letter-spacing:.18em;font-size:1.15rem}
 .nav ul{display:flex;gap:28px;list-style:none}
 .nav ul a{text-decoration:none;font-family:var(--cond);font-weight:600;text-transform:uppercase;letter-spacing:.1em;font-size:1.05rem;opacity:.85;position:relative}
@@ -98,11 +98,11 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 @keyframes sobe{to{opacity:1;transform:none}}
 
 /* lente que revela a foto nítida */
-.lente{position:relative;aspect-ratio:4/5;border-radius:28px;overflow:hidden;background:var(--marinho-esc);touch-action:pan-y;cursor:none;box-shadow:0 30px 60px -30px rgba(0,0,0,.6);--x:50%;--y:42%;--r:56px;--d:90px}
+.lente{position:relative;aspect-ratio:4/5;--y:42%;border-radius:28px;overflow:hidden;background:var(--marinho-esc);touch-action:pan-y;cursor:none;box-shadow:0 30px 60px -30px rgba(0,0,0,.6);--x:50%;--y:42%;--r:56px;--d:90px}
 .lente img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.lente .borrada{filter:blur(11px) saturate(.7) brightness(.9);transform:scale(1.08)}
-.lente .nitida{-webkit-mask-image:radial-gradient(circle var(--r) at calc(var(--x) - var(--d)) var(--y),#000 96%,transparent 100%),radial-gradient(circle var(--r) at calc(var(--x) + var(--d)) var(--y),#000 96%,transparent 100%);mask-image:radial-gradient(circle var(--r) at calc(var(--x) - var(--d)) var(--y),#000 96%,transparent 100%),radial-gradient(circle var(--r) at calc(var(--x) + var(--d)) var(--y),#000 96%,transparent 100%)}
-.lente .armacao{position:absolute;left:var(--x);top:var(--y);width:calc(var(--d)*2 + var(--r)*2 + var(--r)*.75);transform:translate(-50%,-54%);color:var(--laranja);pointer-events:none;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
+.lente .borrada{filter:grayscale(1) blur(7px) brightness(.92);transform:scale(1.06)}
+.lente .nitida{-webkit-mask-image:radial-gradient(circle calc(var(--r) * .8) at calc(var(--x) - var(--d)) var(--y),#000 96%,transparent 100%),radial-gradient(circle calc(var(--r) * .8) at calc(var(--x) + var(--d)) var(--y),#000 96%,transparent 100%);mask-image:radial-gradient(circle calc(var(--r) * .8) at calc(var(--x) - var(--d)) var(--y),#000 96%,transparent 100%),radial-gradient(circle calc(var(--r) * .8) at calc(var(--x) + var(--d)) var(--y),#000 96%,transparent 100%)}
+.lente .armacao{position:absolute;left:var(--x);top:var(--y);width:calc(var(--r)*5.6);transform:translate(-50%,-53.8%);color:var(--laranja);pointer-events:none;filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
 .lente .armacao svg{width:100%;height:auto;display:block}
 .lente figcaption{position:absolute;left:16px;right:16px;bottom:16px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;pointer-events:none}
 .lente .dica{background:rgba(12,26,71,.82);backdrop-filter:blur(6px);padding:8px 12px;border-radius:12px;font-size:.88rem;font-weight:600;max-width:15em;line-height:1.3}
@@ -194,6 +194,13 @@ section{position:relative}
 .resultado .tarja{font-size:1.7rem;margin-bottom:12px}
 .resultado p{color:#DCE3FA;margin-bottom:18px}
 
+/* ------------------------------------------------ FEED */
+.feed{background:var(--creme)}
+.galeria{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.galeria a{display:block;border-radius:20px;overflow:hidden;aspect-ratio:4/5;background:var(--menta)}
+.galeria img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.galeria a:hover img{transform:scale(1.06)}
+
 /* ------------------------------------------------ NÚMEROS */
 .numeros{background:var(--laranja);color:#fff}
 .numeros .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-top:56px;padding-bottom:56px}
@@ -277,6 +284,7 @@ fieldset.campo{border:0;min-width:0}
 @media (max-width:1000px){
   .cards{grid-template-columns:repeat(2,1fr)}
   .numeros .wrap{grid-template-columns:repeat(2,1fr)}
+  .galeria{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:860px){
   .nav ul,.nav .btn-agendar{display:none}
@@ -325,8 +333,8 @@ fieldset.campo{border:0;min-width:0}
     <symbol id="i-pin" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></symbol>
     <symbol id="i-seta" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
     <symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></g></symbol>
-    <!-- Marca provisória: trocar pelo arquivo oficial da Virtus (SVG) antes de publicar -->
-    <symbol id="logo-olho" viewBox="0 0 44 28"><path d="M2 14C8 4 15 1 22 1s14 3 20 13c-6 10-13 13-20 13S8 24 2 14z" fill="#F2652F"/><path d="M8 14c4-5 8-7 14-7s10 2 14 7c-4 5-8 7-14 7S12 19 8 14z" fill="#fff"/><path d="M15 9l7 13 7-13" fill="none" stroke="#F2652F" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <!-- Símbolo da Virtus redesenhado em vetor a partir do avatar oficial do @oticavirtus -->
+    <symbol id="logo-olho" viewBox="32 108 740 740"><circle cx="402" cy="478" r="370" fill="#0C1A47"/><circle cx="402" cy="478" r="332" fill="#F2652F"/><g fill="#fff"><path d="M108 478 L108 382 Q108 366 122 360 L258 302 Q272 296 280 308 L326 368 Q196 392 108 478Z"/><path d="M696 478 L696 382 Q696 366 682 360 L546 302 Q532 296 524 308 L478 368 Q608 392 696 478Z"/><path d="M108 478 Q402 678 696 478 L696 560 Q696 576 682 583 Q402 726 122 583 Q108 576 108 560Z"/><circle cx="402" cy="484" r="100"/></g><path d="M340 378 L464 378 L402 508Z" fill="#F2652F"/></symbol>
   </defs>
 </svg>
 
@@ -382,11 +390,11 @@ fieldset.campo{border:0;min-width:0}
     </div>
 
     <figure class="lente" id="lente" aria-label="Foto que fica nítida através de uma lente em forma de óculos">
-      <img class="borrada" src="https://images.unsplash.com/photo-1525786210598-d527194d3e9a?auto=format&fit=crop&w=900&q=60" alt="" aria-hidden="true">
-      <img class="nitida" src="https://images.unsplash.com/photo-1525786210598-d527194d3e9a?auto=format&fit=crop&w=900&q=80" alt="Mulher usando óculos de armação preta">
+      <img class="borrada" src="img/hero-oculos-transparente.jpg" alt="" aria-hidden="true">
+      <img class="nitida" src="img/hero-oculos-transparente.jpg" alt="Modelo da campanha Virtus usando óculos de armação transparente">
       <div class="armacao" aria-hidden="true"><svg viewBox="0 0 120 52"><use href="#g-redondo"/></svg></div>
       <figcaption>
-        <span class="dica" id="dica">Passa o mouse na foto: é assim que a gente te enxerga.</span>
+        <span class="dica" id="dica">Passa o mouse na foto: o mundo ganha cor e nitidez.</span>
         <span class="grau" aria-hidden="true">20/20</span>
       </figcaption>
     </figure>
@@ -411,7 +419,7 @@ fieldset.campo{border:0;min-width:0}
     </div>
     <div class="cards">
       <a class="card rv" data-msg="Oi, Virtus! Quero ver os modelos de óculos de GRAU disponíveis." href="#">
-        <img loading="lazy" src="https://images.unsplash.com/photo-1656074520589-bd325dc7aa4f?auto=format&fit=crop&w=700&q=70" alt="Pessoa usando óculos de grau">
+        <img loading="lazy" src="img/grau-redondo.jpg" alt="Modelo da campanha Virtus com óculos de grau redondo">
         <span class="ir"><svg><use href="#i-seta"/></svg></span>
         <div class="tit"><span class="tarja">De grau</span><p>Armações que transformam o olhar, do clássico ao ousado.</p></div>
       </a>
@@ -426,7 +434,7 @@ fieldset.campo{border:0;min-width:0}
         <div class="tit"><span class="tarja">Infantil</span><p>O primeiro óculos merece ser escolhido com carinho.</p></div>
       </a>
       <a class="card rv" data-msg="Oi, Virtus! Quero saber mais sobre as LENTES (antirreflexo, filtro azul, fotossensível)." href="#">
-        <img loading="lazy" src="https://images.unsplash.com/photo-1540162875225-3f6b56d69fe8?auto=format&fit=crop&w=700&q=70" alt="Mão segurando óculos com lentes">
+        <img loading="lazy" src="img/lentes-detalhe.jpg" alt="Foto em preto e branco com destaque colorido nos óculos">
         <span class="ir"><svg><use href="#i-seta"/></svg></span>
         <div class="tit"><span class="tarja l">Lentes</span><p>Antirreflexo, filtro de luz azul e lentes que escurecem no sol.</p></div>
       </a>
@@ -527,6 +535,25 @@ fieldset.campo{border:0;min-width:0}
           <a class="btn btn-l" id="resBtn" href="#"><svg><use href="#i-wpp"/></svg>Quero ver esses modelos</a>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIRETO DO FEED ============ -->
+<section class="feed sec" id="feed">
+  <div class="wrap">
+    <div class="topo-sec rv">
+      <div>
+        <span class="eyebrow">Direto do feed</span>
+        <h2 class="cond h-l">Seu rosto, sua<br>personalidade, <span class="tarja l">seu Virtus.</span></h2>
+      </div>
+      <a class="btn btn-m" href="https://www.instagram.com/oticavirtus/" target="_blank" rel="noopener">Seguir @oticavirtus</a>
+    </div>
+    <div class="galeria">
+      <a class="rv" href="https://www.instagram.com/oticavirtus/" target="_blank" rel="noopener"><img loading="lazy" src="img/feed-seu-virtus.jpg" alt="Campanha Virtus: seu rosto, sua personalidade, seu Virtus"></a>
+      <a class="rv" href="https://www.instagram.com/oticavirtus/" target="_blank" rel="noopener"><img loading="lazy" src="img/feed-dia-dos-pais.jpg" alt="Campanha Virtus de Dia dos Pais com óculos azul"></a>
+      <a class="rv" href="https://www.instagram.com/oticavirtus/" target="_blank" rel="noopener"><img loading="lazy" src="img/feed-presente-sol.jpg" alt="Campanha Virtus: óculos de grau completo com óculos de sol de brinde"></a>
+      <a class="rv" href="https://www.instagram.com/oticavirtus/" target="_blank" rel="noopener"><img loading="lazy" src="img/feed-colecao.jpg" alt="Ensaio Virtus com óculos de armação tartaruga"></a>
     </div>
   </div>
 </section>
@@ -632,12 +659,13 @@ fieldset.campo{border:0;min-width:0}
         <h4>Fala com a gente</h4>
         <p><a href="https://www.instagram.com/oticavirtus/" target="_blank" rel="noopener">Instagram @oticavirtus</a></p>
         <p><a href="https://beacons.ai/virtusotica" target="_blank" rel="noopener">beacons.ai/virtusotica</a></p>
-        <p><a href="#" class="js-wpp">WhatsApp</a></p>
+        <p><a href="#" class="js-wpp">WhatsApp (81) 99827-7804</a></p>
+        <p><a href="https://virtusotica.com.br" target="_blank" rel="noopener">virtusotica.com.br</a></p>
       </div>
     </div>
     <div class="fim">
       <span>© Virtus Ótica · Recife/PE</span>
-      <span>Fotos ilustrativas: Unsplash (Vinicius Wiesehofer, Lance Reis, José Pinto, Zahra Amiri, Nathan Dumlao).</span>
+      <span>Fotos das campanhas @oticavirtus. Cards "De sol" e "Infantil": Unsplash (José Pinto, Zahra Amiri), imagens ilustrativas.</span>
     </div>
   </div>
 </footer>
@@ -657,7 +685,8 @@ fieldset.campo{border:0;min-width:0}
    do Instagram da Virtus.
    ================================================================ */
 const CONFIG = {
-  whatsapp: { boavista: '', iputinga: '' },
+  whatsapp: { boavista: '5581998277804', iputinga: '5581998277804' },
+  fone: '(81) 99827-7804',
   instagramDM: 'https://ig.me/m/oticavirtus'
 };
 
@@ -730,24 +759,24 @@ addEventListener('scroll', () => $('#nav').classList.toggle('sombra', scrollY > 
   let alvo = { x: .5, y: .42 }, pos = { ...alvo }, ultimo = 0, t0 = performance.now();
   const medir = () => {
     const w = el.clientWidth, r = Math.max(30, Math.min(64, w * .125));
-    el.style.setProperty('--r', r + 'px'); el.style.setProperty('--d', (r * 54 / 34) + 'px');
+    el.style.setProperty('--r', r + 'px'); el.style.setProperty("--d", (r * 1.26) + "px");
   };
   medir(); addEventListener('resize', medir);
   const mover = (cx, cy) => { const b = el.getBoundingClientRect(); alvo = { x: (cx - b.left) / b.width, y: (cy - b.top) / b.height }; ultimo = performance.now(); };
   el.addEventListener('pointermove', e => mover(e.clientX, e.clientY));
   el.addEventListener('pointerdown', e => mover(e.clientX, e.clientY));
-  if (matchMedia('(hover: none)').matches) $('#dica').textContent = 'Arrasta o dedo na foto: é assim que a gente te enxerga.';
+  if (matchMedia('(hover: none)').matches) $('#dica').textContent = 'Arrasta o dedo na foto: o mundo ganha cor e nitidez.';
   const loop = now => {
     if (now - ultimo > 2200) { // sem interação: a lente passeia sozinha
       const t = (now - t0) / 1000;
-      alvo = { x: .5 + Math.sin(t * .7) * .2, y: .38 + Math.sin(t * 1.1) * .12 };
+      alvo = { x: .5 + Math.sin(t * .7) * .2, y: .42 + Math.sin(t * 1.1) * .07 };
     }
     pos.x += (alvo.x - pos.x) * .12; pos.y += (alvo.y - pos.y) * .12;
     el.style.setProperty('--x', (pos.x * 100).toFixed(2) + '%');
     el.style.setProperty('--y', (pos.y * 100).toFixed(2) + '%');
     requestAnimationFrame(loop);
   };
-  if (reduz) { el.style.setProperty('--x', '50%'); el.style.setProperty('--y', '38%'); el.addEventListener('pointermove', () => { el.style.setProperty('--x', (alvo.x * 100) + '%'); el.style.setProperty('--y', (alvo.y * 100) + '%'); }); }
+  if (reduz) { el.style.setProperty('--x', '50%'); el.style.setProperty('--y', '42%'); el.addEventListener('pointermove', () => { el.style.setProperty('--x', (alvo.x * 100) + '%'); el.style.setProperty('--y', (alvo.y * 100) + '%'); }); }
   else requestAnimationFrame(loop);
 })();
 
@@ -861,6 +890,7 @@ $$('[data-conta]').forEach(el => ioN.observe(el));
       <div class="info">
         <div class="linha"><h3>${l.nome}</h3><span class="status ${aberta ? 'aberta' : ''}"><i></i>${st}</span></div>
         <p class="end"><svg><use href="#i-pin"/></svg>${l.endereco}</p>
+        <p class="end"><svg><use href="#i-wpp"/></svg><a href="#" class="js-wpp-loja" data-loja="${id}" style="text-decoration:none">${CONFIG.fone}</a></p>
         <ul class="horas">${linhas}</ul>
         <div class="acoes">
           <a class="btn btn-m" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${q}"><svg><use href="#i-pin"/></svg>Como chegar</a>
@@ -869,6 +899,7 @@ $$('[data-conta]').forEach(el => ioN.observe(el));
       </div></article>`;
   }).join('');
   $$('#gridLojas .rv').forEach(el => io.observe(el));
+  $$('#gridLojas .js-wpp-loja').forEach(a => a.addEventListener('click', e => { e.preventDefault(); enviar(`Oi, Virtus! Vim pelo site e quero falar com a loja ${LOJAS[a.dataset.loja].nome}.`, a.dataset.loja); }));
   $$('#gridLojas [data-loja]').forEach(a => a.addEventListener('click', () => { $(`input[name=loja][value=${a.dataset.loja}]`).checked = true; montaHorarios(); }));
 })();
 
