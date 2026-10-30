@@ -1,0 +1,121 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+@page{size:210mm 297mm;margin:0}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{--ink:#111110;--paper:#f2f0eb;--red:#d7261e;--mute:#6b6862;--line:rgba(17,17,16,.14)}
+html,body{background:#777}
+body{font-family:Archivo,sans-serif;color:var(--ink);font-size:13px;line-height:1.45}
+.pg{position:relative;width:794px;height:1123px;overflow:hidden;background:var(--paper);page-break-after:always}
+.pg:last-child{page-break-after:auto}
+.blk{font-family:"Archivo Black",sans-serif;text-transform:uppercase;letter-spacing:-.5px;line-height:.9}
+.cap{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
+.dark{background:var(--ink);color:var(--paper)}
+
+/* capa */
+.cv-top{position:absolute;top:56px;left:56px;right:56px;display:flex;justify-content:space-between}
+.cv-name{position:absolute;left:50px;bottom:300px;font-size:124px}
+.cv-name span{color:var(--red)}
+.cv-sub{position:absolute;left:56px;bottom:250px;font-size:22px;font-weight:600}
+.cv-bar{position:absolute;left:0;right:0;bottom:0;height:190px;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 56px}
+.cv-price{font-size:72px}
+.cv-price small{font-size:26px;vertical-align:top;margin-right:6px}
+.cv-bar .cap{opacity:.85}
+.cv-num{position:absolute;right:56px;top:160px;font-size:320px;color:rgba(242,240,235,.06)}
+
+/* produto */
+.hd{position:absolute;top:44px;left:56px;right:56px;display:flex;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.ph{position:absolute;top:100px;left:56px;right:56px;height:700px;overflow:hidden;background:#ddd}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.tagp{position:absolute;top:760px;right:80px;background:var(--red);color:#fff;padding:18px 26px;text-align:center}
+.tagp .blk{font-size:44px}
+.tagp .cap{font-size:10px;margin-bottom:4px}
+.info{position:absolute;left:56px;right:56px;top:840px}
+.info h2{font-size:60px}
+.info .brand{color:var(--red);margin-bottom:10px}
+.rows{display:grid;grid-template-columns:repeat(3,1fr);margin-top:26px;border-top:1px solid var(--line)}
+.rows div{padding:14px 0;border-bottom:1px solid var(--line)}
+.rows .cap{color:var(--mute);font-size:9.5px;margin-bottom:4px}
+.rows b{font-size:16px;font-weight:600}
+.ft{position:absolute;bottom:36px;left:56px;right:56px;display:flex;justify-content:space-between;color:var(--mute)}
+
+/* contato */
+.ct{position:absolute;left:56px;right:56px;top:120px}
+.ct h2{font-size:96px}
+.ct h2 span{color:var(--red)}
+.ct p{font-size:18px;margin-top:22px;max-width:520px;color:rgba(242,240,235,.8)}
+.steps{margin-top:56px;display:grid;gap:0}
+.steps div{display:flex;gap:22px;align-items:baseline;padding:18px 0;border-top:1px solid rgba(242,240,235,.2);font-size:19px;font-weight:500}
+.steps .blk{color:var(--red);font-size:30px;width:44px}
+.qrbox{position:absolute;left:56px;right:56px;bottom:70px;display:flex;align-items:center;gap:36px;background:var(--paper);color:var(--ink);padding:30px}
+.qrbox img{width:170px;height:170px;display:block}
+.qrbox .tel{font-size:42px;margin:8px 0}
+</style></head><body>
+
+<!-- CAPA -->
+<section class="pg dark">
+  <div class="cv-top"><span class="cap">Catálogo de camisetas</span><span class="cap">Pronta entrega</span></div>
+  <div class="blk cv-name">Matheus<span>.</span></div>
+  <div class="cv-sub">Camisetas de algodão, pronta entrega.</div>
+  <div class="cv-bar">
+    <div><div class="cap">Qualquer modelo</div><div class="blk cv-price"><small>R$</small>99,90</div></div>
+    <div style="text-align:right"><div class="cap">Pedidos no WhatsApp</div><div class="blk" style="font-size:30px;margin-top:8px">(81) 97915-1287</div></div>
+  </div>
+</section>
+
+<!-- TXC -->
+<section class="pg">
+  <div class="hd"><span class="cap">Matheus · Catálogo</span><span class="cap">01 / 02</span></div>
+  <div class="ph"><img src="txc.jpg" style="object-position:50% 40%"></div>
+  <div class="tagp"><div class="cap">Preço</div><div class="blk">R$99,90</div></div>
+  <div class="info">
+    <div class="cap brand">TXC</div>
+    <h2 class="blk">TXC Arco</h2>
+    <div class="rows">
+      <div><div class="cap">Cor</div><b>Off-white</b></div>
+      <div><div class="cap">Estampa</div><b>Vermelha, frente</b></div>
+      <div><div class="cap">Tamanhos</div><b>Consulte</b></div>
+    </div>
+  </div>
+  <div class="ft"><span class="cap">Pedidos: (81) 97915-1287</span><span class="cap">Pronta entrega</span></div>
+</section>
+
+<!-- JUSTHYPE -->
+<section class="pg">
+  <div class="hd"><span class="cap">Matheus · Catálogo</span><span class="cap">02 / 02</span></div>
+  <div class="ph"><img src="justhype.jpg" style="object-position:50% 35%"></div>
+  <div class="tagp"><div class="cap">Preço</div><div class="blk">R$99,90</div></div>
+  <div class="info">
+    <div class="cap brand">Abitragem</div>
+    <h2 class="blk">Justhype</h2>
+    <div class="rows">
+      <div><div class="cap">Cor</div><b>Preta</b></div>
+      <div><div class="cap">Estampa</div><b>Branca, frente</b></div>
+      <div><div class="cap">Tamanhos</div><b>Consulte</b></div>
+    </div>
+  </div>
+  <div class="ft"><span class="cap">Pedidos: (81) 97915-1287</span><span class="cap">Pronta entrega</span></div>
+</section>
+
+<!-- CONTATO -->
+<section class="pg dark">
+  <div class="ct">
+    <div class="cap" style="color:var(--red)">Como pedir</div>
+    <h2 class="blk" style="margin-top:18px">Chama<br>no zap<span>.</span></h2>
+    <p>Escolha o modelo, diga o tamanho e combine pagamento e entrega direto com o Matheus.</p>
+    <div class="steps">
+      <div><span class="blk">1</span>Mande o nome do modelo (TXC Arco ou Justhype)</div>
+      <div><span class="blk">2</span>Informe o tamanho e confirme a disponibilidade</div>
+      <div><span class="blk">3</span>Combine pagamento e entrega</div>
+    </div>
+  </div>
+  <div class="qrbox">
+    <img src="qr.svg">
+    <div>
+      <div class="cap" style="color:var(--mute)">Aponte a câmera ou chame</div>
+      <div class="blk tel">(81) 97915-1287</div>
+      <div style="font-size:16px;font-weight:600">Matheus · todas as camisetas R$99,90</div>
+    </div>
+  </div>
+</section>
+</body></html>
