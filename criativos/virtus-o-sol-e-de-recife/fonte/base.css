@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@400;500;600;700&display=swap');
+:root{--laranja:#F2652F;--marinho:#15296B;--marinho-esc:#0C1A47;--menta:#D6F0EE;--creme:#F7F3EC}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#111}
+.p{position:relative;overflow:hidden;color:#fff;font-family:Barlow,sans-serif}
+/* foto P&B + recorte em cor (padrão aprovado da Virtus) */
+.ph,.ph-cor{position:absolute;inset:0;background:url(foto-oculos-virtus.jpg) no-repeat}
+.ph{filter:grayscale(1) contrast(1.08) brightness(.86)}
+.recorte{position:absolute;border:2px solid rgba(255,255,255,.95)}
+.shade{position:absolute;inset:0}
+.logo{position:absolute;left:50%;transform:translateX(-50%)}
+.parc{position:absolute;left:0;right:0;text-align:center;font:500 22px "Barlow Condensed";letter-spacing:.32em;text-transform:uppercase;opacity:.92}
+.parc b{font-weight:700}
+h1{font-family:"Barlow Condensed";text-transform:uppercase;line-height:.95;letter-spacing:.005em}
+h1 .l{font-weight:300}h1 .b{font-weight:800}
+.apoio{font-weight:400;line-height:1.3}
+.apoio b{font-weight:700}
+.tarja{display:inline-block;font-family:"Barlow Condensed";text-transform:uppercase;font-weight:600;line-height:1;padding:.18em .36em .14em}
+.t-laranja{background:var(--laranja);color:#fff}
+.t-marinho{background:var(--marinho);color:#fff}
+.grain{position:absolute;inset:0;background:url(grain.png);background-size:300px;mix-blend-mode:overlay;opacity:.16;pointer-events:none}
