@@ -6,17 +6,17 @@ Para ver no computador: `python3 -m http.server` dentro desta pasta e abra `http
 
 ## O que tem na página
 
-1. **Topo:** "Corte que chama atenção." Ao carregar, uma tesoura atravessa o título por uma linha tracejada e a metade de baixo das letras cai um pouco, como papel recortado. Botões de agendar e WhatsApp, horário e endereço.
-2. **Faixa:** os serviços passando com tesouras entre eles.
-3. **Cortes:** três fotos de corte. No celular, rolam para o lado. Linha sobre o corte kids.
-4. **Preços:** cabelo R$ 50, barba R$ 40, cabelo + barba R$ 80, e um cupom recortável com os 50% no primeiro corte.
-5. **Como funciona:** três passos, do agendamento até sair pronto.
-6. **Fundador:** foto e frase do Edmilson Rodrigues.
-7. **Curso de barbeiro** (`#curso`, dá para mandar o link direto para essa parte): Instituto Beleza Academy, turma em formação, botão para entrar na lista pelo WhatsApp.
-8. **Como chegar:** mapa, endereço com a referência da delegacia, horário, telefones e botão de rota.
-9. **Chamada final e rodapé**, com a vaga de barbeiro. No celular, uma barra fixa "Agendar" + WhatsApp.
+Visual escuro e premium (carvão, amarelo Casa Amarela e aço), com vídeo e tesoura reais.
 
-Entre as seções, a linha tracejada de "corte aqui" ganha uma tesoura que anda e abre/fecha conforme a página rola. Com "reduzir movimento" ligado no aparelho, as animações param.
+1. **Topo:** vídeo real da máquina fazendo o degradê na nuca. Ao carregar, uma tesoura de verdade (foto recortada) atravessa o título "Corte que chama atenção." pela linha tracejada e a metade de baixo cai em amarelo, como papel recortado. Depois ela fica parada ao lado do título e acompanha o mouse. O selo mostra "Aberto agora" no horário de funcionamento (hora de Recife).
+2. **Faixa amarela:** ao rolar, a tesoura corta a tela e preenche "Hora marcada. Sem fila." atrás dela.
+3. **Escolha o seu corte:** abas com três cortes; foto, descrição, preço e botões mudam juntos. O WhatsApp já sai com o nome do corte.
+4. **Monte seu atendimento:** marca cabelo e/ou barba e o total aparece na hora (o combo mostra a economia de R$ 10). O botão muda para "Agendar cabelo + barba", etc.
+5. **Cupom de 50%:** botão "Recortar o cupom"; a tesoura passa, o cupom solta e aparece o botão de usar no primeiro corte.
+6. **Do celular à cadeira:** segundo vídeo (toca ao apertar o play) e os três passos.
+7. **Fundador**, **Curso de barbeiro** (`#curso`), **Como chegar** (mapa, rota, telefones), **chamada final** e **rodapé** com a vaga. No celular, barra fixa "Agendar" + WhatsApp.
+
+Os vídeos só rodam quando estão na tela. Com "reduzir movimento" ligado no aparelho, as animações param e os vídeos não tocam sozinhos.
 
 ## Como editar
 
@@ -27,6 +27,8 @@ Entre as seções, a linha tracejada de "corte aqui" ganha uma tesoura que anda 
   - `edmilson.webp`, `cadeira-ed.webp`: recortadas de prints da página do IBA. Peça os arquivos originais, porque o print perde qualidade.
   - `logo-ed.png`: logo branca com fundo transparente (no topo ela é escurecida por CSS).
   - `og.jpg`: prévia do link no WhatsApp (1200×630).
+  - `nuca.mp4`/`nuca.webm`/`nuca.jpg` (topo) e `acabamento.mp4`/`acabamento.jpg`: vídeos do Mixkit. O ideal é trocar por vídeos verticais da própria ED (até 8 s, sem som).
+  - `tesoura.webp`: tesoura profissional real com fundo transparente (foto do Unsplash, recortada e com a marca gravada apagada).
 - **Rastreamento:** os cliques mandam `agendar_clique`, `whatsapp_clique` e `rota_clique` para `window.dataLayer`. Se instalarem Google Tag Manager ou Meta Pixel, os eventos já chegam lá.
 
 ## Antes de publicar no domínio deles
@@ -37,4 +39,4 @@ Entre as seções, a linha tracejada de "corte aqui" ganha uma tesoura que anda 
 
 ## Créditos das imagens
 
-Cortes: fotos do [Unsplash](https://unsplash.com/license) (uso comercial livre). Fotos do Edmilson: material da própria ED Barbearia. Ícones do WhatsApp e do Instagram: Simple Icons (CC0).
+Cortes e tesoura: fotos do [Unsplash](https://unsplash.com/license) (uso comercial livre). Vídeos: [Mixkit](https://mixkit.co/license/) (uso comercial livre). Fotos do Edmilson: material da própria ED Barbearia. Ícones do WhatsApp e do Instagram: Simple Icons (CC0).
