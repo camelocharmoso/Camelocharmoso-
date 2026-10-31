@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>House · teu Instagram vende?</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Post @housedocreator: feed 1080x1350 e story 1080x1920.
+   Padrão House: Ink #0E0E0E, Yellow #FECF05, Poppins Bold com contorno, faíscas, logo principal negativa.
+   Renderizar com: node render.js */
+:root{--k:#0E0E0E;--y:#FECF05;--c1:#141414;--c2:#1C1C1C;--gr:#A9A9A9;--g2:#6E6E6E;--ln:#2A2A2A}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#333;display:flex;gap:40px;padding:40px;align-items:flex-start;font-family:'Poppins',sans-serif}
+.arte{position:relative;overflow:hidden;flex:none;background:var(--k);color:#fff}
+.feed{width:1080px;height:1350px}
+.story{width:1080px;height:1920px}
+.diag{position:absolute;inset:0;background:repeating-linear-gradient(68deg,transparent 0 46px,#151515 46px 48px);clip-path:polygon(55% 0,100% 0,100% 100%,30% 100%)}
+.logo{position:absolute}
+.eyebrow{position:absolute;font-weight:700;color:var(--y);letter-spacing:.22em;text-transform:uppercase}
+.titulo{position:absolute;font-weight:700;line-height:1.06;letter-spacing:-.01em;-webkit-text-stroke:3.4px currentColor;paint-order:stroke fill}
+.titulo .y{color:var(--y)}
+.sub{position:absolute;color:var(--gr);line-height:1.55}
+.sub b{color:#fff;font-weight:600}
+.notif{position:absolute;display:flex;flex-direction:column;gap:16px}
+.n{display:flex;align-items:center;gap:18px;background:var(--c2);border:1px solid var(--ln);border-radius:26px;padding:20px 26px}
+.n .ic{width:58px;height:58px;border-radius:16px;display:grid;place-content:center;flex:none}
+.n .ic svg{width:30px;height:30px}
+.n b{display:block;font-weight:600;font-size:27px;line-height:1.2}
+.n span{display:block;color:var(--gr);font-size:22px}
+.n.ok .ic{background:#2B1A1F}
+.n.zero .ic{background:#1E2A21}
+.n.zero b{color:#FF7A6B}
+.ilus{color:var(--g2);font-size:19px;padding-left:8px}
+.cta{position:absolute;background:var(--y);color:var(--k);border-radius:999px;display:flex;align-items:center;justify-content:space-between;font-weight:700}
+.cta em{font-style:normal;background:var(--k);color:var(--y);border-radius:999px;padding:8px 22px;margin:0 8px}
+.rod{position:absolute;color:var(--g2);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.chips{position:absolute;display:flex;flex-wrap:wrap;gap:12px}
+.chips span{border:2px solid var(--y);color:var(--y);border-radius:999px;padding:10px 22px;font-weight:600}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="faisca" viewBox="0 0 60 60"><g fill="none" stroke="#FECF05" stroke-linecap="round" stroke-width="9"><path d="M30 8 L44 26"/><path d="M8 26 L30 34"/></g></symbol>
+  <symbol id="coracao" viewBox="0 0 24 24"><path fill="#FF5A79" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.4 2.5.8-1.3 2.3-2.5 4.4-2.5 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></symbol>
+  <symbol id="chat" viewBox="0 0 24 24"><path fill="#4CD964" d="M12 3C6.5 3 2 6.9 2 11.7c0 2.4 1.1 4.6 3 6.2L4.2 21l3.8-1.7c1.2.4 2.6.6 4 .6 5.5 0 10-3.9 10-8.7S17.5 3 12 3z"/></symbol>
+</svg>
+
+<!-- ================= FEED 1080x1350 ================= -->
+<div class="arte feed" id="feed">
+  <div class="diag"></div>
+  <img class="logo" src="../../marca/principal-negativa.png" style="left:80px;top:72px;width:230px" alt="House do Creator">
+  <p class="eyebrow" style="left:80px;top:196px;font-size:21px">Pra negócio local · Recife</p>
+
+  <svg style="position:absolute;left:34px;top:250px;width:64px;height:64px;transform:rotate(-8deg)"><use href="#faisca"/></svg>
+  <h1 class="titulo" style="left:80px;top:268px;font-size:112px">Teu Instagram<br>é bonito.<br>Mas ele <span class="y">vende?</span></h1>
+  <svg style="position:absolute;left:958px;top:596px;width:62px;height:62px;transform:rotate(170deg)"><use href="#faisca"/></svg>
+
+  <div class="notif" style="left:80px;top:660px;width:600px">
+    <div class="n ok"><div class="ic"><svg><use href="#coracao"/></svg></div><div><b>247 curtidas</b><span>no post da semana</span></div></div>
+    <div class="n zero"><div class="ic"><svg><use href="#chat"/></svg></div><div><b>0 mensagens</b><span>no WhatsApp da loja</span></div></div>
+    <span class="ilus">Exemplo ilustrativo</span>
+  </div>
+
+  <p class="sub" style="left:80px;top:1010px;width:900px;font-size:31px">Post bonito sem gancho, sem oferta e sem caminho pro WhatsApp vira só vitrine. <b>A House transforma teu perfil em cliente entrando na loja.</b></p>
+
+  <div class="cta" style="left:80px;right:80px;top:1176px;height:92px;padding:0 30px;font-size:27px;justify-content:center">
+    <span>Comenta<em>DIAGNÓSTICO</em>e a gente analisa teu perfil</span>
+  </div>
+  <p class="rod" style="left:80px;bottom:28px;font-size:17px">@housedocreator</p>
+  <p class="rod" style="right:80px;bottom:28px;font-size:17px">WhatsApp (81) 98355-4583</p>
+</div>
+
+<!-- ================= STORY 1080x1920 ================= -->
+<div class="arte story" id="story">
+  <div class="diag"></div>
+  <img class="logo" src="../../marca/principal-negativa.png" style="left:80px;top:250px;width:250px" alt="House do Creator">
+  <p class="eyebrow" style="left:80px;top:390px;font-size:23px">Pra negócio local · Recife</p>
+
+  <svg style="position:absolute;left:30px;top:452px;width:70px;height:70px;transform:rotate(-8deg)"><use href="#faisca"/></svg>
+  <h1 class="titulo" style="left:80px;top:470px;font-size:112px">Teu Instagram<br>é bonito.<br>Mas ele <span class="y">vende?</span></h1>
+  <svg style="position:absolute;left:958px;top:808px;width:64px;height:64px;transform:rotate(170deg)"><use href="#faisca"/></svg>
+
+  <div class="notif" style="left:80px;top:900px;width:640px">
+    <div class="n ok"><div class="ic"><svg><use href="#coracao"/></svg></div><div><b>247 curtidas</b><span>no post da semana</span></div></div>
+    <div class="n zero"><div class="ic"><svg><use href="#chat"/></svg></div><div><b>0 mensagens</b><span>no WhatsApp da loja</span></div></div>
+    <span class="ilus">Exemplo ilustrativo</span>
+  </div>
+
+  <p class="sub" style="left:80px;top:1260px;width:900px;font-size:34px">Post bonito sem gancho, sem oferta e sem caminho pro WhatsApp vira só vitrine. <b>A House transforma teu perfil em cliente entrando na loja.</b></p>
+
+  <div class="chips" style="left:80px;top:1500px;font-size:26px"><span>Reels com gancho</span><span>Oferta clara</span><span>WhatsApp no 1º toque</span></div>
+
+  <div class="cta" style="left:80px;right:80px;top:1620px;height:100px;padding:0 40px;font-size:32px;justify-content:center">
+    <span>Me chama no direct: <em>DIAGNÓSTICO</em></span>
+  </div>
+</div>
+</body>
+</html>
