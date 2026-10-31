@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Virtus Express · artes</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,800&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Artes Virtus Express: feed 1080x1350 e story 1080x1920.
+   Renderizar com Playwright (render_artes.js) para gerar os PNGs. */
+:root{--laranja:#F2652F;--marinho:#15296B;--marinho-esc:#0C1A47;--menta:#D6F0EE;--creme:#F7F3EC}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#222;display:flex;gap:40px;padding:40px;align-items:flex-start}
+.arte{position:relative;overflow:hidden;flex:none;font-family:'Barlow',sans-serif;color:#fff}
+.feed{width:1080px;height:1350px;background:#838381}
+.story{width:1080px;height:1920px;background:var(--marinho)}
+.foto{position:absolute;background:url(foto-express.jpg) center/cover no-repeat}
+.feed .foto{inset:0;background-position:46% 0}
+.story .foto{left:0;top:0;width:1080px;height:1077px}
+
+/* tarjas */
+.tarjas{position:absolute;display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.t{font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;line-height:1;padding:10px 22px 6px;background:var(--marinho);color:#fff}
+.t.l{background:var(--laranja)}
+.sub{font-weight:600;line-height:1.35}
+
+/* marca */
+.marca{position:absolute;display:flex;align-items:center;gap:14px}
+.marca svg{width:62px;height:62px}
+.marca span{font-family:'Archivo',sans-serif;font-stretch:125%;font-weight:800;letter-spacing:.2em;font-size:36px}
+
+/* selo express */
+.selo{position:absolute;border-radius:50%;background:var(--laranja);display:grid;place-content:center;text-align:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;line-height:.9;box-shadow:0 18px 40px -12px rgba(0,0,0,.45)}
+.selo small{display:block;font-size:.34em;letter-spacing:.14em;font-weight:700}
+.selo .anel{position:absolute;inset:12px;border:3px dashed rgba(255,255,255,.55);border-radius:50%}
+
+.nota{position:absolute;font-size:22px;font-weight:500;opacity:.85}
+.lojas{position:absolute;display:flex;gap:12px}
+.lojas b{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:28px;padding:10px 20px;border-radius:999px;border:2px solid currentColor}
+.ondas{position:absolute;left:0;width:100%;overflow:hidden;background:var(--menta)}
+.ondas svg{display:block;width:100%;height:100%}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="logo" viewBox="32 108 740 740"><circle cx="402" cy="478" r="370" fill="#0C1A47"/><circle cx="402" cy="478" r="332" fill="#F2652F"/><g fill="#fff"><path d="M108 478 L108 382 Q108 366 122 360 L258 302 Q272 296 280 308 L326 368 Q196 392 108 478Z"/><path d="M696 478 L696 382 Q696 366 682 360 L546 302 Q532 296 524 308 L478 368 Q608 392 696 478Z"/><path d="M108 478 Q402 678 696 478 L696 560 Q696 576 682 583 Q402 726 122 583 Q108 576 108 560Z"/><circle cx="402" cy="484" r="100"/></g><path d="M340 378 L464 378 L402 508Z" fill="#F2652F"/></symbol>
+</svg>
+
+<!-- ================= FEED 1080x1350 ================= -->
+<div class="arte feed" id="feed">
+  <div class="foto"></div>
+  <div class="marca" style="left:50%;top:56px;transform:translateX(-50%)"><svg><use href="#logo"/></svg><span>VIRTUS</span></div>
+
+  <div class="selo" style="right:60px;top:300px;width:250px;height:250px;font-size:52px;transform:rotate(8deg)">
+    <span class="anel"></span>
+    <div><small>Virtus</small>Express<small>até 1h</small></div>
+  </div>
+
+  <div class="tarjas" style="left:64px;bottom:250px">
+    <span class="t" style="font-size:108px">Seu óculos</span>
+    <span class="t" style="font-size:108px">pronto em</span>
+    <span class="t l" style="font-size:124px">até 1 hora.</span>
+  </div>
+  <p class="sub" style="position:absolute;left:64px;bottom:150px;width:620px;font-size:32px;color:var(--marinho-esc);background:rgba(247,243,236,.92);padding:16px 22px">Traga sua receita, escolha a armação e saia usando.</p>
+  <div class="lojas" style="left:64px;bottom:64px;color:var(--marinho-esc)"><b style="background:rgba(247,243,236,.92)">Boa Vista</b><b style="background:rgba(247,243,236,.92)">Iputinga</b></div>
+  <p class="nota" style="right:64px;bottom:72px;color:var(--marinho-esc);text-align:right">*Para lentes disponíveis em loja.</p>
+</div>
+
+<!-- ================= STORY 1080x1920 ================= -->
+<div class="arte story" id="story">
+  <div class="foto"></div>
+  <div class="marca" style="left:50%;top:230px;transform:translateX(-50%)"><svg><use href="#logo"/></svg><span>VIRTUS</span></div>
+  <div class="ondas" style="top:1047px;height:90px">
+    <svg viewBox="0 0 1080 90" preserveAspectRatio="none"><g fill="none" stroke="#F2652F" stroke-width="22" stroke-linecap="round"><path d="M-20 24 C 160 -6, 300 70, 540 40 S 900 -6, 1100 24"/><path d="M-20 70 C 160 40, 300 116, 540 86 S 900 40, 1100 70"/></g></svg>
+  </div>
+  <div class="selo" style="right:70px;top:880px;width:270px;height:270px;font-size:56px;transform:rotate(8deg);z-index:2">
+    <span class="anel"></span>
+    <div><small>Virtus</small>Express<small>até 1h</small></div>
+  </div>
+  <div class="tarjas" style="left:70px;top:1210px">
+    <span class="t b" style="font-size:118px;background:#fff;color:var(--marinho)">Seu óculos</span>
+    <span class="t" style="font-size:118px;background:#fff;color:var(--marinho)">pronto em</span>
+    <span class="t l" style="font-size:136px">até 1 hora.</span>
+  </div>
+  <p class="sub" style="position:absolute;left:70px;top:1640px;width:900px;font-size:38px;color:#DCE3FA">Traga sua receita, escolha a armação e saia usando. Na Boa Vista e em Iputinga.</p>
+  <p class="nota" style="left:70px;top:1765px;color:#AEB9E0">*Para lentes disponíveis em loja.</p>
+</div>
+</body>
+</html>
