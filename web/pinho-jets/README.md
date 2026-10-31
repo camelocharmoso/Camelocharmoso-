@@ -28,9 +28,9 @@ Toda mensagem termina com "(Vim pelo site)", para a equipe saber quantos cliente
   - `logo-pinho.png`: recortado do print do perfil. Peça o arquivo original do logo.
 - **Rastreamento:** os cliques nos botões mandam o evento `whatsapp_clique` para `window.dataLayer`. Se instalarem o Google Tag Manager ou o Meta Pixel, o evento já chega lá.
 
-## Antes de publicar no domínio deles
+## Publicação
 
-- Remover `<meta name="robots" content="noindex">` do `index.html`.
+A página está liberada para aparecer no Google (sem `noindex`).
 - `og:url` e `og:image` apontam para `https://lucent-crepe-04b429.netlify.app/`. Se trocar o nome do site no Netlify ou usar domínio próprio, troque as duas, senão a prévia do link some no WhatsApp.
 - As imagens dos jets não usam `filter` no CSS: a sombra do jet do topo já vem dentro do arquivo. Filtro animado em imagem fez o jet virar um retângulo branco no navegador do Instagram (Safari).
 - Confirmar com o cliente: o ponto de encontro em cada local (a página diz que ele vai pelo WhatsApp), se a oficina atende as quatro marcas citadas (Sea-Doo, Yamaha, Kawasaki e Can-Am, que estão no logo) e se o preço é por jet ou por pessoa.
