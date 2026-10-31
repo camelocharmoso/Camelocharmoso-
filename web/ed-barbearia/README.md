@@ -33,10 +33,7 @@ Entre as seções, a linha tracejada de "corte aqui" ganha uma tesoura que anda 
 
 - Remover `<meta name="robots" content="noindex">` do `index.html`.
 - `og:url` e `og:image` apontam para o GitHub Pages (`https://camelocharmoso.github.io/Camelocharmoso-/ed-barbearia/`). Se for para domínio próprio, troque as duas.
-- **Confirmar com o cliente:**
-  - se os **50% no primeiro corte** (agendando pelo app, de segunda a quarta) continuam valendo. Estava num post do Instagram. Se não, apague o bloco `<aside class="cupom" data-promo>`;
-  - se ainda estão **contratando barbeiro** (rodapé);
-  - os textos do curso, que seguem a página do IBA (turma em formação, presencial, iniciante).
+- Confirmado com o cliente em 31/10/2026: os 50% no primeiro corte (agendando pelo app, de segunda a quarta) e a vaga de barbeiro estão valendo. Quando a promoção acabar, apague o bloco `<aside class="cupom" data-promo>`; quando a vaga fechar, apague a linha `rodape-vaga` do rodapé.
 
 ## Créditos das imagens
 
