@@ -1,0 +1,99 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@page{size:154mm 216mm;margin:0}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{--bg:#0e0e0e;--paper:#f1ebe1;--ink:#121212;--gold:#c9a46a;--mute:rgba(241,235,225,.72)}
+html,body{background:var(--bg)}
+body{color:var(--paper);font-family:Manrope,sans-serif}
+.p{position:relative;width:1124px;height:1576px;overflow:hidden;background:var(--bg)}
+@media print{.p{zoom:.51784}}
+.cap{font-size:19px;font-weight:800;letter-spacing:4px;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",serif;font-weight:400}
+.disp{font-family:Anton,sans-serif;font-weight:400;text-transform:uppercase}
+
+/* topo */
+.top{position:absolute;top:44px;left:60px;right:60px;display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:20px}
+.brand img{width:118px}
+.brand .w{font-size:26px;font-weight:800;letter-spacing:7px}
+.brand .s{font-size:16px;color:var(--gold);letter-spacing:4px;font-weight:700;margin-top:6px}
+.tag{border:2px solid var(--paper);padding:12px 18px;font-size:16px}
+
+/* chamada */
+h1{position:absolute;left:58px;top:196px;font-size:118px;line-height:.9;letter-spacing:.5px}
+h1 em{font-family:"Instrument Serif",serif;font-style:italic;text-transform:none;color:var(--gold);font-size:112px;letter-spacing:-1px}
+.sub{position:absolute;left:62px;top:430px;width:760px;font-size:25px;line-height:1.4;color:var(--mute)}
+.sub b{color:var(--paper);font-weight:700}
+
+/* fotos */
+.grid{position:absolute;left:60px;right:60px;top:530px;height:470px;display:grid;grid-template-columns:1fr 1.18fr 1fr;gap:10px}
+.ph{position:relative;overflow:hidden;background:#1a1a1a}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) contrast(1.08) brightness(1.04)}
+.ph .lb{position:absolute;left:14px;bottom:14px;background:var(--paper);color:var(--ink);padding:9px 13px 8px;font-size:14px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;z-index:2}
+.ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 62%,rgba(0,0,0,.45) 100%);z-index:1}
+.g1 img{object-position:52% 18%;filter:grayscale(1) contrast(1.05) brightness(1.6)}
+.g2 img{object-position:36% 22%}
+.g3 img{object-position:72% 40%;transform:scale(1.5);transform-origin:60% 52%}
+.g3::before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse 45% 22% at 100% 0%,#1b1b1b 55%,rgba(27,27,27,0) 100%),radial-gradient(ellipse 62% 19% at 100% 100%,#111 60%,rgba(17,17,17,0) 100%)}
+
+/* precos */
+.menu{position:absolute;left:60px;right:60px;top:1034px;height:214px;background:var(--paper);color:var(--ink);display:grid;grid-template-columns:1fr 1fr 1.25fr}
+.m{padding:30px 30px 0;border-left:2px solid rgba(18,18,18,.18)}
+.m:first-child{border-left:none}
+.m .n{font-size:17px;font-weight:800;letter-spacing:3.5px;text-transform:uppercase}
+.m .v{font-size:104px;line-height:1;margin-top:14px;letter-spacing:-1px}
+.m .v sup{font-family:Manrope;font-size:22px;font-weight:800;vertical-align:58px;margin-right:6px}
+.m.hi{background:var(--ink);color:var(--paper);border-left:none;position:relative;box-shadow:inset 0 0 0 3px var(--gold)}
+.m.hi .n{color:var(--gold)}
+.m.hi .badge{position:absolute;top:-18px;right:24px;background:var(--gold);color:var(--ink);font-size:14px;font-weight:800;letter-spacing:2.5px;padding:8px 12px;text-transform:uppercase}
+.m.hi .note{font-size:19px;margin-top:6px;color:var(--mute)}
+.m.hi .note b{color:var(--paper)}
+
+/* CTA */
+.cta{position:absolute;left:60px;right:60px;top:1288px;display:flex;gap:30px;align-items:center}
+.qr{width:236px;height:236px;background:var(--paper);padding:14px;flex:none;box-shadow:0 0 0 5px var(--gold)}
+.qr img{width:100%;height:100%;display:block}
+.cta .t{flex:1}
+.cta .k{color:var(--gold)}
+.cta .big{font-size:60px;line-height:.98;margin-top:10px}
+.cta .big em{font-style:italic;color:var(--gold)}
+.cta .tel{font-size:38px;font-weight:800;letter-spacing:1px;margin-top:14px}
+.info{position:absolute;right:60px;top:1302px;text-align:right;font-size:20px;line-height:1.65;color:var(--mute)}
+.info b{color:var(--paper);font-weight:700}
+.info .cap{color:var(--gold);font-size:16px;display:block;margin-bottom:6px}
+.grain{position:absolute;inset:0;background:url(grain.png);background-size:600px;opacity:.14;z-index:9;mix-blend-mode:screen;filter:invert(1);pointer-events:none}
+</style></head><body><div class="p">
+
+<div class="top">
+ <div class="brand"><img src="logo.png"><div><div class="w">ED BARBEARIA</div><div class="s">CORTE · BARBA · ESTILO</div></div></div>
+ <div class="tag cap">Casa Amarela · Recife</div>
+</div>
+
+<h1 class="disp">Corte que chama<br><em>atenção.</em></h1>
+<div class="sub">Degradê no detalhe, barba alinhada e acabamento caprichado. <b>Você senta na cadeira e sai pronto pra foto.</b></div>
+
+<div class="grid">
+ <div class="ph g1"><img src="barba.jpg"><span class="lb">Degradê + barba</span></div>
+ <div class="ph g2"><img src="textured.jpg"><span class="lb">Textured crop</span></div>
+ <div class="ph g3"><img src="platinado.jpg"><span class="lb">Platinado</span></div>
+</div>
+
+<div class="menu">
+ <div class="m"><div class="n">Cabelo</div><div class="v disp"><sup>R$</sup>50</div></div>
+ <div class="m"><div class="n">Barba</div><div class="v disp"><sup>R$</sup>40</div></div>
+ <div class="m hi"><span class="badge">Melhor valor</span><div class="n">Cabelo + Barba</div><div class="v disp"><sup>R$</sup>80</div><div class="note">Você economiza <b>R$10</b></div></div>
+</div>
+
+<div class="cta">
+ <div class="qr"><img src="qr.svg"></div>
+ <div class="t">
+  <div class="cap k">Agende pelo WhatsApp</div>
+  <div class="big serif">Aponte a câmera<br>e <em>garanta seu horário.</em></div>
+  <div class="tel">81 9.9942-1727</div>
+ </div>
+</div>
+<div class="info"><span class="cap">Visite</span><b>Rua Paula Batista, 604</b><br>Casa Amarela, Recife<br>Fixo 81 2014-1545<br><b>@edbarbearia</b></div>
+
+<div class="grain"></div>
+</div></body></html>
