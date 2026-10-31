@@ -31,7 +31,8 @@ Toda mensagem termina com "(Vim pelo site)", para a equipe saber quantos cliente
 ## Antes de publicar no domínio deles
 
 - Remover `<meta name="robots" content="noindex">` do `index.html`.
-- `og:url` e `og:image` apontam para o GitHub Pages (`https://camelocharmoso.github.io/Camelocharmoso-/pinho-jets/`). Se a página for para um domínio próprio, troque as duas, senão a prévia do link some no WhatsApp.
+- `og:url` e `og:image` apontam para `https://lucent-crepe-04b429.netlify.app/`. Se trocar o nome do site no Netlify ou usar domínio próprio, troque as duas, senão a prévia do link some no WhatsApp.
+- As imagens dos jets não usam `filter` no CSS: a sombra do jet do topo já vem dentro do arquivo. Filtro animado em imagem fez o jet virar um retângulo branco no navegador do Instagram (Safari).
 - Confirmar com o cliente: o ponto de encontro em cada local (a página diz que ele vai pelo WhatsApp), se a oficina atende as quatro marcas citadas (Sea-Doo, Yamaha, Kawasaki e Can-Am, que estão no logo) e se o preço é por jet ou por pessoa.
 
 ## Créditos das imagens

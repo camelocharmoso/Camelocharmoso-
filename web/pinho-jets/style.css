@@ -137,7 +137,7 @@ button, input, textarea { font: inherit; color: inherit; }
 }
 .palco {
   /* posição do jet e do ponto de impacto, relativas à tela */
-  --jet-x: 69%; --jet-top: 30%; --jet-h: 90%;
+  --jet-x: 69%; --jet-top: 30%; --jet-h: 101%;
   --impacto-x: 69%;
   position: relative; width: 100%;
 }
@@ -228,7 +228,8 @@ button, input, textarea { font: inherit; color: inherit; }
 .jet-rolagem {
   position: absolute; z-index: 5;
   left: var(--jet-x); top: var(--jet-top); height: var(--jet-h);
-  aspect-ratio: 1100 / 1680;
+  /* a imagem já traz a sombra embutida embaixo (sem filtro CSS: o Safari se perde com filtro em imagem animada) */
+  aspect-ratio: 1340 / 1890;
   translate: -50% 0;
   pointer-events: none;
 }
@@ -237,8 +238,7 @@ button, input, textarea { font: inherit; color: inherit; }
 @keyframes boia { 50% { transform: translateY(-1.6%) rotate(-.9deg); } }
 .jet-hero {
   width: 100%; height: 100%; object-fit: contain;
-  transform-origin: 50% 66%;
-  filter: drop-shadow(0 28px 26px rgba(6, 26, 46, .38));
+  transform-origin: 50% 59%;
 }
 .js .jet-hero { opacity: 0; animation: mostrar 0s 4s forwards; }
 @keyframes mostrar { to { opacity: 1; } }
@@ -270,7 +270,7 @@ button, input, textarea { font: inherit; color: inherit; }
 }
 @media (min-width: 640px) and (max-width: 959px) {
   .tela { aspect-ratio: 16 / 10; }
-  .palco { --jet-x: 66%; --jet-top: 20%; --jet-h: 112%; --impacto-x: 66%; }
+  .palco { --jet-x: 66%; --jet-top: 20%; --jet-h: 126%; --impacto-x: 66%; }
 }
 @media (min-width: 960px) {
   /* título e texto à esquerda; a tela à direita, com o jet saindo por baixo */
@@ -285,7 +285,7 @@ button, input, textarea { font: inherit; color: inherit; }
   .palco {
     grid-area: palco; align-self: start;
     margin-top: clamp(10px, 1.6vw, 26px);
-    --jet-x: 55%; --jet-top: 11%; --jet-h: 132%;
+    --jet-x: 55%; --jet-top: 11%; --jet-h: 148.5%;
     --impacto-x: 55%;
   }
   .tela { aspect-ratio: 16 / 9; max-height: none; border-width: 7px; border-radius: 22px; }
@@ -318,7 +318,6 @@ button, input, textarea { font: inherit; color: inherit; }
   position: absolute; left: 0; top: 50%; z-index: 2;
   width: clamp(280px, 46vw, 760px); height: auto;
   translate: -50% -52%;
-  filter: drop-shadow(0 26px 20px rgba(3, 50, 66, .45));
   will-change: transform;
 }
 .esteira {
@@ -390,7 +389,6 @@ button, input, textarea { font: inherit; color: inherit; }
   max-width: none;
   translate: -74% 0;
   transition: left .5s var(--curva);
-  filter: drop-shadow(0 8px 8px rgba(0,0,0,.35));
   pointer-events: none;
 }
 .parada {
@@ -660,7 +658,6 @@ button, input, textarea { font: inherit; color: inherit; }
 .jet-final {
   position: absolute; z-index: 2; right: -6%; top: 6%;
   width: clamp(280px, 52vw, 820px); height: auto;
-  filter: drop-shadow(0 30px 30px rgba(0,0,0,.45));
   pointer-events: none; will-change: transform;
 }
 .final-acoes { position: relative; z-index: 3; display: grid; gap: 16px; justify-items: start; max-width: 30rem; }

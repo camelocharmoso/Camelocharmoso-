@@ -283,7 +283,7 @@
         w, h, ix,
         borda: parseFloat(getComputedStyle(tela).borderTopWidth) || 0,
         raio: parseFloat(getComputedStyle(tela).borderTopLeftRadius) || 0,
-        jetW: rolagem.offsetWidth,
+        jetW: rolagem.offsetWidth * (1100 / 1340), // a imagem tem margem para a sombra
         fundo: Math.min(h * 0.2, 130),
       };
     }
@@ -501,9 +501,9 @@
         taxa: 70,
         gerar() {
           if (scrollY > 120) return null;
-          const w = rolagem.offsetWidth;
+          const w = rolagem.offsetWidth * (1100 / 1340);
           const x = rolagem.offsetLeft + (Math.random() - 0.5) * w * 0.62;
-          const y = rolagem.offsetTop + rolagem.offsetHeight * (0.86 + Math.random() * 0.06);
+          const y = rolagem.offsetTop + rolagem.offsetHeight * (0.76 + Math.random() * 0.05);
           const lado = x < rolagem.offsetLeft ? -1 : 1;
           return { x, y, vx: lado * (60 + Math.random() * 200), vy: -120 - Math.random() * 280, vida: 0.5 + Math.random() * 0.6, tam: 0.8 + Math.random() * 2.2 };
         },
@@ -513,8 +513,6 @@
     function tremor() {
       return [0, -8, 7, -6, 5, -3, 2, 0].map((v, i) => ({ transform: `translate(${v}px, ${i % 2 ? -v * 0.5 : v * 0.35}px)` }));
     }
-
-    const sombraJet = 'drop-shadow(0 28px 26px rgba(6, 26, 46, .38))';
 
     async function estourar() {
       if (quebrou) return;
@@ -539,10 +537,10 @@
 
       jet.animate(
         [
-          { transform: 'translateY(-30%) scale(.28)', filter: `blur(5px) brightness(.7) ${sombraJet}`, opacity: 0 },
+          { transform: 'translateY(-30%) scale(.28)', opacity: 0 },
           { opacity: 1, offset: 0.08 },
-          { transform: 'translateY(3%) scale(1.07)', filter: `blur(1px) brightness(1.06) ${sombraJet}`, offset: 0.62 },
-          { transform: 'translateY(0) scale(1)', filter: `blur(0px) brightness(1) ${sombraJet}`, opacity: 1 },
+          { transform: 'translateY(3%) scale(1.07)', offset: 0.62 },
+          { transform: 'translateY(0) scale(1)', opacity: 1 },
         ],
         { duration: 780, easing: 'cubic-bezier(.16, .84, .26, 1)', fill: 'forwards' }
       );
