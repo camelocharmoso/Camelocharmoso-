@@ -4,7 +4,7 @@
 html,body{background:#111}
 .p{position:relative;overflow:hidden;color:#fff;font-family:Barlow,sans-serif}
 /* foto P&B + recorte em cor (padrão aprovado da Virtus) */
-.ph,.ph-cor{position:absolute;inset:0;background:url(foto1.jpg) no-repeat}
+.ph,.ph-cor{position:absolute;inset:0;background:url(foto-oculos-virtus.jpg) no-repeat}
 .ph{filter:grayscale(1) contrast(1.08) brightness(.86)}
 .recorte{position:absolute;border:2px solid rgba(255,255,255,.95)}
 .shade{position:absolute;inset:0}
@@ -18,3 +18,4 @@ h1 .l{font-weight:300}h1 .b{font-weight:800}
 .tarja{display:inline-block;font-family:"Barlow Condensed";text-transform:uppercase;font-weight:600;line-height:1;padding:.18em .36em .14em}
 .t-laranja{background:var(--laranja);color:#fff}
 .t-marinho{background:var(--marinho);color:#fff}
+.grain{position:absolute;inset:0;background:url(grain.png);background-size:300px;mix-blend-mode:overlay;opacity:.16;pointer-events:none}
