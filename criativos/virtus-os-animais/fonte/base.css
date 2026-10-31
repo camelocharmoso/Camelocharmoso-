@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@400;500;600;700&family=Archivo:wdth,wght@125,800&display=swap');
+:root{--laranja:#F2652F;--marinho:#15296B;--marinho-esc:#0C1A47;--menta:#D6F0EE;--creme:#F7F3EC}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--marinho-esc)}
+.cond{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase}
+.sans{font-family:Barlow,sans-serif}
+.wordmark{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:800;letter-spacing:.14em}
+.tarja{display:inline-block;font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;font-weight:600;line-height:1;padding:.16em .32em .14em}
+.t-laranja{background:var(--laranja);color:#fff}
+.t-marinho{background:var(--marinho);color:#fff}
+.t-creme{background:var(--creme);color:var(--marinho)}
+.lockup{display:flex;align-items:center;gap:18px}
+.x{font-family:"Barlow Condensed";font-weight:300;font-size:44px;color:#fff;opacity:.85}
+.animais{font-family:"Barlow Condensed";font-weight:800;text-transform:uppercase;color:#fff;border:3px solid #fff;padding:6px 14px 4px;font-size:34px;letter-spacing:.06em;line-height:1}
