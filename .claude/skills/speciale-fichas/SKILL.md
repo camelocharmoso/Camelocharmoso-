@@ -50,6 +50,7 @@ python3 port_v2.py ficha  /caminho/saida/portuguesa.html      # ficha da Portugu
 python3 port_v2.py padrao /caminho/saida/padronizacao.html    # tamanho e desperdício
 python3 massa_v2.py ficha   /caminho/saida/massa.html         # ficha da massa
 python3 massa_v2.py receita /caminho/saida/receita.html       # receita da produção (cozinha)
+python3 oper_port.py /caminho/saida/oper.html         # ficha OPERACIONAL simplificada (1 página, cozinha)
 python3 ft_ref.py quatro_queijos /caminho/saida/4q.html       # outras pizzas: portuguesa, quatro_queijos, lombinho_bacon, frango_catupiry, chocolate_avela, parma_speciale
 node render.js /caminho/saida/arquivo.html /caminho/saida/arquivo.pdf
 ```
@@ -57,6 +58,10 @@ node render.js /caminho/saida/arquivo.html /caminho/saida/arquivo.pdf
 - `fichas_data.py` guarda os dados das pizzas (exceto a Portuguesa, que está em `port_v2.py`). Para uma pizza nova, siga o modelo de `port_v2.py` (ficha completa com fotos).
 - Fotos da casa: `fotos_port/` (Portuguesa) e `fotos_massa/` (massa). Fotos novas entram em uma pasta própria.
 - Depois de gerar, rasterize (`pdftoppm -r 40 -png`) e confira se nada estourou a página. Salve os PDFs finais em `speciale/fichas/` e faça commit.
+
+## Ficha operacional (cozinha)
+
+Versão de 1 página para colar na cozinha: tabela de quantidades por tamanho (Grande em destaque), ordem de montagem numerada com 3 fotos e 3 alertas. Sem preços, sem PCC, sem custos. Modelo: `oper_port.py`.
 
 ## Fluxo de trabalho
 
