@@ -1,0 +1,107 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--p:#111111;--b:#F5F3EE;--d:#C9A24A;--a:#8A8F96}
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1920px;background:var(--p);color:var(--b);font-family:Manrope,sans-serif;padding:70px 76px 76px}
+.disp{font-family:Anton,sans-serif;text-transform:uppercase;line-height:.92;letter-spacing:-.3px}
+.k{font-size:14px;font-weight:800;letter-spacing:2.4px;text-transform:uppercase;color:var(--a)}
+.topo{display:flex;justify-content:space-between;align-items:flex-end}
+.topo img{width:96px}
+h1{font:400 92px/.95 Anton;text-transform:uppercase;margin-top:14px}
+h1 span{color:var(--d)}
+.grid{display:grid;grid-template-columns:1fr 1.05fr;gap:40px;margin-top:46px}
+.cartao{background:#1b1b1b;border-radius:28px;padding:30px;border:1px solid #2a2a2a}
+.foto{position:relative;border-radius:18px;overflow:hidden}
+.foto img{width:100%;display:block}
+.seta{position:absolute;display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;background:rgba(17,17,17,.82);padding:8px 14px;border-radius:99px;border:1.5px solid var(--d);color:var(--d)}
+.cores{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.cor{border-radius:18px;overflow:hidden;border:1px solid #2a2a2a}
+.cor .sw{height:150px;display:flex;align-items:flex-end;padding:14px;font:400 42px Anton}
+.cor .tx{padding:14px 16px;background:#1b1b1b}
+.cor b{font-size:18px}.cor small{display:block;color:var(--a);font-size:14px;margin-top:3px;line-height:1.4}
+.prop{display:flex;height:22px;border-radius:99px;overflow:hidden;margin-top:18px}
+.apps{display:grid;grid-template-columns:330px 186px 1fr;gap:18px;margin-top:18px;align-items:start}
+.feed{width:330px;height:412px;border-radius:14px;background:var(--p);position:relative;overflow:hidden;border:1px solid #2a2a2a}
+.story{width:186px;height:330px;border-radius:14px;position:relative;overflow:hidden;border:1px solid #2a2a2a}
+.ft img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08)}
+.pill{display:inline-block;border-radius:99px;background:var(--d);color:var(--p);font-weight:800}
+.por li{font-size:20px;line-height:1.5;margin:12px 0 0 24px}
+.por b{color:var(--d)}
+</style></head><body>
+<div class="topo"><div><div class="k">ED Barbearia · Paleta recomendada</div>
+<h1>Preto, branco e <span>dourado seco.</span></h1></div><img src="img/logo-ed.png"></div>
+
+<div class="grid">
+ <div>
+  <div class="cartao">
+   <div class="k">O dourado já está na ED</div>
+   <div class="foto" style="margin-top:16px"><img src="img/espaco-logo.jpg">
+    <div class="seta" style="left:200px;top:18px">● luminária dourada</div>
+    <div class="seta" style="left:470px;top:150px">● dourado no logo da parede</div>
+    <div class="seta" style="left:30px;bottom:24px;border-color:var(--b);color:var(--b)">● avental e capa pretos</div>
+   </div>
+   <p style="margin-top:16px;font-size:18px;color:#cfcac0;line-height:1.5">A paleta sai do próprio salão: parede preta e branca, capa preta com logo branco, luminária e anel do logo em dourado, tesouras de aço. Quem vê o post e entra na ED reconhece o lugar.</p>
+  </div>
+  <div class="cartao" style="margin-top:24px">
+   <div class="k">Por que esta e não outra</div>
+   <ul class="por">
+    <li><b>Fiel ao espaço:</b> é a única cor de destaque que já existe na barbearia.</li>
+    <li><b>Premium sem exagero:</b> o tom seco não vira mostarda nem “luxo de festa”.</li>
+    <li><b>Funciona como chamada:</b> contraste de 8,8:1 no preto, forte o bastante para o botão de agendar e o preço.</li>
+    <li><b>Aço como apoio:</b> o cinza das ferramentas organiza textos secundários sem disputar com o dourado.</li>
+   </ul>
+  </div>
+ </div>
+
+ <div>
+  <div class="cartao">
+   <div class="k">As 4 cores e o papel de cada uma</div>
+   <div class="cores">
+    <div class="cor"><div class="sw" style="background:var(--p);color:var(--b)">60%</div><div class="tx"><b>Preto</b><small>#111111 · fundo de tudo</small></div></div>
+    <div class="cor"><div class="sw" style="background:var(--b);color:var(--p)">30%</div><div class="tx"><b>Branco</b><small>#F5F3EE · títulos e textos</small></div></div>
+    <div class="cor"><div class="sw" style="background:var(--d);color:var(--p)">8%</div><div class="tx"><b>Dourado seco</b><small>#C9A24A · preço, botão, selo</small></div></div>
+    <div class="cor"><div class="sw" style="background:var(--a);color:var(--p)">2%</div><div class="tx"><b>Cinza aço</b><small>#8A8F96 · legendas e linhas</small></div></div>
+   </div>
+   <div class="prop"><div style="width:60%;background:var(--p);border:1px solid #333"></div><div style="width:30%;background:var(--b)"></div><div style="width:8%;background:var(--d)"></div><div style="width:2%;background:var(--a)"></div></div>
+  </div>
+
+  <div class="cartao" style="margin-top:24px">
+   <div class="k">Aplicado</div>
+   <div class="apps">
+    <div class="feed">
+     <div style="position:absolute;left:18px;top:16px;display:flex;align-items:center;gap:8px;font:400 13px Anton;text-transform:uppercase;letter-spacing:1px"><img src="img/logo-ed.png" style="width:28px">ED Barbearia</div>
+     <div class="disp" style="position:absolute;left:16px;top:54px;font-size:64px">Seg a qua</div>
+     <div style="position:absolute;left:0;right:0;top:126px;border-top:2px dashed var(--d)"></div>
+     <img src="img/tesoura.webp" style="position:absolute;width:100px;left:200px;top:110px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.6))">
+     <div class="disp" style="position:absolute;left:16px;top:154px;font-size:74px;color:var(--d)">50%</div>
+     <div style="position:absolute;left:18px;top:230px;font-weight:800;font-size:16px;line-height:1.15">no seu<br>primeiro corte</div>
+     <div style="position:absolute;left:18px;top:282px;font-size:12px;color:var(--a);line-height:1.4">Agendando pelo app.<br>Segunda a quarta.</div>
+     <div class="ft" style="position:absolute;left:176px;top:154px;width:136px;height:190px;border-radius:10px;overflow:hidden;border:2px solid var(--d)"><img src="img/corte-textured.webp" style="object-position:40% 25%"></div>
+     <span class="pill" style="position:absolute;left:16px;bottom:16px;font-size:12px;padding:8px 12px">Agende pelo link da bio</span>
+    </div>
+    <div class="story">
+     <div class="ft" style="position:absolute;inset:0"><img src="img/edmilson.webp" style="object-position:50% 15%;filter:grayscale(1) brightness(.7)"></div>
+     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,17,17,0) 30%,#111 80%)"></div>
+     <div class="disp" style="position:absolute;left:12px;bottom:92px;font-size:34px">Horários<br><span style="color:var(--d)">livres hoje</span></div>
+     <div style="position:absolute;left:12px;right:12px;bottom:58px;border-top:1.5px solid var(--a)"></div>
+     <span class="pill" style="position:absolute;left:12px;bottom:16px;font-size:11px;padding:7px 11px">Agendar</span>
+    </div>
+    <div style="display:grid;gap:14px">
+     <div style="background:var(--p);border:1px solid #2a2a2a;border-radius:14px;padding:18px">
+      <div class="k" style="font-size:11px">Site</div>
+      <span class="pill" style="font-size:15px;padding:12px 18px;margin-top:10px">Agendar meu horário</span>
+      <div style="margin-top:12px;font:400 34px Anton;color:var(--d)">R$ 80</div>
+      <div style="font-size:13px;color:var(--a)">cabelo + barba</div>
+     </div>
+     <div style="background:var(--b);color:var(--p);border-radius:14px;padding:18px">
+      <div class="k" style="font-size:11px;color:#6b6b6b">Panfleto (papel branco)</div>
+      <div style="font:400 28px Anton;text-transform:uppercase;margin-top:8px;white-space:nowrap">Cabelo + barba</div><div style="margin-top:8px"><span style="font:400 30px Anton;background:var(--p);color:var(--d);padding:2px 10px;border-radius:6px;white-space:nowrap">R$ 80</span></div>
+      <div style="font-size:12.5px;color:#555;margin-top:8px;line-height:1.4">No branco, o dourado só entra dentro de um bloco preto. Na gráfica: hot stamping dourado no preço ou na logo.</div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+</body></html>
