@@ -1,0 +1,107 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:1920px;background:#ededeb;font-family:Manrope,sans-serif;color:#111;padding:64px 70px 70px}
+.disp{font-family:Anton,sans-serif;text-transform:uppercase;line-height:.9;letter-spacing:-.3px}
+h1{font:400 64px/1 Anton;text-transform:uppercase}
+.intro{font-size:22px;color:#444;margin-top:12px;max-width:1200px}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:44px}
+.col{background:#fff;border-radius:28px;padding:30px;position:relative}
+.col.rec{outline:5px solid #111}
+.selo{position:absolute;top:-20px;left:30px;background:#111;color:#fff;font-weight:800;font-size:16px;letter-spacing:2px;padding:9px 16px;border-radius:99px}
+.nome{font-weight:800;font-size:28px}.hex{font-size:18px;color:#777;margin-top:2px}
+.barra{display:flex;height:44px;border-radius:12px;overflow:hidden;margin:18px 0 6px;border:1px solid #ddd}
+.leg{display:flex;font-size:13px;color:#777;font-weight:700}.leg span:nth-child(1){width:60%}.leg span:nth-child(2){width:30%}
+.pecas{display:flex;gap:14px;margin-top:22px;align-items:flex-start}
+.feed{width:316px;height:395px;background:#111;color:#fff;border-radius:14px;position:relative;overflow:hidden;flex:none}
+.story{width:176px;height:313px;background:#111;color:#fff;border-radius:14px;position:relative;overflow:hidden;flex:none}
+.m{position:absolute;display:flex;align-items:center;gap:7px;font:400 12px Anton;text-transform:uppercase;letter-spacing:1px}
+.m img{width:26px}
+.foto{position:absolute;border-radius:10px;overflow:hidden}
+.foto img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08)}
+.cut{position:absolute;left:0;right:0;border-top:2px dashed var(--a);opacity:.85}
+.pill{display:inline-block;border-radius:99px;font-weight:800;background:var(--a);color:#111}
+.site{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.site>div{border-radius:14px;padding:18px;min-height:150px}
+.k{font-size:12px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#888;margin-bottom:10px}
+.ok{color:#1a8f4a;font-weight:800}.no{color:#c0392b;font-weight:800}
+.nota{margin-top:20px;font-size:16px;line-height:1.5;color:#333}
+.rodape{margin-top:40px;display:grid;grid-template-columns:1.2fr 1fr;gap:34px}
+.box{background:#111;color:#fff;border-radius:28px;padding:34px 38px}
+.box h2{font:400 36px Anton;text-transform:uppercase;color:#C9A24A;margin-bottom:16px}
+.box li{font-size:19px;line-height:1.5;margin:8px 0 0 22px}
+</style></head><body>
+<h1>ED Barbearia · Preto, branco e uma cor de destaque</h1>
+<p class="intro">A mesma arte de feed, story e botão do site em cada opção. Regra em todas: 60% preto, 30% branco e 10% de cor, e a cor só aparece sobre o preto.</p>
+
+<div class="cols">
+ <!-- TEMPLATE repetido via JS -->
+</div>
+
+<div class="rodape">
+ <div class="box">
+  <h2>Minha recomendação: dourado seco #C9A24A</h2>
+  <ul>
+   <li>Combina com o preto e branco da logo e com o metal da tesoura e da navalha.</li>
+   <li>É o que mais puxa o premium sem ficar com cara de mostarda: é sóbrio na tela e tem bom contraste no preto (8,8:1).</li>
+   <li>O champanhe é elegante, mas fica claro demais e se aproxima do bege. Perde força num feed cheio.</li>
+   <li>O amarelo chama mais atenção, mas é o menos premium dos três.</li>
+  </ul>
+ </div>
+ <div class="box" style="background:#fff;color:#111">
+  <h2 style="color:#111">Como usar o dourado</h2>
+  <ul>
+   <li><b>Pode:</b> preço, botão de agendar, selo, fio de corte, um detalhe por peça.</li>
+   <li><b>Não pode:</b> fundo de arte inteira ou texto sobre fundo branco (2,4:1, ilegível).</li>
+   <li><b>Na gráfica:</b> CMYK sai amarronzado. Para panfleto, usar hot stamping dourado só na logo ou no preço.</li>
+  </ul>
+ </div>
+</div>
+
+<script>
+const ops=[
+ {nome:'Dourado seco',hex:'#C9A24A',preto:'8,8',branco:'2,4',rec:true,nota:'Sóbrio e com cara de metal. Lê bem no preto e mantém o ar premium no feed.'},
+ {nome:'Champanhe',hex:'#D8B56A',preto:'10,7',branco:'2,0',nota:'Mais claro e suave. Fica elegante, mas puxa para o bege e chama menos atenção.'},
+ {nome:'Amarelo atual',hex:'#FFC629',preto:'13,4',branco:'1,6',nota:'O que mais chama atenção na vitrine e no feed. É o menos premium e não tem relação com o metal.'},
+];
+const c=document.querySelector('.cols');
+c.innerHTML=ops.map(o=>`
+<div class="col${o.rec?' rec':''}" style="--a:${o.hex}">
+ ${o.rec?'<div class="selo">RECOMENDO</div>':''}
+ <div class="nome">${o.nome}</div><div class="hex">${o.hex}</div>
+ <div class="barra"><div style="width:60%;background:#111"></div><div style="width:30%;background:#fff"></div><div style="width:10%;background:${o.hex}"></div></div>
+ <div class="leg"><span>60% preto</span><span>30% branco</span><span>10%</span></div>
+ <div class="pecas">
+  <div class="feed">
+   <div class="m" style="left:18px;top:16px"><img src="img/logo-ed.png">ED Barbearia</div>
+   <div class="disp" style="position:absolute;left:16px;top:52px;font-size:62px">Seg a qua</div>
+   <div class="cut" style="top:122px"></div>
+   <img src="img/tesoura.webp" style="position:absolute;width:96px;left:190px;top:107px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.6))">
+   <div class="disp" style="position:absolute;left:16px;top:150px;font-size:70px;color:${o.hex}">50%</div>
+   <div style="position:absolute;left:18px;top:222px;font-weight:800;font-size:16px;line-height:1.15">no seu<br>primeiro corte</div>
+   <div class="foto" style="left:166px;top:150px;width:136px;height:190px;border:2px solid ${o.hex}"><img src="img/corte-textured.webp" style="object-position:40% 25%"></div>
+   <span class="pill" style="position:absolute;left:16px;bottom:16px;font-size:12px;padding:8px 12px">Agende pelo link da bio</span>
+  </div>
+  <div class="story">
+   <div class="foto" style="inset:0;border-radius:0"><img src="img/edmilson.webp" style="object-position:50% 15%;filter:grayscale(1) brightness(.7)"></div>
+   <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,17,17,0) 30%,#111 80%)"></div>
+   <div class="disp" style="position:absolute;left:12px;bottom:92px;font-size:34px">Horários<br><span style="color:${o.hex}">livres hoje</span></div>
+   <div style="position:absolute;left:12px;right:12px;bottom:58px;border-top:1.5px solid ${o.hex}"></div>
+   <span class="pill" style="position:absolute;left:12px;bottom:16px;font-size:11px;padding:7px 11px">Agendar</span>
+  </div>
+ </div>
+ <div class="site">
+  <div style="background:#111;color:#fff"><div class="k" style="color:#999">Site · fundo preto</div>
+   <span class="pill" style="font-size:15px;padding:12px 18px">Agendar meu horário</span>
+   <div style="margin-top:12px;font:400 34px Anton;color:${o.hex}">R$ 80</div>
+   <div style="font-size:13px;color:#aaa">Contraste ${o.preto}:1 <span class="ok">✓</span></div></div>
+  <div style="background:#fff;border:1px solid #e2e2e2"><div class="k">Site · fundo branco</div>
+   <div style="font-weight:800;font-size:19px;color:${o.hex}">Texto na cor</div>
+   <div style="font-size:13px;color:#888;margin-top:2px">Contraste ${o.branco}:1 <span class="no">✗ ilegível</span></div>
+   <div style="margin-top:14px;font-weight:800;font-size:17px;padding-bottom:6px;border-bottom:3px solid ${o.hex};display:inline-block">Só como detalhe ✓</div></div>
+ </div>
+ <p class="nota">${o.nota}</p>
+</div>`).join('');
+</script>
+</body></html>
