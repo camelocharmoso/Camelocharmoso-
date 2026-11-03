@@ -1,0 +1,179 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--c:#121110;--g:#1c1a18;--y:#ffc629;--p:#f6f1e7;--m:rgba(246,241,231,.7)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#555;font-family:Manrope,sans-serif;display:flex;flex-wrap:wrap;gap:40px;padding:40px}
+.arte{position:relative;overflow:hidden;flex:none}
+.f{width:1080px;height:1350px}.s{width:1080px;height:1920px}
+.disp{font-family:Anton,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:-.5px;line-height:.9}
+.escuro{background:var(--c);color:var(--p)}.amarelo{background:var(--y);color:var(--c)}.papel{background:var(--p);color:var(--c)}
+.marca{position:absolute;display:flex;align-items:center;gap:16px;font:400 30px/1 Anton;text-transform:uppercase;letter-spacing:1.5px}
+.marca img{width:74px}.amarelo .marca img,.papel .marca img{filter:brightness(0)}
+.pag{position:absolute;font-weight:800;font-size:26px;letter-spacing:2px;opacity:.6}
+.tes{position:absolute;filter:drop-shadow(0 24px 26px rgba(0,0,0,.45))}
+.corte{position:absolute;left:0;right:0;border-top:4px dashed currentColor;opacity:.55}
+.foto{position:absolute;overflow:hidden;border-radius:36px;background:#000}
+.foto img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08)}
+.pill{display:inline-block;border-radius:999px;padding:18px 32px;font-weight:800;font-size:32px}
+.pill.p{background:var(--c);color:var(--y)}.pill.y{background:var(--y);color:var(--c)}
+.seta{position:absolute;right:70px;bottom:70px;font-weight:800;font-size:30px;display:flex;align-items:center;gap:14px}
+.seta i{display:inline-block;width:64px;height:64px;border-radius:50%;background:currentColor;position:relative}
+.seta i::after{content:"";position:absolute;left:22px;top:20px;width:18px;height:18px;border-top:5px solid var(--bgc,#121110);border-right:5px solid var(--bgc,#121110);transform:rotate(45deg)}
+.escuro .seta i{--bgc:#121110;background:var(--y)}.escuro .seta{color:var(--y)}
+.amarelo .seta i{--bgc:#ffc629}.papel .seta i{--bgc:#f6f1e7}
+.zona{position:absolute;border:4px dashed currentColor;border-radius:28px;display:grid;place-items:center;font-weight:700;font-size:30px;opacity:.55;text-align:center}
+.capa{width:1080px;height:1920px;background:var(--y);display:grid;place-items:center}
+.capa .c{width:760px;height:760px;border-radius:50%;background:var(--c);display:grid;place-items:center}
+.capa svg{width:380px;height:380px;stroke:var(--y);fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+</style></head><body>
+
+<!-- F1 · Campanha Seg a Qua Cheia -->
+<div class="arte f amarelo" id="feed-01-campanha">
+ <div class="marca" style="left:70px;top:66px"><img src="img/logo-ed.png">ED Barbearia</div>
+ <div class="pag" style="right:70px;top:80px">CASA AMARELA · RECIFE</div>
+ <div class="disp" style="position:absolute;left:66px;top:190px;font-size:220px">Seg a qua</div>
+ <div class="corte" style="top:450px"></div>
+ <img class="tes" src="img/tesoura.webp" style="width:330px;left:640px;top:400px">
+ <div class="foto" style="left:600px;top:540px;width:410px;height:560px;border:6px solid #121110"><img src="img/corte-textured.webp" style="object-position:40% 25%"></div>
+ <div style="position:absolute;left:70px;top:540px;width:500px">
+  <div class="disp" style="font-size:225px;line-height:.85">50%</div>
+  <div style="font-weight:800;font-size:56px;line-height:1.1;margin-top:20px">no seu<br>primeiro corte</div>
+ </div>
+ <div style="position:absolute;left:70px;right:70px;bottom:70px;display:flex;justify-content:space-between;align-items:center">
+  <span class="pill p">Agende pelo link da bio</span><span style="font-weight:700;font-size:28px;text-align:right">Agendando pelo app.<br>Válido de segunda a quarta.</span>
+ </div>
+</div>
+
+<!-- F2 · Carrossel: agendar em 3 toques -->
+<div class="arte f escuro" id="feed-02a-agendar-capa">
+ <div class="marca" style="left:70px;top:66px"><img src="img/logo-ed.png">ED Barbearia</div>
+ <div class="pag" style="right:70px;top:80px">1/3</div>
+ <img class="tes" src="img/tesoura.webp" style="width:560px;right:-40px;top:250px;rotate:-14deg">
+ <div class="disp" style="position:absolute;left:66px;bottom:330px;font-size:210px">Agendar<br>na ED leva<br><span style="color:var(--y)">3 toques.</span></div>
+ <div style="position:absolute;left:70px;bottom:200px;font-size:40px;font-weight:600;color:var(--m)">Sem fila, sem esperar no WhatsApp.</div>
+ <div class="seta" style="color:var(--y)">Arrasta <i></i></div>
+</div>
+<div class="arte f papel" id="feed-02b-agendar-passos">
+ <div class="pag" style="left:70px;top:80px">COMO AGENDAR</div><div class="pag" style="right:70px;top:80px">2/3</div>
+ <div style="position:absolute;left:70px;right:70px;top:190px;display:grid;gap:34px">
+  <div style="display:flex;gap:40px;align-items:center;background:#fff;border-radius:36px;padding:44px"><span class="disp" style="font-size:180px;width:120px">1</span><div><div class="disp" style="font-size:70px">Toque no link da bio</div><div style="font-size:34px;margin-top:12px;color:#4b4640">Abre o agendamento da ED.</div></div></div>
+  <div style="display:flex;gap:40px;align-items:center;background:#fff;border-radius:36px;padding:44px"><span class="disp" style="font-size:180px;width:120px">2</span><div><div class="disp" style="font-size:70px">Escolha serviço e hora</div><div style="font-size:34px;margin-top:12px;color:#4b4640">Corte, barba ou os dois, com o barbeiro que você quiser.</div></div></div>
+  <div style="display:flex;gap:40px;align-items:center;background:var(--c);color:var(--p);border-radius:36px;padding:44px"><span class="disp" style="font-size:180px;width:120px;color:var(--y)">3</span><div><div class="disp" style="font-size:70px;color:var(--y)">Confirme e pronto</div><div style="font-size:34px;margin-top:12px;color:var(--m)">Chegue na hora marcada e sente na cadeira.</div></div></div>
+ </div>
+ <div class="seta">Preços <i></i></div>
+</div>
+<div class="arte f amarelo" id="feed-02c-agendar-precos">
+ <div class="pag" style="left:70px;top:80px">TABELA</div><div class="pag" style="right:70px;top:80px">3/3</div>
+ <div style="position:absolute;left:70px;right:70px;top:200px;border-top:5px solid #121110">
+  <div style="display:flex;align-items:baseline;gap:20px;padding:40px 0;border-bottom:5px solid #121110"><span class="disp" style="font-size:110px">Cabelo</span><span style="flex:1;border-bottom:6px dotted #121110;opacity:.5"></span><span class="disp" style="font-size:130px"><small style="font:800 34px Manrope;vertical-align:60px">R$</small>50</span></div>
+  <div style="display:flex;align-items:baseline;gap:20px;padding:40px 0;border-bottom:5px solid #121110"><span class="disp" style="font-size:110px">Barba</span><span style="flex:1;border-bottom:6px dotted #121110;opacity:.5"></span><span class="disp" style="font-size:130px"><small style="font:800 34px Manrope;vertical-align:60px">R$</small>40</span></div>
+  <div style="display:flex;align-items:center;gap:20px;padding:40px 36px;background:#121110;color:var(--y);border-radius:30px;margin-top:30px"><div><div class="disp" style="font-size:96px">Cabelo + barba</div><div style="font:800 34px Manrope;color:var(--p);margin-top:10px">você economiza R$ 10</div></div><span style="flex:1"></span><span class="disp" style="font-size:150px"><small style="font:800 34px Manrope;vertical-align:70px;color:var(--p)">R$</small>80</span></div>
+ </div>
+ <div style="position:absolute;left:70px;bottom:80px;font-weight:700;font-size:32px;max-width:560px">Corte kids e salão feminino: veja no app.</div>
+ <span class="pill p" style="position:absolute;right:70px;bottom:66px">Link na bio</span>
+</div>
+
+<!-- F3 · Carrossel: quem é o Ed -->
+<div class="arte f escuro" id="feed-03a-ed-capa">
+ <div class="foto" style="inset:0;border-radius:0"><img src="img/edmilson.webp" style="object-position:50% 15%"></div>
+ <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,17,16,0) 35%,rgba(18,17,16,.92) 78%)"></div>
+ <div class="marca" style="left:70px;top:66px"><img src="img/logo-ed.png">ED Barbearia</div>
+ <div class="pag" style="right:70px;top:80px">1/3</div>
+ <div class="disp" style="position:absolute;left:66px;bottom:170px;font-size:150px">Quem senta na<br>cadeira da ED,<br><span style="color:var(--y)">volta.</span></div>
+ <div class="seta" style="color:var(--y)">Conheça o Ed <i></i></div>
+</div>
+<div class="arte f amarelo" id="feed-03b-ed-frase">
+ <div class="pag" style="left:70px;top:80px">EDMILSON RODRIGUES · FUNDADOR</div><div class="pag" style="right:70px;top:80px">2/3</div>
+ <div class="disp" style="position:absolute;left:66px;top:170px;font-size:300px;line-height:1">“</div>
+ <div style="position:absolute;left:70px;right:90px;top:400px;font-weight:800;font-size:82px;line-height:1.12;letter-spacing:-1.5px">Mais do que cortar cabelo, meu propósito é entregar experiência, confiança e transformação.</div>
+ <div style="position:absolute;left:70px;bottom:90px;font-weight:700;font-size:32px">@edrodriguesbarber</div>
+ <img class="tes" src="img/tesoura.webp" style="width:330px;right:60px;bottom:60px;rotate:-10deg">
+</div>
+<div class="arte f escuro" id="feed-03c-ed-agendar">
+ <div class="pag" style="left:70px;top:80px">ED BARBEARIA</div><div class="pag" style="right:70px;top:80px">3/3</div>
+ <div class="foto" style="left:70px;top:170px;width:440px;height:580px"><img src="img/cadeira-ed.webp" style="object-position:50% 25%"></div>
+ <div style="position:absolute;left:560px;right:70px;top:190px;font-size:36px;line-height:1.45;color:var(--m)">O Ed está na casa de segunda a sábado e revisa cada acabamento antes do cliente levantar.</div>
+ <div class="disp" style="position:absolute;left:66px;top:820px;font-size:150px">Sua vez<br><span style="color:var(--y)">na cadeira.</span></div>
+ <div style="position:absolute;left:70px;right:70px;bottom:70px;display:flex;justify-content:space-between;align-items:center">
+  <span class="pill y">Agende pelo link da bio</span><span style="font-weight:700;font-size:26px;text-align:right;color:var(--m)">Rua Paula Batista, 604<br>Seg a sáb, 9h às 19h</span>
+ </div>
+</div>
+
+<!-- F4 · Carrossel: qual corte é o seu -->
+<div class="arte f papel" id="feed-04a-cortes-capa">
+ <div class="marca" style="left:70px;top:66px"><img src="img/logo-ed.png">ED Barbearia</div>
+ <div class="pag" style="right:70px;top:80px">1/4</div>
+ <div style="position:absolute;left:70px;right:70px;top:190px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+  <div class="foto" style="position:relative;height:440px;border-radius:26px"><img src="img/corte-barba.webp" style="object-position:50% 25%"></div>
+  <div class="foto" style="position:relative;height:440px;border-radius:26px"><img src="img/corte-textured.webp" style="object-position:40% 25%"></div>
+  <div class="foto" style="position:relative;height:440px;border-radius:26px"><img src="img/corte-crop.webp" style="object-position:50% 25%"></div>
+ </div>
+ <div class="disp" style="position:absolute;left:66px;bottom:200px;font-size:210px">Qual corte<br>é o seu?</div>
+ <div class="seta">Arrasta <i></i></div>
+</div>
+<div class="arte f escuro" id="feed-04b-corte-textured">
+ <div class="foto" style="left:70px;top:70px;right:70px;height:760px;width:auto"><img src="img/corte-textured.webp" style="object-position:40% 22%"></div>
+ <div class="pag" style="right:100px;top:100px;color:#fff">2/4</div>
+ <div class="disp" style="position:absolute;left:66px;top:880px;font-size:130px;color:var(--y)">Textured crop</div>
+ <div style="position:absolute;left:70px;right:70px;top:1020px;font-size:36px;line-height:1.4;color:var(--m)">Topo com textura e franja curta, laterais em degradê. Prático no dia a dia.</div>
+ <span class="pill y" style="position:absolute;left:70px;bottom:66px">Cabelo · R$ 50</span>
+</div>
+<div class="arte f escuro" id="feed-04c-corte-barba">
+ <div class="foto" style="left:70px;top:70px;right:70px;height:760px;width:auto"><img src="img/corte-barba.webp" style="object-position:50% 22%"></div>
+ <div class="pag" style="right:100px;top:100px;color:#fff">3/4</div>
+ <div class="disp" style="position:absolute;left:66px;top:880px;font-size:130px;color:var(--y)">Degradê + barba</div>
+ <div style="position:absolute;left:70px;right:70px;top:1020px;font-size:36px;line-height:1.4;color:var(--m)">Laterais bem baixas subindo para o topo e barba desenhada na navalha.</div>
+ <span class="pill y" style="position:absolute;left:70px;bottom:66px">Cabelo + barba · R$ 80</span>
+</div>
+<div class="arte f amarelo" id="feed-04d-corte-crop">
+ <div class="foto" style="left:70px;top:70px;right:70px;height:760px;width:auto;border:6px solid #121110"><img src="img/corte-crop.webp" style="object-position:50% 22%"></div>
+ <div class="pag" style="right:100px;top:100px;color:#fff">4/4</div>
+ <div class="disp" style="position:absolute;left:66px;top:880px;font-size:130px">Crop com fade</div>
+ <div style="position:absolute;left:70px;right:70px;top:1020px;font-size:36px;line-height:1.4">Curto em cima, fade marcado e contorno na régua. Manda o print do seu no direct.</div>
+ <span class="pill p" style="position:absolute;left:70px;bottom:66px">Agende pelo link da bio</span>
+</div>
+
+<!-- Stories -->
+<div class="arte s amarelo" id="story-01-campanha">
+ <div class="marca" style="left:70px;top:150px"><img src="img/logo-ed.png">ED Barbearia</div>
+ <div class="disp" style="position:absolute;left:66px;top:300px;font-size:340px">Seg<br>a qua</div>
+ <div class="corte" style="top:950px"></div><img class="tes" src="img/tesoura.webp" style="width:360px;left:640px;top:896px">
+ <div class="disp" style="position:absolute;left:66px;top:1010px;font-size:300px">50%</div>
+ <div style="position:absolute;left:70px;top:1300px;font-weight:800;font-size:60px;line-height:1.1">no seu primeiro corte,<br>agendando pelo app.</div>
+ <div class="zona" style="left:190px;right:190px;top:1520px;height:170px">cole aqui o adesivo<br>de link do agendamento</div>
+</div>
+<div class="arte s escuro" id="story-02-horarios-hoje">
+ <div class="marca" style="left:70px;top:150px"><img src="img/logo-ed.png">ED Barbearia</div>
+ <div class="disp" style="position:absolute;left:66px;top:320px;font-size:230px">Horários<br><span style="color:var(--y)">livres hoje</span></div>
+ <div style="position:absolute;left:70px;right:70px;top:880px;display:grid;gap:26px">
+  <div style="height:120px;border-radius:24px;border:3px solid rgba(246,241,231,.3)"></div><div style="height:120px;border-radius:24px;border:3px solid rgba(246,241,231,.3)"></div><div style="height:120px;border-radius:24px;border:3px solid rgba(246,241,231,.3)"></div><div style="height:120px;border-radius:24px;border:3px solid rgba(246,241,231,.3)"></div>
+ </div>
+ <div style="position:absolute;left:70px;top:1460px;font-size:36px;color:var(--m)">Escreva os horários nas caixas com o texto do Instagram.</div>
+ <div class="zona" style="left:190px;right:190px;top:1580px;height:160px;color:var(--y)">adesivo de link</div>
+</div>
+<div class="arte s papel" id="story-03-antes-depois">
+ <div class="disp" style="position:absolute;left:66px;top:150px;font-size:150px">Antes / depois</div>
+ <div class="zona" style="left:70px;right:70px;top:360px;height:610px">foto do antes</div>
+ <span class="pill p" style="position:absolute;left:100px;top:390px">Antes</span>
+ <div class="zona" style="left:70px;right:70px;top:1000px;height:610px">foto do depois</div>
+ <span class="pill y" style="position:absolute;left:100px;top:1030px">Depois</span>
+ <div style="position:absolute;left:70px;right:70px;top:1660px;display:flex;justify-content:space-between;align-items:center"><span style="font:400 44px Anton;text-transform:uppercase">ED Barbearia</span><span class="pill p" style="font-size:28px">Agende pelo link</span></div>
+</div>
+<div class="arte s escuro" id="story-04-caixinha">
+ <img class="tes" src="img/tesoura.webp" style="width:620px;left:230px;top:260px;rotate:-12deg">
+ <div class="disp" style="position:absolute;left:66px;right:66px;top:620px;font-size:190px;text-align:center">Qual corte<br><span style="color:var(--y)">você quer?</span></div>
+ <div style="position:absolute;left:120px;right:120px;top:1060px;text-align:center;font-size:40px;color:var(--m)">Manda o print. O Ed responde se combina com o seu rosto.</div>
+ <div class="zona" style="left:150px;right:150px;top:1240px;height:300px;color:var(--y)">cole aqui a<br>caixinha de perguntas</div>
+</div>
+
+<!-- Capas de destaque -->
+<div class="arte capa" id="destaque-agendar"><div class="c"><svg viewBox="0 0 100 100"><rect x="18" y="24" width="64" height="58" rx="8"/><path d="M18 40h64M36 16v16M64 16v16M38 61l9 9 17-18"/></svg></div></div>
+<div class="arte capa" id="destaque-cortes"><div class="c"><svg viewBox="0 0 100 100"><circle cx="28" cy="30" r="11"/><circle cx="28" cy="70" r="11"/><path d="M37 36l47 30M37 64l47-30"/></svg></div></div>
+<div class="arte capa" id="destaque-precos"><div class="c"><svg viewBox="0 0 100 100"><path d="M50 14v72M64 30c-4-5-10-7-15-7-9 0-15 5-15 12 0 16 31 9 31 26 0 7-7 13-16 13-7 0-13-3-17-8"/></svg></div></div>
+<div class="arte capa" id="destaque-kids"><div class="c"><svg viewBox="0 0 100 100"><path d="M50 14l10 22 24 3-18 16 5 24-21-12-21 12 5-24-18-16 24-3z"/></svg></div></div>
+<div class="arte capa" id="destaque-salao"><div class="c"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="40" rx="24" ry="28"/><path d="M50 68v18M36 86h28"/></svg></div></div>
+<div class="arte capa" id="destaque-acao-social"><div class="c"><svg viewBox="0 0 100 100"><path d="M50 82S16 62 16 38c0-11 8-20 19-20 7 0 12 4 15 9 3-5 8-9 15-9 11 0 19 9 19 20 0 24-34 44-34 44z"/></svg></div></div>
+<div class="arte capa" id="destaque-curso"><div class="c"><svg viewBox="0 0 100 100"><path d="M10 40l40-18 40 18-40 18z"/><path d="M26 48v18c0 6 11 12 24 12s24-6 24-12V48M90 40v22"/></svg></div></div>
+<div class="arte capa" id="destaque-onde"><div class="c"><svg viewBox="0 0 100 100"><path d="M50 88S22 58 22 38a28 28 0 0 1 56 0c0 20-28 50-28 50z"/><circle cx="50" cy="38" r="10"/></svg></div></div>
+</body></html>
