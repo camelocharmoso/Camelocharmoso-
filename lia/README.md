@@ -21,6 +21,24 @@ O cliente conversa com a Lia pelo WhatsApp e pede artes, stories, carrosséis, l
 
 **Ainda não faz sozinha:** publicar no Instagram (você publica pelo Meta Business Suite quando chega o aviso) e ler métricas do Instagram. A Lia foi instruída a não inventar números.
 
+## Modelos de arte
+
+Inspirados em artes profissionais de hamburgueria e food service. A Lia escolhe o modelo pelo clima do pedido (`promo`, `premium`, `divertido`) e cada "Refazer" passa para os próximos.
+
+| Modelo | Visual | Melhor com |
+|---|---|---|
+| `eco` | Título gigante repetido 3x, produto na frente, etiqueta de preço em gota | produto recortado |
+| `script` | Título em duas cores + palavra manuscrita por cima ("Nostalgia *pura*") | produto recortado |
+| `oferta` | Manchete serifada, produto no centro, placa "por apenas R$ 20,90 unid" | qualquer foto |
+| `cinema` | Foto ocupando tudo, escurecida, título embaixo | foto inteira (não recortada) |
+| `fogo` | Fundo escuro com brilho e faíscas, título vazado gigante, reflexo do produto | produto recortado |
+
+**Paletas prontas** para quem não tem cores definidas: `brasa`, `pop`, `fresh`, `retro`, `street`, `noite`. Se o cliente tem cores, elas têm prioridade.
+
+**Recorte do fundo**: configure `CUTOUT_API_URL` e `CUTOUT_API_KEY` (remove.bg ou Photoroom) para o produto sair "solto" na frente do título. Cada foto é recortada uma vez só, quando chega. Sem isso, a foto entra emoldurada e a Lia prefere o modelo `cinema`.
+
+Fontes usadas (todas OFL, uso comercial liberado): Inter, Archivo Black, Alfa Slab One, Anton e Great Vibes, com as licenças em `fonts/`.
+
 ## Seus comandos (mande do seu WhatsApp para o número da Lia)
 
 ```
@@ -119,7 +137,9 @@ src/server.js            servidor, webhook da Meta, simulador
 src/handler.js           decide o que fazer com cada mensagem; comandos do operador
 src/brain.js             prompt da Lia e ferramentas do Claude
 src/actions.js           artes, créditos, agendamento, tarefas, avisos para você
-src/art.js               templates das artes (SVG → PNG)
+src/templates.js         modelos de arte (eco, script, oferta, cinema, fogo) e paletas
+src/art.js               renderização SVG → PNG, carrossel, utilidades de imagem
+src/cutout.js            remoção de fundo das fotos (opcional)
 src/db.js                banco SQLite
 src/plans.js             planos, preços e custo em créditos
 src/channels/            WhatsApp Cloud API e canal do simulador

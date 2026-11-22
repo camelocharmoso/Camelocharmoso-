@@ -3,7 +3,8 @@
 import crypto from "node:crypto";
 import { config } from "./config.js";
 import { COSTS, EXTRA_PACK, planOf } from "./plans.js";
-import { postSVG, carouselSVGs, renderPng, saveMedia, photoDataUri } from "./art.js";
+import { carouselSVGs, renderPng, saveMedia, loadPhotoAssets } from "./art.js";
+import { renderTemplate, templatesFor } from "./templates.js";
 
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const newGroup = () => "g" + crypto.randomBytes(5).toString("hex");
@@ -51,26 +52,29 @@ export class Actions {
     return this.client.onboarded ? COSTS[kind] : 0; // amostras do onboarding são grátis
   }
 
+  /** Foto mais recente do cliente: { photo, cutout } com data URI e tamanho; ou nada. */
   photoFor(usePhoto) {
-    if (!usePhoto) return null;
-    return photoDataUri(this.store.latestPhoto(this.phone));
+    if (!usePhoto) return { photo: null, cutout: null };
+    return loadPhotoAssets(this.store.latestPhoto(this.phone));
   }
 
-  /** spec: { format: "feed"|"story", title, badge, subtitle, caption, use_photo } */
+  /** spec: { format: "feed"|"story", title, badge, subtitle, caption, use_photo, style } */
   async createArt(spec, { redo = 0, free } = {}) {
     const client = this.client;
     const kind = spec.format === "story" ? "story" : "feed";
     const cost = free ? 0 : this.costFor(kind);
     if (client.credits < cost) return this.insufficient(cost);
 
-    const photo = this.photoFor(spec.use_photo);
-    const cycles = kind === "feed" ? [["A", "B"], ["C", "D"], ["B", "A"]] : [["D"], ["A"], ["C"]];
-    const variants = cycles[redo % cycles.length];
+    const { photo, cutout } = this.photoFor(spec.use_photo);
+    // Cada "Refazer" passa para os próximos modelos da lista, sem repetir.
+    const list = templatesFor(spec.style, { hasCutout: !!cutout, hasPhoto: !!photo });
+    const n = kind === "feed" ? 2 : 1;
+    const chosen = Array.from({ length: n }, (_, i) => list[(redo * n + i) % list.length]);
     const group = newGroup();
     const ids = [];
-    for (const v of variants) {
-      const file = saveMedia(renderPng(postSVG(client, spec, kind, v, photo)));
-      ids.push(this.store.addArt({ phone: this.phone, group, kind, variant: v, file, spec: { ...spec, format: kind, free: cost === 0, redo } }));
+    for (const template of chosen) {
+      const file = saveMedia(renderPng(renderTemplate({ client, spec, template, format: kind, photo, cutout })));
+      ids.push(this.store.addArt({ phone: this.phone, group, kind, variant: template, file, spec: { ...spec, format: kind, free: cost === 0, redo } }));
     }
     for (let i = 0; i < ids.length; i++) {
       const art = this.store.getArt(ids[i]);
@@ -95,7 +99,7 @@ export class Actions {
     const cost = free ? 0 : this.costFor("carousel");
     if (client.credits < cost) return this.insufficient(cost);
 
-    const svgs = carouselSVGs(client, spec.cover_title, slides, this.photoFor(true), redo % 2 === 1);
+    const svgs = carouselSVGs(client, spec.cover_title, slides, this.photoFor(true).photo?.uri || null, redo % 2 === 1);
     const group = newGroup();
     const ids = svgs.map((svg, i) => this.store.addArt({
       phone: this.phone, group, kind: "carousel", variant: `${redo % 2}-${i}`,

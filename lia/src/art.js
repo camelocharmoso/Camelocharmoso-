@@ -8,10 +8,8 @@ import { Resvg } from "@resvg/resvg-js";
 import { config } from "./config.js";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const FONT_FILES = [
-  path.join(here, "..", "fonts", "InterDisplay-ExtraBold.otf"),
-  path.join(here, "..", "fonts", "Inter-SemiBold.otf"),
-];
+const FONT_DIR = path.join(here, "..", "fonts");
+const FONT_FILES = fs.readdirSync(FONT_DIR).filter((f) => /\.(ttf|otf)$/i.test(f)).map((f) => path.join(FONT_DIR, f));
 const DISPLAY = "Inter Display";
 const BODY = "Inter";
 
@@ -244,6 +242,42 @@ export function saveMedia(buffer, ext = "png") {
 }
 
 export const mediaPath = (name) => path.join(mediaDir(), path.basename(String(name)));
+
+/** Largura e altura de PNG, JPEG ou WEBP lendo só o cabeçalho. */
+export function imageSize(buf) {
+  try {
+    if (buf[0] === 0x89 && buf[1] === 0x50) return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+    if (buf[0] === 0xff && buf[1] === 0xd8) {
+      let i = 2;
+      while (i < buf.length - 9) {
+        if (buf[i] !== 0xff) { i++; continue; }
+        const m = buf[i + 1];
+        if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) return { w: buf.readUInt16BE(i + 7), h: buf.readUInt16BE(i + 5) };
+        i += 2 + buf.readUInt16BE(i + 2);
+      }
+    }
+    if (buf.subarray(8, 12).toString("latin1") === "WEBP") {
+      const kind = buf.subarray(12, 16).toString("latin1");
+      if (kind === "VP8X") return { w: 1 + buf.readUIntLE(24, 3), h: 1 + buf.readUIntLE(27, 3) };
+      if (kind === "VP8 ") return { w: buf.readUInt16LE(26) & 0x3fff, h: buf.readUInt16LE(28) & 0x3fff };
+      if (kind === "VP8L") { const b = buf.readUInt32LE(21); return { w: (b & 0x3fff) + 1, h: ((b >> 14) & 0x3fff) + 1 }; }
+    }
+  } catch { /* cabeçalho estranho */ }
+  return { w: 1000, h: 1000 };
+}
+
+/** Foto e recorte (se houver) prontos para entrar na arte. */
+export function loadPhotoAssets(row) {
+  const load = (file, mime) => {
+    if (!file || !PHOTO_TYPES.has(mime) || !MEDIA_NAME.test(file)) return null;
+    try {
+      const buf = fs.readFileSync(mediaPath(file));
+      return { uri: `data:${mime};base64,${buf.toString("base64")}`, ...imageSize(buf) };
+    } catch { return null; }
+  };
+  if (!row) return { photo: null, cutout: null };
+  return { photo: load(row.file, row.mime), cutout: load(row.cutout, "image/png") };
+}
 
 /** Lê uma foto salva como data URI para entrar na arte. */
 export function photoDataUri(photo) {

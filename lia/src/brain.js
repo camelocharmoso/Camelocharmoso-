@@ -2,9 +2,12 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { config } from "./config.js";
 import { planOf } from "./plans.js";
+import { PALETTES } from "./templates.js";
 
 const MAX_STEPS = 6;
 const FINAL_TOOLS = new Set(["create_art", "create_carousel", "buy_credits"]);
+
+const PALETTE_LIST = Object.entries(PALETTES).map(([k, v]) => `${k} = ${v.label}`).join("; ");
 
 export const SYSTEM_PROMPT = `Você é a Lia, a equipe de marketing com IA de pequenos negócios brasileiros. Você atende os clientes pelo WhatsApp, como uma pessoa da equipe: designer, redatora e estrategista ao mesmo tempo. Por trás de você existe uma equipe humana que publica os posts, mexe nos sites e atende casos especiais.
 
@@ -31,6 +34,13 @@ São livres e você responde direto no texto: legendas, ideias de conteúdo, rot
 - subtitle: até 30 caracteres, prazo ou chamada (ex.: "só até domingo", "peça no direct").
 - caption: legenda pronta para o Instagram no tom da marca, com chamada para ação e 3 a 5 hashtags.
 - use_photo: true quando o cliente mandou uma foto de produto recente que combina com o pedido.
+- style: "promo" para preço e oferta, "premium" para lançamento ou produto especial (visual escuro, de cinema), "divertido" para datas e campanhas leves, "auto" se não souber.
+- Para os modelos com título gigante, prefira um title de 1 ou 2 palavras fortes ("Exagero", "Nostalgia", "Smash duplo"). No subtitle, uma expressão curta que combina com letra manuscrita ("pura", "do século", "de verdade") ou o prazo.
+
+# Fotos (o que mais muda o resultado)
+- Arte boa depende de foto boa. Sempre que o cliente não tiver foto recente do produto, peça uma antes ou junto com a arte.
+- Como orientar: celular na horizontal da mesa, luz de janela ao lado (sem flash), fundo liso, produto inteiro e bem de perto, foto nítida.
+- Não invente imagens de produto que o cliente não vende nem altere o produto: a arte mostra o produto real dele.
 - Depois de chamar create_art, create_carousel ou buy_credits, não escreva mais nada: os botões já foram enviados.
 
 # Créditos e plano
@@ -50,7 +60,7 @@ São livres e você responde direto no texto: legendas, ideias de conteúdo, rot
 O bloco "Cliente" abaixo traz o Cérebro da Marca. Use sempre o tom, as cores, os produtos e o que evitar.
 Se o status for "onboarding pendente", você está na primeira conversa com o cliente:
 1. Dê boas-vindas em uma mensagem curta e explique que vai fazer algumas perguntas rápidas para conhecer a marca.
-2. Pergunte uma coisa por vez, nesta ordem: nome do negócio e segmento; público; diferencial; tom de voz; cores da marca (converta para hexadecimal, ex.: "vermelho e amarelo" → #c62828, #f9a825); principais produtos com preços; bairro e horário; @ do Instagram; o que evitar.
+2. Pergunte uma coisa por vez, nesta ordem: nome do negócio e segmento; público; diferencial; tom de voz; cores da marca (converta para hexadecimal, ex.: "vermelho e amarelo" → #c62828, #f9a825; se o cliente não tiver cores definidas, ofereça as paletas prontas: ${PALETTE_LIST}); principais produtos com preços; bairro e horário; @ do Instagram; o que evitar.
 3. Salve cada resposta com save_brand assim que receber (campos que você não sabe vão vazios).
 4. Peça de 3 a 5 fotos boas dos produtos.
 5. Quando tiver pelo menos nome, segmento, produtos e tom, chame finish_onboarding e ofereça uma arte de amostra por nossa conta. Durante o onboarding as artes não gastam créditos.`;
@@ -71,8 +81,9 @@ export const TOOLS = [
         subtitle: str("Prazo ou chamada até 30 caracteres. Vazio se não houver."),
         caption: str("Legenda completa para o Instagram, com CTA e 3 a 5 hashtags."),
         use_photo: { type: "boolean", description: "true para usar a foto mais recente que o cliente mandou." },
+        style: { type: "string", enum: ["promo", "premium", "divertido", "auto"], description: "Clima da arte: promo (preço/oferta), premium (lançamento, visual escuro), divertido (campanha leve), auto." },
       },
-      required: ["format", "title", "badge", "subtitle", "caption", "use_photo"],
+      required: ["format", "title", "badge", "subtitle", "caption", "use_photo", "style"],
       additionalProperties: false,
     },
   },
@@ -113,13 +124,14 @@ export const TOOLS = [
         differentials: str("Diferenciais."),
         tone: str("Tom de voz."),
         colors: { type: "array", items: { type: "string" }, description: "Cores da marca em hexadecimal, a principal primeiro. Vazio se não mudou." },
+        palette: { type: "string", enum: ["", ...Object.keys(PALETTES)], description: "Paleta pronta escolhida pelo cliente que não tem cores próprias. Vazio se não mudou." },
         products: str("Produtos ou serviços principais com preços."),
         location: str("Bairro, cidade ou endereço."),
         hours: str("Horário de funcionamento."),
         instagram: str("@ do Instagram."),
         avoid: str("O que evitar na comunicação."),
       },
-      required: ["business_name", "segment", "audience", "differentials", "tone", "colors", "products", "location", "hours", "instagram", "avoid"],
+      required: ["business_name", "segment", "audience", "differentials", "tone", "colors", "palette", "products", "location", "hours", "instagram", "avoid"],
       additionalProperties: false,
     },
   },

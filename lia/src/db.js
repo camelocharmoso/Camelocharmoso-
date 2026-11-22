@@ -84,6 +84,10 @@ export function openDb(file = path.join(config.dataDir, "lia.db")) {
   const db = new DatabaseSync(file);
   db.exec("PRAGMA journal_mode = WAL;");
   db.exec(SCHEMA);
+  // colunas novas em bancos antigos
+  for (const col of ["cutout TEXT"]) {
+    try { db.exec(`ALTER TABLE photos ADD COLUMN ${col}`); } catch { /* já existe */ }
+  }
   return new Store(db);
 }
 
@@ -227,7 +231,8 @@ class Store {
   }
 
   // ---------- photos ----------
-  addPhoto(phone, file, mime) { this.db.prepare("INSERT INTO photos (phone, file, mime) VALUES (?, ?, ?)").run(phone, file, mime); }
+  addPhoto(phone, file, mime) { return Number(this.db.prepare("INSERT INTO photos (phone, file, mime) VALUES (?, ?, ?)").run(phone, file, mime).lastInsertRowid); }
+  setCutout(id, file) { this.db.prepare("UPDATE photos SET cutout = ? WHERE id = ?").run(file, id); }
   latestPhoto(phone) { return this.db.prepare("SELECT * FROM photos WHERE phone = ? ORDER BY id DESC LIMIT 1").get(phone) || null; }
 
   // ---------- housekeeping ----------

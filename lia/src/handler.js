@@ -5,6 +5,7 @@ import { saveMedia } from "./art.js";
 import { PLANS, planOf } from "./plans.js";
 import { transcribe, transcribeEnabled } from "./transcribe.js";
 import { RateLimiter, sniffImage } from "./security.js";
+import { cutoutEnabled, removeBackground } from "./cutout.js";
 
 const digits = (s) => String(s || "").replace(/\D/g, "");
 const MIN = 60_000;
@@ -80,8 +81,13 @@ export function createHandler({ store, brain, channels, adminChannel, limiter = 
           return await actions.say("Não consegui abrir essa imagem 😕 Manda como foto (JPG ou PNG), de até 5 MB?");
         }
         const file = saveMedia(media.buffer, { "image/png": "png", "image/webp": "webp" }[mime] || "jpg");
-        store.addPhoto(phone, file, mime);
+        const photoId = store.addPhoto(phone, file, mime);
         image = { data: media.buffer.toString("base64"), mime };
+        // Recorta o fundo uma vez só, para as artes com o produto "solto" na frente do título.
+        if (cutoutEnabled()) {
+          try { store.setCutout(photoId, saveMedia(await removeBackground(media.buffer, mime), "png")); }
+          catch (e) { console.error("[lia] recorte de fundo falhou:", e.message); }
+        }
         label = `[foto]${text ? " " + text : ""}`;
       } else if (msg.type === "audio") {
         if (!transcribeEnabled()) {

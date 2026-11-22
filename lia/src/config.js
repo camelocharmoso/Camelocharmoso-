@@ -27,6 +27,15 @@ export const config = {
     model: env.TRANSCRIBE_MODEL || "whisper-1",
   },
 
+  // Remoção de fundo (opcional). remove.bg: https://api.remove.bg/v1.0/removebg + X-Api-Key.
+  // Photoroom: https://sdk.photoroom.com/v1/segment + x-api-key.
+  cutout: {
+    url: env.CUTOUT_API_URL || "",
+    key: env.CUTOUT_API_KEY || "",
+    header: env.CUTOUT_API_KEY_HEADER || "X-Api-Key",
+    field: env.CUTOUT_FIELD || "image_file",
+  },
+
   timezone: "America/Sao_Paulo",
 
   // Quantos proxies existem na frente do servidor (Railway, Render e Cloudflare usam 1).
