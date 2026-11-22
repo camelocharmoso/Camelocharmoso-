@@ -32,12 +32,18 @@ Inspirados em artes profissionais de hamburgueria e food service. A Lia escolhe 
 | `oferta` | Manchete serifada, produto no centro, placa "por apenas R$ 20,90 unid" | qualquer foto |
 | `cinema` | Foto ocupando tudo, escurecida, título embaixo | foto inteira (não recortada) |
 | `fogo` | Fundo escuro com brilho e faíscas, título vazado gigante, reflexo do produto | produto recortado |
+| `splash` | Título arredondado em 2 cores, selo de preço em explosão, xadrez de losangos | produto recortado |
+| `arco` | Título curvo por cima do produto e palavra de destaque embaixo | produto recortado |
+| `enquete` | Pergunta com opções A, B, C, D para gerar comentários | qualquer (ou sem foto) |
+| `frase` | Frase de efeito numa caixa ondulada com a última palavra em destaque | sem foto |
 
 **Paletas prontas** para quem não tem cores definidas: `brasa`, `pop`, `fresh`, `retro`, `street`, `noite`. Se o cliente tem cores, elas têm prioridade.
 
 **Recorte do fundo**: configure `CUTOUT_API_URL` e `CUTOUT_API_KEY` (remove.bg ou Photoroom) para o produto sair "solto" na frente do título. Cada foto é recortada uma vez só, quando chega. Sem isso, a foto entra emoldurada e a Lia prefere o modelo `cinema`.
 
-Fontes usadas (todas OFL, uso comercial liberado): Inter, Archivo Black, Alfa Slab One, Anton e Great Vibes, com as licenças em `fonts/`.
+O rodapé de pedido usa o WhatsApp e os apps de entrega salvos no Cérebro da Marca, sempre em texto (logos de iFood e outros são marcas registradas e não entram).
+
+Fontes usadas (todas OFL, uso comercial liberado): Inter, Archivo Black, Alfa Slab One, Anton, Great Vibes e Bagel Fat One, com as licenças em `fonts/`.
 
 ## Seus comandos (mande do seu WhatsApp para o número da Lia)
 
