@@ -36,6 +36,12 @@ Inspirados em artes profissionais de hamburgueria e food service. A Lia escolhe 
 | `arco` | Título curvo por cima do produto e palavra de destaque embaixo | produto recortado |
 | `enquete` | Pergunta com opções A, B, C, D para gerar comentários | qualquer (ou sem foto) |
 | `frase` | Frase de efeito numa caixa ondulada com a última palavra em destaque | sem foto |
+| `combo` | Palavra gigante acima e abaixo do produto, fita ondulada e selo redondo | produto recortado |
+| `destaque` | Título à esquerda, produto enorme saindo pela borda, etiqueta de preço vertical | produto recortado |
+
+**Carrossel editorial**: capa com gancho em letras condensadas e complemento manuscrito, slides de frase com uma palavra em *itálico colorido*, régua lateral, cabeçalho "@perfil | Nome" em todos e um slide final de chamada ("Comenta *EU QUERO*…").
+
+**Barra de contato em pílula** ("Faça seu pedido | Peça também no iFood") e **selo redondo** com o slogan da marca (`tagline` no Cérebro da Marca).
 
 **Paletas prontas** para quem não tem cores definidas: `brasa`, `pop`, `fresh`, `retro`, `street`, `noite`. Se o cliente tem cores, elas têm prioridade.
 
@@ -43,7 +49,7 @@ Inspirados em artes profissionais de hamburgueria e food service. A Lia escolhe 
 
 O rodapé de pedido usa o WhatsApp e os apps de entrega salvos no Cérebro da Marca, sempre em texto (logos de iFood e outros são marcas registradas e não entram).
 
-Fontes usadas (todas OFL, uso comercial liberado): Inter, Archivo Black, Alfa Slab One, Anton, Great Vibes e Bagel Fat One, com as licenças em `fonts/`.
+Fontes usadas (todas OFL, uso comercial liberado): Inter, Archivo Black, Alfa Slab One, Anton, Great Vibes, Bagel Fat One e Instrument Serif, com as licenças em `fonts/`.
 
 ## Seus comandos (mande do seu WhatsApp para o número da Lia)
 

@@ -3,8 +3,8 @@
 import crypto from "node:crypto";
 import { config } from "./config.js";
 import { COSTS, EXTRA_PACK, planOf } from "./plans.js";
-import { carouselSVGs, renderPng, saveMedia, loadPhotoAssets } from "./art.js";
-import { renderTemplate, templatesFor } from "./templates.js";
+import { renderPng, saveMedia, loadPhotoAssets } from "./art.js";
+import { renderTemplate, templatesFor, renderCarousel } from "./templates.js";
 
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const newGroup = () => "g" + crypto.randomBytes(5).toString("hex");
@@ -102,7 +102,8 @@ export class Actions {
     const cost = free ? 0 : this.costFor("carousel");
     if (client.credits < cost) return this.insufficient(cost);
 
-    const svgs = carouselSVGs(client, spec.cover_title, slides, this.photoFor(true).photo?.uri || null, redo % 2 === 1);
+    const { photo, cutout } = this.photoFor(true);
+    const svgs = renderCarousel({ client, spec: { ...spec, slides }, photo, cutout, alt: redo % 2 === 1 });
     const group = newGroup();
     const ids = svgs.map((svg, i) => this.store.addArt({
       phone: this.phone, group, kind: "carousel", variant: `${redo % 2}-${i}`,

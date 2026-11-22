@@ -13,7 +13,9 @@ import { clean, wrap, contrast } from "./art.js";
 //  arco    título curvo por cima do produto e palavra de destaque embaixo (estilo "Seu novo vício")
 //  enquete post de engajamento com pergunta e opções A, B, C, D
 //  frase   frase de efeito numa caixa ondulada com palavra destacada (não precisa de foto)
-export const TEMPLATES = ["eco", "script", "oferta", "cinema", "fogo", "splash", "arco", "enquete", "frase"];
+//  combo   palavra gigante acima e abaixo do produto, fita ondulada e selo redondo (estilo "COMBO")
+//  destaque título à esquerda, produto enorme saindo pela borda e etiqueta de preço vertical
+export const TEMPLATES = ["eco", "script", "oferta", "cinema", "fogo", "splash", "arco", "enquete", "frase", "combo", "destaque"];
 
 const F = {
   black: "Inter Display", // 800 e 900
@@ -22,6 +24,7 @@ const F = {
   cond: "Anton",
   script: "Great Vibes",
   round: "Bagel Fat One",
+  serif: "Instrument Serif",
   body: "Inter",
 };
 // largura média de um caractere, em "em", para estimar quanto o texto ocupa
@@ -30,8 +33,9 @@ const WIDTH = { round: 0.74, black: 0.62, blackUpper: 0.7, wide: 0.8, slab: 0.66
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const fit = (text, kind, maxW, maxSize, minSize = 40) => Math.max(minSize, Math.min(maxSize, Math.floor(maxW / (Math.max(1, text.length) * WIDTH[kind]))));
 
-function T(x, y, size, fill, txt, { anchor = "start", font = F.body, weight = 600, ls = 0, opacity, rotate, stroke, strokeW } = {}) {
+function T(x, y, size, fill, txt, { anchor = "start", font = F.body, weight = 600, ls = 0, opacity, rotate, stroke, strokeW, italic } = {}) {
   const attrs = [
+    italic ? `font-style="italic"` : "",
     `x="${x}"`, `y="${y}"`, `font-family="${font}"`, `font-size="${size}"`, `font-weight="${weight}"`,
     `text-anchor="${anchor}"`, `letter-spacing="${ls}"`,
     stroke ? `fill="none" stroke="${stroke}" stroke-width="${strokeW || 3}"` : `fill="${fill}"`,
@@ -573,7 +577,218 @@ function frase(ctx, W, H) {
   return s;
 }
 
-const BUILDERS = { eco, script, oferta, cinema, fogo, splash, arco, enquete, frase };
+
+// ---------- barra de contato e selos ----------
+/** Pílula "Faça seu pedido 81 9999-9999 | Peça também no iFood" (só texto, sem logos de terceiros). */
+function pillBar(ctx, W, y, bg, fg) {
+  const b = ctx.brand;
+  const left = b.whatsapp ? ["FAÇA SEU PEDIDO", clean(b.whatsapp)] : b.instagram ? ["SIGA A GENTE", "@" + clean(b.instagram).replace(/^@/, "")] : null;
+  const right = b.delivery ? ["PEÇA TAMBÉM NO", clean(b.delivery).toUpperCase().slice(0, 22)] : b.location ? ["ONDE ESTAMOS", clean(b.location).slice(0, 22)] : null;
+  if (!left && !right) return footer(ctx, W, y, fg);
+  const w = left && right ? 760 : 420, x = (W - w) / 2, h = 96;
+  let s = `<rect x="${x}" y="${y - h / 2 - 8}" width="${w}" height="${h}" rx="22" fill="${bg}"/>`;
+  const col = (cx, [a, bb]) => T(cx, y - 14, 20, fg, a, { anchor: "middle", font: F.body, weight: 600, ls: 3, opacity: 0.8 }) + T(cx, y + 22, 32, fg, bb, { anchor: "middle", font: F.wide, weight: 400 });
+  if (left && right) s += col(x + w * 0.27, left) + `<rect x="${W / 2 - 1}" y="${y - 38}" width="2" height="64" fill="${fg}" opacity=".35"/>` + col(x + w * 0.73, right);
+  else s += col(W / 2, left || right);
+  return s;
+}
+
+/** Selo redondo com texto girando (ex.: "MELHOR HAMBÚRGUER DA CIDADE"). */
+function circleSeal(ctx, cx, cy, r, color, text) {
+  const id = ctx.id();
+  const t = (clean(text).toUpperCase() + " · ").repeat(3).slice(0, Math.floor((2 * Math.PI * r) / 17));
+  return `<circle cx="${cx}" cy="${cy}" r="${r + 26}" fill="#ffffff" opacity=".92"/>
+    <circle cx="${cx}" cy="${cy}" r="${r + 26}" fill="none" stroke="${color}" stroke-width="2" opacity=".5"/>
+    <defs><path id="${id}" d="M${cx - r} ${cy} a${r} ${r} 0 1 1 ${2 * r} 0 a${r} ${r} 0 1 1 ${-2 * r} 0"/></defs>
+    <text font-family="${F.body}" font-size="22" font-weight="600" fill="${color}" letter-spacing="2"><textPath href="#${id}">${esc(t)}</textPath></text>`;
+}
+
+function combo(ctx, W, H) {
+  const p = ctx.pal;
+  const { oy, end, foot } = frame(H);
+  const id = ctx.id();
+  const bg = p.soft;
+  const hot = contrast(p.bg, bg) >= 2 ? p.bg : p.accent;
+  let s = `<rect width="${W}" height="${H}" fill="${bg}"/>`;
+  s += `<path d="M-60 ${oy + 160} C180 ${oy + 40} 260 ${oy + 260} 520 ${oy + 170} C700 ${oy + 110} 760 ${oy - 40} 1140 ${oy + 60} L1140 -10 L-60 -10 Z" fill="${hot}" opacity=".07"/>`;
+  const word = clean(ctx.spec.title).split(" ")[0].toUpperCase().slice(0, 9);
+  const size = fit(word, "cond", 1000, 470, 200);
+  const capH = size * 0.74;
+  const yTop = oy + 230 + capH;
+  s += T(W / 2, yTop, size, hot, word, { anchor: "middle", font: F.cond, weight: 400, ls: 2 });
+  s += T(W / 2, end - 10, size, hot, word, { anchor: "middle", font: F.cond, weight: 400, ls: 2 });
+  const prod = product(ctx, 40, oy + 270, W - 80, end - 160 - (oy + 270), { align: "center" });
+  s += prod.svg;
+  const kick = clean(ctx.spec.kicker || ctx.spec.subtitle).toUpperCase();
+  if (kick) {
+    const ks = fit(kick, "wide", 720, 50, 30), kw = kick.length * ks * 0.8 + 90, kh = ks * 1.7;
+    const tag = contrast("#f6b81c", hot) > 1.5 ? "#f6b81c" : p.accent;
+    s += `<path d="${wavyBox((W - kw) / 2, oy + 110, kw, kh, 5, kick)}" fill="${tag}"/>` + T(W / 2, oy + 110 + kh * 0.68, ks, pick(tag, "#3a1606", "#ffffff"), kick, { anchor: "middle", font: F.wide, weight: 400 });
+  }
+  if (ctx.brand.tagline) s += circleSeal(ctx, Math.min(W - 150, prod.box.x + prod.box.w - 40), prod.box.y + prod.box.h - 70, 78, hot, ctx.brand.tagline);
+  if (ctx.spec.badge) s += priceDrop(W - 200, prod.box.y + 50, { ...p, accent: hot, accentInk: pick(hot, "#ffffff", "#111111") }, ctx.spec.badge);
+  s += pillBar(ctx, W, foot - 10, hot, pick(hot, "#ffffff", "#111111"));
+  if (H > 1350) s += storyCta(W, H, { ...p, accent: hot, accentInk: pick(hot, "#ffffff", "#111111") });
+  return s;
+}
+
+function destaque(ctx, W, H) {
+  const p = ctx.pal;
+  const { oy, foot } = frame(H);
+  const bg = p.bg === PALETTES.noite.bg ? p.accent : p.bg;
+  const ink = pick(bg, p.ink, "#3a1606", "#111111");
+  const light = pick(bg, p.light, "#ffffff");
+  let s = `<rect width="${W}" height="${H}" fill="${bg}"/>`;
+  // manchas claras nas bordas
+  s += `<path d="M-40 -20 L560 -20 C520 60 420 40 380 110 C330 190 200 120 120 200 C60 260 -10 220 -40 260 Z" fill="${p.soft}" opacity=".85"/>`;
+  s += `<path d="M${W + 40} ${H * 0.62} C${W - 120} ${H * 0.66} ${W - 60} ${H * 0.78} ${W - 160} ${H * 0.84} C${W - 240} ${H * 0.9} ${W - 120} ${H} ${W + 40} ${H} Z" fill="${p.soft}" opacity=".6"/>`;
+  const lines = wrap(clean(ctx.spec.title).toUpperCase(), 14, 3);
+  const size = Math.min(...lines.map((l) => fit(l, "wide", 900, 112, 60)));
+  let y = oy + 250;
+  lines.forEach((l) => { s += T(76, y, size, ink, l, { font: F.wide, weight: 400, ls: -1 }); y += size * 1.02; });
+  const sub = clean(ctx.spec.subtitle).toUpperCase();
+  if (sub) { s += T(80, y + 10, fit(sub, "body", 880, 54, 30), light, sub, { font: F.body, weight: 600 }); y += 70; }
+  // produto enorme, saindo pela borda de baixo
+  const top = y + 40;
+  s += product(ctx, -40, top, W + 80, (H - top) * 1.18, { align: "center", frameRotate: 0 }).svg;
+  if (ctx.spec.badge) {
+    const price = parsePrice(ctx.spec.badge);
+    const tw = 300, th = 330, tx = W - tw - 50, ty = H * 0.55;
+    const tag = contrast("#f6b81c", bg) > 1.4 ? "#f6b81c" : p.light;
+    s += `<g transform="rotate(-4 ${tx + tw / 2} ${ty + th / 2})"><path d="${wavyBox(tx, ty, tw, th, 6, ctx.spec.badge)}" fill="${tag}"/>`;
+    const label = clean(ctx.spec.details || ctx.spec.title).toUpperCase().slice(0, 14);
+    s += T(tx + tw / 2, ty + 62, fit(label, "wide", tw - 50, 34, 20), "#3a1606", label, { anchor: "middle", font: F.wide, weight: 400 });
+    if (price) {
+      const isz = price.int.length > 2 ? 120 : 150;
+      const iw = price.int.length * isz * 0.5;
+      const x0 = tx + (tw - (iw + 60 + (price.cents ? 60 : 0))) / 2;
+      s += T(x0, ty + 262, 38, "#3a1606", "R$", { font: F.wide, weight: 400 });
+      s += T(x0 + 62, ty + 262, isz, "#ffffff", price.int, { font: F.cond, weight: 400 });
+      if (price.cents) s += T(x0 + 66 + iw, ty + 262 - isz * 0.5, 50, "#ffffff", price.cents, { font: F.cond, weight: 400 });
+    } else s += T(tx + tw / 2, ty + 220, fit(ctx.spec.badge, "wide", tw - 40, 70, 30), "#3a1606", ctx.spec.badge.toUpperCase(), { anchor: "middle", font: F.wide, weight: 400 });
+    s += "</g>";
+  }
+  s += pillBar(ctx, W, foot - 10, mix(bg, "#000000", 0.45), "#ffffff");
+  if (H > 1350) s += storyCta(W, H, { ...p, accent: ink, accentInk: light });
+  return s;
+}
+
+// ---------- carrossel editorial ----------
+/** Texto com *destaques*: as palavras entre asteriscos saem em serifada itálica colorida. */
+function richLines(text, maxChars) {
+  const tokens = [];
+  String(text || "").split(/(\*[^*]+\*)/).forEach((part) => {
+    const hl = /^\*[^*]+\*$/.test(part);
+    clean(hl ? part.slice(1, -1) : part).split(" ").filter(Boolean).forEach((w) => tokens.push({ w, hl }));
+  });
+  const lines = [[]];
+  let len = 0;
+  for (const t of tokens) {
+    if (len && len + 1 + t.w.length > maxChars) { lines.push([]); len = 0; }
+    lines[lines.length - 1].push(t);
+    len += (len ? 1 : 0) + t.w.length;
+  }
+  return lines.filter((l) => l.length);
+}
+
+function richText(x, y, size, color, hlColor, lines, { anchor = "start", lh = 1.18 } = {}) {
+  return lines.map((line, i) => {
+    const spans = line.map((t, k) => {
+      const sp = k < line.length - 1 ? " " : "";
+      return t.hl
+        ? `<tspan font-family="${F.serif}" font-style="italic" font-weight="400" font-size="${Math.round(size * 1.18)}" fill="${hlColor}">${esc(t.w + sp)}</tspan>`
+        : `<tspan>${esc(t.w + sp)}</tspan>`;
+    }).join("");
+    return `<text x="${x}" y="${y + i * size * lh}" font-family="${F.body}" font-weight="600" font-size="${size}" fill="${color}" text-anchor="${anchor}" xml:space="preserve">${spans}</text>`;
+  }).join("");
+}
+
+function header(ctx, W, color) {
+  const insta = ctx.brand.instagram ? "@" + clean(ctx.brand.instagram).replace(/^@/, "") : "";
+  const parts = [insta, ctx.name].filter(Boolean);
+  return `<text x="${W / 2}" y="78" font-family="${F.body}" font-size="28" fill="${color}" text-anchor="middle" xml:space="preserve">` +
+    parts.map((p, i) => `<tspan font-weight="600" opacity="${i === 0 && parts.length > 1 ? 0.75 : 1}">${esc(p)}</tspan>`).join(`<tspan opacity=".6">  |  </tspan>`) + "</text>" +
+    `<rect x="60" y="62" width="34" height="4" rx="2" fill="${color}" opacity=".7"/>`;
+}
+
+function ruler(W, H, color) {
+  let s = `<g opacity=".25" stroke="${color}" stroke-width="2">`;
+  for (let y = 170; y < H - 90; y += 22) {
+    const big = (y - 170) % 110 === 0;
+    s += `<line x1="38" y1="${y}" x2="${big ? 62 : 50}" y2="${y}"/><line x1="${W - 38}" y1="${y}" x2="${W - (big ? 62 : 50)}" y2="${y}"/>`;
+  }
+  return s + "</g>";
+}
+
+/**
+ * Carrossel editorial (estilo das agências): capa com gancho, slides de frase com destaque e CTA final.
+ * spec: { cover_title, cover_script, slides: [{heading, body}], cta }
+ */
+export function renderCarousel({ client, spec, photo = null, cutout = null, alt = false }) {
+  const W = 1080, H = 1350;
+  const brand = client.brand || {};
+  let n = 0;
+  const salt = crypto.randomBytes(3).toString("hex");
+  const pal = paletteFor(brand);
+  const ctx = { brand, name: clean(brand.business_name || client.business || ""), pal, spec: {}, photo, cutout, id: () => `k${salt}${++n}` };
+  const svg = (body, bg) => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="${bg}"/>${body}</svg>`;
+  const total = (spec.slides || []).length + 1 + (spec.cta ? 1 : 0);
+  const out = [];
+  const coverBg = alt ? pal.soft : pal.bg;
+  const dark = pick(coverBg, pal.ink, "#1d1206", "#111111");
+  const light = pick(coverBg, "#ffffff", pal.light);
+  // cor do destaque: a mais próxima da marca que ainda tenha contraste com o fundo do slide
+  const hlOn = (bg) => [pal.bg, mix(pal.bg, "#000000", 0.3), mix(pal.bg, "#000000", 0.5), pal.title, "#ffffff", "#111111"].find((c) => contrast(c, bg) >= 3) || pick(bg, "#ffffff", "#111111");
+  const hot = hlOn("#f7f5f0");
+
+  // capa
+  {
+    const words = clean(spec.cover_title).toUpperCase().split(" ");
+    const half = Math.ceil(words.length / 2);
+    const [l1, l2] = words.length > 1 ? [words.slice(0, half).join(" "), words.slice(half).join(" ")] : [words[0], ""];
+    const s1 = fit(l1, "cond", 900, 300, 120), s2 = l2 ? fit(l2, "cond", 900, 300, 120) : 0;
+    let b = ruler(W, H, dark) + header(ctx, W, dark);
+    const y1 = 190 + s1 * 0.78;
+    b += T(W / 2, y1, s1, light, l1, { anchor: "middle", font: F.cond, weight: 400 });
+    const y2 = y1 + s2 * 0.96;
+    if (l2) b += T(W / 2, y2, s2, dark, l2, { anchor: "middle", font: F.cond, weight: 400 });
+    const yEnd = l2 ? y2 : y1;
+    if (photo || cutout) b += product(ctx, 140, yEnd + 30, W - 280, H - yEnd - 60, { align: "bottom", frameRotate: -2 }).svg;
+    const sc = clean(spec.cover_script).toLowerCase();
+    if (sc) b += T(W / 2 - 80, yEnd + 70, fit(sc, "script", 700, 130, 70), light, sc, { anchor: "middle", font: F.script, weight: 400, rotate: -5 });
+    b += `<rect x="${W - 330}" y="${H - 96}" width="270" height="52" rx="26" fill="${dark}"/>` + T(W - 195, H - 61, 22, light, "ARRASTA PRO LADO →", { anchor: "middle", font: F.body, weight: 600, ls: 2 });
+    out.push(svg(b, coverBg));
+  }
+  // slides de conteúdo
+  (spec.slides || []).forEach((sl, i) => {
+    const bg = i % 2 ? pal.soft : "#f7f5f0";
+    const ink = "#1c1712";
+    const lines = richLines(sl.body, 20);
+    const size = lines.length > 6 ? 56 : 68;
+    const blockH = lines.length * size * 1.18 + (sl.heading ? 90 : 0);
+    let y = H / 2 - blockH / 2 + size;
+    let b = ruler(W, H, ink) + header(ctx, W, ink);
+    if (sl.heading) { b += T(110, y - size - 30, 26, hlOn(bg), clean(sl.heading).toUpperCase(), { font: F.body, weight: 600, ls: 5 }); }
+    b += richText(110, y, size, ink, hlOn(bg), lines);
+    b += T(110, H - 70, 30, ink, `${String(i + 2).padStart(2, "0")}/${String(total).padStart(2, "0")}`, { font: F.wide, weight: 400, opacity: 0.6 });
+    out.push(svg(b, bg));
+  });
+  // chamada final
+  if (spec.cta) {
+    const bg = "#14110e";
+    const lines = richLines(spec.cta, 18);
+    const size = 76;
+    let b = ruler(W, H, "#ffffff") + header(ctx, W, "#ffffff");
+    const hotDark = hlOn(bg);
+    b += richText(W / 2, H / 2 - (lines.length * size * 1.18) / 2 + size, size, "#ffffff", hotDark, lines, { anchor: "middle" });
+    b += `<path d="M${W / 2 - 30} ${H - 260} h60 m-22 -22 l22 22 l-22 22" stroke="${hotDark}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+    b += T(W / 2, H - 70, 30, "#ffffff", `${total}/${total}`, { anchor: "middle", font: F.wide, weight: 400, opacity: 0.6 });
+    out.push(svg(b, bg));
+  }
+  return out;
+}
+
+const BUILDERS = { eco, script, oferta, cinema, fogo, splash, arco, enquete, frase, combo, destaque };
 
 /**
  * Monta a arte.
@@ -605,14 +820,14 @@ export function templatesFor(style, { hasCutout, hasPhoto, postType = "produto" 
   if (postType === "enquete") return ["enquete"];
   if (postType === "frase") return ["frase"];
   const byStyle = {
-    promo: ["splash", "oferta", "eco", "arco", "script", "fogo", "cinema"],
-    premium: ["cinema", "fogo", "arco", "eco", "script", "oferta", "splash"],
-    divertido: ["script", "splash", "eco", "arco", "oferta", "fogo", "cinema"],
-    auto: ["eco", "splash", "oferta", "arco", "script", "fogo", "cinema"],
+    promo: ["splash", "combo", "destaque", "oferta", "eco", "arco", "script", "fogo", "cinema"],
+    premium: ["cinema", "fogo", "arco", "destaque", "eco", "script", "combo", "oferta", "splash"],
+    divertido: ["script", "splash", "combo", "eco", "arco", "destaque", "oferta", "fogo", "cinema"],
+    auto: ["eco", "splash", "destaque", "combo", "oferta", "arco", "script", "fogo", "cinema"],
   };
   let list = byStyle[style] || byStyle.auto;
   // sem recorte, só a foto inteira fica boa; os modelos de produto "solto" ficam por último
-  if (!hasCutout && hasPhoto) list = ["cinema", "oferta", "eco", ...list.filter((t) => !["cinema", "oferta", "eco", "fogo", "arco"].includes(t))];
+  if (!hasCutout && hasPhoto) list = ["cinema", "oferta", "eco", ...list.filter((t) => !["cinema", "oferta", "eco", "fogo", "arco", "combo", "destaque"].includes(t))];
   if (!hasCutout && !hasPhoto) list = list.filter((t) => t !== "cinema");
   return list;
 }

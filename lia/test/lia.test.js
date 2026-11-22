@@ -148,9 +148,9 @@ test("sem créditos: o modelo recebe o erro e oferece o pacote", async () => {
 });
 
 test("carrossel gera capa + slides", async () => {
-  reset([toolUse("create_carousel", { cover_title: "Como nasce o smash", slides: [{ heading: "Blend", body: "160g moído na hora" }, { heading: "Chapa", body: "250 graus" }], caption: "#smash" })]);
+  reset([toolUse("create_carousel", { cover_title: "Como nasce o smash", cover_script: "", cta: "Comenta *SMASH*", slides: [{ heading: "Blend", body: "160g moído na hora" }, { heading: "Chapa", body: "250 graus" }], caption: "#smash" })]);
   await send({ from: PHONE, type: "text", text: "faz um carrossel" });
-  assert.deepEqual(out().map((m) => m.type), ["image", "image", "image", "buttons"]);
+  assert.deepEqual(out().map((m) => m.type), ["image", "image", "image", "image", "buttons"]);
   const approve = out().at(-1).buttons[0];
   sim.reset();
   await send({ from: PHONE, type: "button", buttonId: approve.id, text: "Aprovar" });

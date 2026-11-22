@@ -38,6 +38,7 @@ São livres e você responde direto no texto: legendas, ideias de conteúdo, rot
 - post_type: "produto" (padrão, arte de venda), "enquete" (pergunta com opções para gerar comentários; title = chamada curta como "Sextou!" ou "Hora da enquete!", subtitle = a pergunta, options = 2 a 4 respostas curtas) ou "frase" (frase de efeito da marca sem foto; title = a frase sem a última palavra, subtitle = a palavra final que fica em destaque, ex.: "Uns matam a fome. Os nossos criam" + "memória").
 - details: descrição curta do produto em uma frase ("carne suculenta, queijo cremoso e bacon crocante"), vazio se não houver.
 - kicker: chamada pequena no topo ("promoção relâmpago de hoje", "corre que é só hoje"), vazio para usar o padrão.
+- Carrossel bom conta uma história: capa com gancho que gera curiosidade, um slide por ideia com uma palavra destacada entre *asteriscos*, e no fim uma chamada para comentar uma palavra (que vira conversa no direct).
 - Sugira enquetes e frases de vez em quando: geram comentários e mantêm o perfil vivo entre as promoções.
 - Para os modelos com título gigante, prefira um title de 1 ou 2 palavras fortes ("Exagero", "Nostalgia", "Smash duplo"). No subtitle, uma expressão curta que combina com letra manuscrita ("pura", "do século", "de verdade") ou o prazo.
 
@@ -97,25 +98,27 @@ export const TOOLS = [
   },
   {
     name: "create_carousel",
-    description: "Cria um carrossel (capa + 2 a 6 slides de texto) com a identidade da marca e envia com botões de aprovação.",
+    description: "Cria um carrossel editorial (capa com gancho + 2 a 6 slides de frase + chamada final) com a identidade da marca e envia com botões de aprovação.",
     strict: true,
     input_schema: {
       type: "object",
       properties: {
-        cover_title: str("Título da capa, até 40 caracteres."),
+        cover_title: str("Gancho da capa, curto e forte, até 30 caracteres (ex.: \"Nunca peça delivery\")."),
+        cover_script: str("Complemento manuscrito da capa, até 20 caracteres (ex.: \"sem ler isso\"). Vazio se não houver."),
+        cta: str("Chamada do último slide, com a palavra para comentar entre *asteriscos* (ex.: \"Comenta *EU QUERO* que a gente te manda o cardápio no direct\")."),
         slides: {
           type: "array",
           description: "De 2 a 6 slides depois da capa.",
           items: {
             type: "object",
-            properties: { heading: str("Título do slide, até 30 caracteres."), body: str("Texto do slide, até 160 caracteres.") },
+            properties: { heading: str("Rótulo pequeno do slide, até 20 caracteres, ou vazio."), body: str("Frase do slide, até 140 caracteres. Coloque 1 palavra de impacto entre *asteriscos* para ela sair em destaque.") },
             required: ["heading", "body"],
             additionalProperties: false,
           },
         },
         caption: str("Legenda completa para o Instagram, com CTA e 3 a 5 hashtags."),
       },
-      required: ["cover_title", "slides", "caption"],
+      required: ["cover_title", "cover_script", "slides", "cta", "caption"],
       additionalProperties: false,
     },
   },
@@ -139,9 +142,10 @@ export const TOOLS = [
         instagram: str("@ do Instagram."),
         whatsapp: str("WhatsApp de pedidos, como aparece para o cliente final (ex.: 81 99999-0000)."),
         delivery: str("Apps de entrega onde está, ex.: iFood, 99Food."),
+        tagline: str("Slogan curto da marca, até 30 caracteres (ex.: \"Melhor hambúrguer da cidade\"). Vazio se não houver."),
         avoid: str("O que evitar na comunicação."),
       },
-      required: ["business_name", "segment", "audience", "differentials", "tone", "colors", "palette", "products", "location", "hours", "instagram", "whatsapp", "delivery", "avoid"],
+      required: ["business_name", "segment", "audience", "differentials", "tone", "colors", "palette", "products", "location", "hours", "instagram", "whatsapp", "delivery", "tagline", "avoid"],
       additionalProperties: false,
     },
   },

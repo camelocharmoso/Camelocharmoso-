@@ -7,7 +7,8 @@ import os from "node:os";
 import path from "node:path";
 
 process.env.DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), "lia-tpl-"));
-const { renderTemplate, templatesFor, parsePrice, paletteFor, TEMPLATES, PALETTES } = await import("../src/templates.js");
+const templates = await import("../src/templates.js");
+const { renderTemplate, templatesFor, parsePrice, paletteFor, TEMPLATES, PALETTES } = templates;
 const { renderPng, imageSize, contrast } = await import("../src/art.js");
 const { config } = await import("../src/config.js");
 const { removeBackground } = await import("../src/cutout.js");
@@ -81,4 +82,12 @@ test("enquete e frase usam o modelo próprio", () => {
   assert.deepEqual(templatesFor("auto", { hasCutout: false, hasPhoto: false, postType: "frase" }), ["frase"]);
   const svg = renderTemplate({ client, spec: { title: "Hora da enquete!", subtitle: "App ou balcão?", options: ["App", "Balcão", "<b>x</b>"] }, template: "enquete" });
   assert.ok(svg.includes(">A<") && svg.includes(">C<") && !svg.includes("<b>x"));
+});
+
+test("carrossel editorial: capa, slides com destaque e chamada final", () => {
+  const { renderCarousel } = templates;
+  const svgs = renderCarousel({ client, spec: { cover_title: "Nunca peça delivery", cover_script: "sem ler isso", slides: [{ heading: "Verdade", body: "Não vou te *iludir* <script>" }, { heading: "", body: "Muda *tudo*" }], cta: "Comenta *EU QUERO*" }, cutout: asset });
+  assert.equal(svgs.length, 4);
+  assert.ok(svgs[1].includes("font-style=\"italic\"") && !svgs[1].includes("<script>"));
+  for (const s of svgs) assert.deepEqual(imageSize(renderPng(s)), { w: 1080, h: 1350 });
 });
