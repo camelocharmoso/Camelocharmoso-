@@ -32,11 +32,54 @@ before(() => {
 
 const reset = (s) => { sim.reset(); calls.length = 0; script = s; };
 
-test("número desconhecido recebe apresentação e o operador é avisado", async () => {
+const LEAD = "5511000000000";
+const lead = () => sim.read(LEAD);
+const sendLead = (m) => handler.handle({ id: String(++n), channel: "sim", from: LEAD, ...m });
+
+test("venda: número desconhecido conversa com a vendedora e o operador é avisado", async () => {
+  reset([
+    (p) => { assert.match(p.system[0].text, /AINDA NÃO é cliente/); assert.ok(p.tools.some((t) => t.name === "present_plans")); return toolUse("save_lead", { name: "Ana", business_name: "Ana Burguer", segment: "hamburgueria", city: "Recife", instagram: "", pain: "não tenho tempo de postar", current: "sozinha", colors: [] }); },
+    text("Que legal, Ana! Me manda uma foto de um lanche que eu faço uma amostra grátis?"),
+  ]);
+  await sendLead({ type: "text", text: "oi, vi o anúncio" });
+  assert.match(lead().at(-1).text, /amostra grátis/);
+  assert.equal(store.getLead(LEAD).data.business_name, "Ana Burguer");
+  assert.match(admin()[0].text, /Nova conversa de venda/);
+});
+
+test("venda: amostra só depois da foto e só uma vez", async () => {
+  reset([toolUse("send_sample", { title: "X", badge: "", subtitle: "", style: "auto" }), (p) => { assert.match(p.messages.at(-1).content[0].content, /ainda não mandou foto/); return text("Me manda a foto 📸"); }]);
+  await sendLead({ type: "text", text: "faz a amostra" });
+  const png = (await import("../src/art.js")).renderPng('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="30"><rect width="40" height="30" fill="#c00"/></svg>');
+  reset([toolUse("send_sample", { title: "Smash da Ana", badge: "R$ 25", subtitle: "", style: "promo" })]);
+  await sendLead({ type: "image", mediaId: sim.storeMedia(png, "image/png"), text: "smash 25 reais" });
+  assert.deepEqual(lead().map((m) => m.type), ["image", "buttons"]);
+  assert.equal(lead()[1].buttons[0].id, "lead:plans");
+  reset([toolUse("send_sample", { title: "Outra", badge: "", subtitle: "", style: "auto" }), (p) => { assert.match(p.messages.at(-1).content[0].content, /já foi enviada/); return text("ok"); }]);
+  await sendLead({ type: "text", text: "faz outra" });
+});
+
+test("venda: planos com valor calculado e fechamento avisa o operador", async () => {
   reset([]);
-  await send({ from: "5511000000000", type: "text", text: "oi" });
-  assert.match(sim.read("5511000000000")[0].text, /só clientes/);
-  assert.match(admin()[0].text, /\/add 5511000000000/);
+  await sendLead({ type: "button", buttonId: "lead:plans", text: "Ver os planos" });
+  const [pitch, btns] = lead();
+  assert.match(pitch.text, /Pro · R\$ 397\/mês\* · 60 créditos/);
+  assert.match(pitch.text, /até 30 artes de feed \(R\$ 13,23 cada\)/);
+  assert.match(pitch.text, /passa pro mês seguinte/);
+  assert.equal(btns.buttons.length, 3);
+  sim.reset();
+  await sendLead({ type: "button", buttonId: "lead:plan:pro", text: "Pro" });
+  assert.match(lead()[0].text, /Fechado: \*Pro\*/);
+  assert.match(admin().at(-1).text, /\/add 5511000000000 pro Ana Burguer/);
+  assert.equal(store.getLead(LEAD).stage, "fechando");
+});
+
+test("venda: /add aproveita os dados do lead e dá boas-vindas", async () => {
+  reset([]);
+  await send({ from: "admin", type: "text", text: `/add ${LEAD} pro Ana Burguer` });
+  assert.equal(store.getClient(LEAD).brand.segment, "hamburgueria");
+  assert.match(lead()[0].text, /Pagamento confirmado/);
+  assert.equal(store.getLead(LEAD).stage, "cliente");
 });
 
 test("operador cadastra cliente pelo comando /add", async () => {

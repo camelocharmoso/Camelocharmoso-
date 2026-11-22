@@ -3,6 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { config } from "./config.js";
 import { planOf } from "./plans.js";
 import { PALETTES } from "./templates.js";
+import { salesPrompt, SALES_TOOLS, SALES_FINAL_TOOLS } from "./sales.js";
 
 const MAX_STEPS = 6;
 const FINAL_TOOLS = new Set(["create_art", "create_carousel", "buy_credits"]);
@@ -54,7 +55,8 @@ São livres e você responde direto no texto: legendas, ideias de conteúdo, rot
 
 # Créditos e plano
 - Se uma ferramenta disser que faltam créditos, explique com leveza e chame buy_credits para oferecer o pacote extra.
-- Para saber o saldo, chame check_credits.
+- Para saber o saldo, chame check_credits. O que sobra no mês passa para o mês seguinte (até metade do plano): lembre isso quando o cliente estiver com medo de gastar.
+- Se o cliente comprou pacote extra ou ficou sem créditos antes do fim do mês, sugira com tato o plano maior (call_human registra o pedido de troca).
 - Mudança de plano, cancelamento, cobrança e reclamação: chame call_human.
 
 # O que você não faz
@@ -242,32 +244,22 @@ export function createBrain({ anthropic } = {}) {
     }
   }
 
-  /**
-   * Responde a uma mensagem do cliente.
-   * history: mensagens anteriores (sem a atual). text: mensagem atual. image: { data (base64), mime } opcional.
-   */
-  async function respond({ actions, history, text, image }) {
-    const c = actions.client;
-    const plan = planOf(c.plan);
-    const photo = actions.store.latestPhoto(actions.phone);
-    const note = `[Contexto do sistema: ${nowText()}. Créditos disponíveis: ${c.credits} de ${plan.credits}. Foto de produto recente: ${photo ? `sim (${photo.created_at} UTC)` : "não"}.]`;
-
+  /** Monta a mensagem atual (com foto, se houver) a partir do histórico. */
+  function buildMessages(history, text, image, note) {
     const current = [];
     if (image) current.push({ type: "image", source: { type: "base64", media_type: image.mime, data: image.data } });
-    current.push({ type: "text", text: `${text || "(o cliente mandou só a foto)"}\n\n${note}` });
-
+    current.push({ type: "text", text: `${text || "(mandou só a foto)"}\n\n${note}` });
     const messages = buildHistory(history);
     if (messages.length && messages[messages.length - 1].role === "user") {
       const prev = messages.pop();
       current.unshift({ type: "text", text: prev.content });
     }
     messages.push({ role: "user", content: current });
+    return messages;
+  }
 
-    const system = [
-      { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
-      { type: "text", text: clientBlock(c) },
-    ];
-
+  /** Motor: chama o Claude, manda o texto, executa as ferramentas e repete até terminar. */
+  async function loop({ actions, system, tools, messages, run, finals }) {
     for (let step = 0; step < MAX_STEPS; step++) {
       const response = await api().beta.messages.create({
         model: config.model,
@@ -276,43 +268,61 @@ export function createBrain({ anthropic } = {}) {
         fallbacks: "default",
         output_config: { effort: config.effort },
         system,
-        tools: TOOLS,
+        tools,
         messages,
       });
-
       if (response.stop_reason === "refusal") {
         await actions.say("Isso eu não consigo fazer por aqui. Quer que eu chame alguém da equipe?");
         return;
       }
-
-      // Texto que vem antes das ferramentas vai na ordem em que foi escrito.
       for (const block of response.content) {
         if (block.type === "text" && block.text.trim()) await actions.say(block.text);
       }
-
       const toolUses = response.content.filter((b) => b.type === "tool_use");
       if (response.stop_reason !== "tool_use" || !toolUses.length) return;
-
       messages.push({ role: "assistant", content: response.content });
       const results = [];
       let allFinal = true;
       for (const tu of toolUses) {
         let result;
         try {
-          result = await runTool(actions, tu.name, tu.input || {});
+          result = await run(tu.name, tu.input || {});
         } catch (e) {
           console.error(`[lia] ferramenta ${tu.name} falhou:`, e.message);
-          // Detalhes técnicos ficam no log; o modelo (e o cliente) só sabem que falhou.
           result = { ok: false, message: "Falha técnica ao executar. Peça desculpas e ofereça chamar a equipe." };
         }
         results.push({ type: "tool_result", tool_use_id: tu.id, content: result.message, ...(result.ok ? {} : { is_error: true }) });
-        if (!(result.ok && FINAL_TOOLS.has(tu.name))) allFinal = false;
+        if (!(result.ok && finals.has(tu.name))) allFinal = false;
       }
-      // Arte ou oferta enviada com botões: a vez agora é do cliente, não precisa chamar o modelo de novo.
+      // Arte ou oferta enviada com botões: a vez agora é da pessoa, não precisa chamar o modelo de novo.
       if (allFinal) return;
       messages.push({ role: "user", content: results });
     }
   }
 
-  return { respond };
+  /** Atendimento de cliente. history: mensagens anteriores (sem a atual). */
+  async function respond({ actions, history, text, image }) {
+    const c = actions.client;
+    const plan = planOf(c.plan);
+    const photo = actions.store.latestPhoto(actions.phone);
+    const carried = c.state?.carried ? ` (${c.state.carried} vieram do mês passado)` : "";
+    const note = `[Contexto do sistema: ${nowText()}. Créditos disponíveis: ${c.credits} de ${plan.credits}${carried}. Foto de produto recente: ${photo ? `sim (${photo.created_at} UTC)` : "não"}.]`;
+    const system = [
+      { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
+      { type: "text", text: clientBlock(c) },
+    ];
+    await loop({ actions, system, tools: TOOLS, messages: buildMessages(history, text, image, note), run: (n, i) => runTool(actions, n, i), finals: FINAL_TOOLS });
+  }
+
+  /** Venda para quem ainda não é cliente. */
+  async function sell({ sales, history, text, image }) {
+    const system = [
+      { type: "text", text: salesPrompt(), cache_control: { type: "ephemeral" } },
+      { type: "text", text: sales.context() },
+    ];
+    const note = `[Contexto do sistema: ${nowText()}.]`;
+    await loop({ actions: sales.a, system, tools: SALES_TOOLS, messages: buildMessages(history, text, image, note), run: (n, i) => sales.run(n, i), finals: SALES_FINAL_TOOLS });
+  }
+
+  return { respond, sell };
 }

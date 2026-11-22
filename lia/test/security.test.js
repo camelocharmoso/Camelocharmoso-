@@ -33,15 +33,35 @@ test("safeEqual e RateLimiter", () => {
 const PHONE = "5581988887777";
 const store = openDb(path.join(process.env.DATA_DIR, "s.db"));
 let modelCalls = 0;
-const brain = { respond: async () => { modelCalls++; } };
+let sellCalls = 0;
+const brain = { respond: async () => { modelCalls++; }, sell: async () => { sellCalls++; } };
 const handler = createHandler({ store, brain, channels: { sim, whatsapp: sim }, adminChannel: sim });
 let n = 0;
 const send = (m) => handler.handle({ id: "s" + ++n, channel: "sim", from: PHONE, ...m });
 
-test("número desconhecido: no máximo uma resposta por dia", async () => {
+test("venda: spam de número desconhecido para no limite diário", async () => {
+  sim.reset(); sellCalls = 0;
+  for (let i = 0; i < 35; i++) await send({ from: "5511777777777", type: "text", text: "spam " + i });
+  assert.equal(sellCalls, 30);
+  assert.equal(sim.read("5511777777777").filter((m) => /conversa rendeu/.test(m.text)).length, 1);
+});
+
+test("venda desligada: resposta única por dia", async () => {
+  const { config } = await import("../src/config.js");
+  config.sales = false;
   sim.reset();
-  for (let i = 0; i < 5; i++) await send({ from: "5511777777777", type: "text", text: "spam" });
-  assert.equal(sim.read("5511777777777").length, 1);
+  for (let i = 0; i < 5; i++) await send({ from: "5511666666666", type: "text", text: "oi" });
+  assert.equal(sim.read("5511666666666").length, 1);
+  config.sales = true;
+});
+
+test("créditos: sobra passa para o mês seguinte, até metade do plano", () => {
+  const p2 = "5581911112222";
+  store.addClient(p2, "Rollover", "pro");
+  store.db.prepare("UPDATE clients SET credits = 45, period = '2000-01' WHERE phone = ?").run(p2);
+  assert.equal(store.ensurePeriod(p2).credits, 60 + 30);
+  store.db.prepare("UPDATE clients SET credits = 7, period = '2000-01' WHERE phone = ?").run(p2);
+  assert.equal(store.ensurePeriod(p2).credits, 67);
 });
 
 test("spam de cliente: para de chamar a IA e avisa uma vez", async () => {

@@ -6,6 +6,7 @@ import { PLANS, planOf } from "./plans.js";
 import { transcribe, transcribeEnabled } from "./transcribe.js";
 import { RateLimiter, sniffImage } from "./security.js";
 import { cutoutEnabled, removeBackground } from "./cutout.js";
+import { Sales } from "./sales.js";
 
 const digits = (s) => String(s || "").replace(/\D/g, "");
 const MIN = 60_000;
@@ -38,15 +39,7 @@ export function createHandler({ store, brain, channels, adminChannel, limiter = 
   async function process(msg, channel) {
     const phone = msg.from;
     const client = store.getClient(phone);
-    if (!client) {
-      // Responde e avisa no máximo uma vez por dia por número, para spam não custar nada.
-      if (store.shouldNotifyStranger(phone)) {
-        await channel.sendText(phone, `Oi! Eu sou a Lia, a equipe de marketing com IA 👋 Este número atende só clientes. ${config.salesContact}`);
-        const a = new Actions({ store, channel, adminChannel, phone });
-        await a.notifyAdmin(`👀 Número novo falou com a Lia: ${phone}\nMensagem: ${(msg.text || `[${msg.type}]`).slice(0, 300)}\n\nPara cadastrar: /add ${phone} pro Nome do Negócio`);
-      }
-      return;
-    }
+    if (!client) return sell(msg, channel);
     if (!client.active) {
       await channel.sendText(phone, "Seu plano está pausado no momento. Fala com a equipe pra reativar 🙏");
       return;
@@ -137,6 +130,58 @@ export function createHandler({ store, brain, channels, adminChannel, limiter = 
     }
   }
 
+  /** Quem ainda não é cliente: a Lia vendedora. */
+  async function sell(msg, channel) {
+    const phone = msg.from;
+    const actions = new Actions({ store, channel, adminChannel, phone, limiter });
+    if (!config.sales) {
+      if (store.shouldNotifyStranger(phone)) await channel.sendText(phone, `Oi! Eu sou a Lia, a equipe de marketing com IA 👋 Este número atende só clientes. ${config.salesContact}`);
+      return;
+    }
+    // Limites: por número e no total do dia (spam não pode virar conta alta de IA).
+    const mine = limiter.hit(`lead:${phone}`, 24 * 60 * MIN);
+    const total = limiter.hit("lead:total", 24 * 60 * MIN);
+    if (mine > L.leadTurnsPerDay || total > L.leadTurnsTotalPerDay) {
+      if (mine === L.leadTurnsPerDay + 1 || total === L.leadTurnsTotalPerDay + 1) {
+        await actions.say("Hoje a conversa rendeu! 😄 Amanhã eu continuo com você. Se quiser falar com alguém da equipe agora, é só pedir.");
+        await actions.notifyAdmin(`⚠️ Limite de conversas de venda atingido (${mine > L.leadTurnsPerDay ? `número ${phone}` : "total do dia"}).`);
+      }
+      return;
+    }
+    const isNew = !store.getLead(phone);
+    const sales = new Sales({ actions });
+    channel.markRead?.(msg.id);
+    try {
+      if (isNew) await actions.notifyAdmin(`👀 Nova conversa de venda: ${phone}\nPrimeira mensagem: ${(msg.text || `[${msg.type}]`).slice(0, 200)}`);
+      if (msg.type === "button") {
+        store.addMessage(phone, "user", `[botão] ${msg.text || msg.buttonId}`);
+        if (String(msg.buttonId).startsWith("lead:")) return await sales.button(msg.buttonId);
+        return await actions.say("Me conta o que você precisa 🙂");
+      }
+      let text = (msg.text || "").trim().slice(0, L.maxTextChars);
+      let image = null;
+      if (msg.type === "image") {
+        const media = await channel.downloadMedia(msg.mediaId);
+        const mime = sniffImage(media.buffer);
+        if (!mime || media.buffer.length > L.maxImageBytes) return await actions.say("Não consegui abrir essa imagem 😕 Manda como foto (JPG ou PNG)?");
+        store.addPhoto(phone, saveMedia(media.buffer, { "image/png": "png", "image/webp": "webp" }[mime] || "jpg"), mime);
+        image = { data: media.buffer.toString("base64"), mime };
+      } else if (msg.type === "audio") {
+        if (!transcribeEnabled()) return await actions.say("Ainda não consigo ouvir áudio por aqui 🙈 Me manda por escrito?");
+        const media = await channel.downloadMedia(msg.mediaId);
+        text = (await transcribe(media.buffer, media.mime)).slice(0, L.maxTextChars);
+      } else if (msg.type !== "text") {
+        return await actions.say("Me manda por texto, foto ou áudio que eu te respondo 🙂");
+      }
+      const history = store.recentMessages(phone);
+      store.addMessage(phone, "user", image ? `[foto] ${text}` : text);
+      await brain.sell({ sales, history, text, image });
+    } catch (e) {
+      console.error(`[lia] erro na venda com ${phone}:`, e.message);
+      await actions.say("Tive um probleminha aqui 😓 Pode mandar de novo em 1 minutinho?").catch(() => {});
+    }
+  }
+
   async function button(actions, msg) {
     store.addMessage(actions.phone, "user", `[botão] ${msg.text || msg.buttonId}`);
     const [kind, a, b] = String(msg.buttonId || "").split(":");
@@ -160,6 +205,14 @@ export function createHandler({ store, brain, channels, adminChannel, limiter = 
         const name = args.slice(2).join(" ");
         if (!tel || !PLANS[plan] || !name) return reply("Uso: /add 5581999998888 pro Nome do Negócio\nPlanos: start, pro, premium");
         const c = store.addClient(tel, name, plan);
+        const lead = store.getLead(tel);
+        if (lead) {
+          const d = lead.data;
+          store.updateBrand(tel, { business_name: d.business_name, segment: d.segment, location: d.city, instagram: d.instagram, colors: d.colors });
+          store.updateLead(tel, {}, "cliente");
+          const a = new Actions({ store, channel: channels[msg.channel === "sim" ? "sim" : "whatsapp"], adminChannel, phone: tel, limiter });
+          await a.say(`Pagamento confirmado! 🎉 Bem-vindo(a) ao plano ${planOf(plan).name}, você já tem ${c.credits} créditos.\n\nAgora vou montar o *Cérebro da sua marca*: são umas perguntas rápidas, uma por vez. Bora? Me responde com um "bora" 🙂`).catch((e) => console.error("[lia] boas-vindas falhou:", e.message));
+        }
         return reply(`✅ ${c.business} cadastrado no plano ${planOf(plan).name} com ${c.credits} créditos. Peça para o cliente mandar um "oi" para a Lia: ela começa o onboarding sozinha.`);
       }
       case "/plano": {
@@ -181,6 +234,11 @@ export function createHandler({ store, brain, channels, adminChannel, limiter = 
         if (!need()) return;
         store.setActive(tel, cmd.toLowerCase() === "/ativar");
         return reply(`✅ Cliente ${cmd.toLowerCase() === "/ativar" ? "ativado" : "pausado"}.`);
+      }
+      case "/leads": {
+        const list = store.listLeads(20);
+        if (!list.length) return reply("Nenhuma conversa de venda ainda.");
+        return reply(list.map((l) => `${l.stage === "fechando" ? "🤑" : l.stage === "cliente" ? "✅" : "💬"} ${l.data.business_name || "?"} · ${l.phone} · ${l.stage}${l.data.plan ? " · " + l.data.plan : ""}`).join("\n"));
       }
       case "/clientes": {
         const list = store.listClients();
@@ -212,7 +270,7 @@ export function createHandler({ store, brain, channels, adminChannel, limiter = 
         return reply([
           "Comandos da Lia:",
           "/add 5581999998888 pro Nome do Negócio",
-          "/clientes",
+          "/clientes · /leads (conversas de venda)",
           "/fila",
           "/feito p12 · /feito t3",
           "/creditos 5581999998888 +10",

@@ -2,6 +2,19 @@
 
 O cliente conversa com a Lia pelo WhatsApp e pede artes, stories, carrosséis, legendas, ideias e roteiros. A Lia cria as artes com a identidade da marca, manda as opções com botões, debita os créditos quando o cliente aprova e avisa você quando tem post para publicar ou tarefa para fazer.
 
+## A Lia também vende
+
+Quem ainda não é cliente e manda mensagem para o número da Lia cai na **Lia vendedora**:
+1. Ela se apresenta, pergunta do negócio e descobre a dor (tempo, custo, perfil parado).
+2. Pede uma foto de um produto e manda **uma arte de amostra grátis** com o nome do negócio.
+3. Conecta a dor aos créditos com números calculados (ex.: Pro = até 30 artes de feed, R$ 13,23 cada) e recomenda um plano.
+4. A pessoa escolhe no botão, recebe o link de pagamento (`PAY_LINK_*`) e você recebe o aviso com o comando `/add` pronto.
+5. Ao rodar `/add`, os dados da conversa viram o começo do Cérebro da Marca e ela já recebe as boas-vindas.
+
+`/leads` mostra as conversas de venda e em que etapa cada uma está.
+
+**Por que os créditos valem a pena** (argumentos que a Lia usa): só gasta quando aprova, refazer é grátis, legendas/ideias/roteiros são ilimitados, **o que sobra passa para o mês seguinte (até metade do plano)** e não tem fidelidade.
+
 ## O que já funciona
 
 | Parte | Como funciona |

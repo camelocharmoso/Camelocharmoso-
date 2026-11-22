@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { config } from "./config.js";
-import { planOf } from "./plans.js";
+import { planOf, ROLLOVER } from "./plans.js";
 import { mediaPath } from "./art.js";
 
 const SCHEMA = `
@@ -72,6 +72,14 @@ CREATE TABLE IF NOT EXISTS photos (
 CREATE TABLE IF NOT EXISTS processed (
   msg_id TEXT PRIMARY KEY,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE TABLE IF NOT EXISTS leads (
+  phone TEXT PRIMARY KEY,
+  data TEXT NOT NULL DEFAULT '{}',
+  stage TEXT NOT NULL DEFAULT 'novo',
+  sample_sent INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE TABLE IF NOT EXISTS strangers (
   phone TEXT PRIMARY KEY,
@@ -152,15 +160,17 @@ class Store {
     return s;
   }
 
-  /** Renova os créditos quando o mês vira. Créditos não acumulam. */
+  /** Renova os créditos quando o mês vira. O que sobrou passa para o mês seguinte, até metade do plano. */
   ensurePeriod(phone) {
     const c = this.getClient(phone);
     const now = currentPeriod();
     if (c.period === now) return c;
-    const credits = planOf(c.plan).credits;
+    const plan = planOf(c.plan).credits;
+    const carry = Math.min(Math.max(0, c.credits), Math.floor(plan * ROLLOVER));
+    const credits = plan + carry;
     this.tx(() => {
-      this.db.prepare("UPDATE clients SET credits = ?, period = ? WHERE phone = ?").run(credits, now, phone);
-      this.addLedger(phone, credits - c.credits, `renovação ${now}`);
+      this.db.prepare("UPDATE clients SET credits = ?, period = ?, state = json_set(state, '$.carried', ?) WHERE phone = ?").run(credits, now, carry, phone);
+      this.addLedger(phone, credits - c.credits, `renovação ${now} (${carry} acumulados)`);
     });
     return this.getClient(phone);
   }
@@ -235,6 +245,31 @@ class Store {
   setCutout(id, file) { this.db.prepare("UPDATE photos SET cutout = ? WHERE id = ?").run(file, id); }
   recentPhotos(phone, n = 2) { return this.db.prepare("SELECT * FROM photos WHERE phone = ? ORDER BY id DESC LIMIT ?").all(phone, n); }
   latestPhoto(phone) { return this.db.prepare("SELECT * FROM photos WHERE phone = ? ORDER BY id DESC LIMIT 1").get(phone) || null; }
+
+  // ---------- leads (quem ainda não é cliente) ----------
+  getLead(phone) {
+    const r = this.db.prepare("SELECT * FROM leads WHERE phone = ?").get(phone);
+    return r ? { ...r, data: parse(r.data, {}), sample_sent: !!r.sample_sent } : null;
+  }
+  ensureLead(phone) {
+    this.db.prepare("INSERT INTO leads (phone) VALUES (?) ON CONFLICT(phone) DO NOTHING").run(phone);
+    return this.getLead(phone);
+  }
+  updateLead(phone, patch = {}, stage) {
+    const l = this.ensureLead(phone);
+    const data = { ...l.data };
+    for (const [k, v] of Object.entries(patch)) if (typeof v === "string" ? v.trim() : v != null) data[k] = v;
+    this.db.prepare("UPDATE leads SET data = ?, stage = COALESCE(?, stage), updated_at = datetime('now') WHERE phone = ?").run(JSON.stringify(data), stage || null, phone);
+    return this.getLead(phone);
+  }
+  /** Marca a amostra grátis como enviada. Devolve false se já tinha sido. */
+  claimSample(phone) {
+    this.ensureLead(phone);
+    return this.db.prepare("UPDATE leads SET sample_sent = 1 WHERE phone = ? AND sample_sent = 0").run(phone).changes > 0;
+  }
+  listLeads(limit = 30) {
+    return this.db.prepare("SELECT * FROM leads ORDER BY updated_at DESC LIMIT ?").all(limit).map((r) => ({ ...r, data: parse(r.data, {}) }));
+  }
 
   // ---------- housekeeping ----------
   /** Apaga registros de deduplicação com mais de 7 dias e artes descartadas com mais de 30. */
