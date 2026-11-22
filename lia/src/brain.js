@@ -35,6 +35,10 @@ São livres e você responde direto no texto: legendas, ideias de conteúdo, rot
 - caption: legenda pronta para o Instagram no tom da marca, com chamada para ação e 3 a 5 hashtags.
 - use_photo: true quando o cliente mandou uma foto de produto recente que combina com o pedido.
 - style: "promo" para preço e oferta, "premium" para lançamento ou produto especial (visual escuro, de cinema), "divertido" para datas e campanhas leves, "auto" se não souber.
+- post_type: "produto" (padrão, arte de venda), "enquete" (pergunta com opções para gerar comentários; title = chamada curta como "Sextou!" ou "Hora da enquete!", subtitle = a pergunta, options = 2 a 4 respostas curtas) ou "frase" (frase de efeito da marca sem foto; title = a frase sem a última palavra, subtitle = a palavra final que fica em destaque, ex.: "Uns matam a fome. Os nossos criam" + "memória").
+- details: descrição curta do produto em uma frase ("carne suculenta, queijo cremoso e bacon crocante"), vazio se não houver.
+- kicker: chamada pequena no topo ("promoção relâmpago de hoje", "corre que é só hoje"), vazio para usar o padrão.
+- Sugira enquetes e frases de vez em quando: geram comentários e mantêm o perfil vivo entre as promoções.
 - Para os modelos com título gigante, prefira um title de 1 ou 2 palavras fortes ("Exagero", "Nostalgia", "Smash duplo"). No subtitle, uma expressão curta que combina com letra manuscrita ("pura", "do século", "de verdade") ou o prazo.
 
 # Fotos (o que mais muda o resultado)
@@ -60,7 +64,7 @@ São livres e você responde direto no texto: legendas, ideias de conteúdo, rot
 O bloco "Cliente" abaixo traz o Cérebro da Marca. Use sempre o tom, as cores, os produtos e o que evitar.
 Se o status for "onboarding pendente", você está na primeira conversa com o cliente:
 1. Dê boas-vindas em uma mensagem curta e explique que vai fazer algumas perguntas rápidas para conhecer a marca.
-2. Pergunte uma coisa por vez, nesta ordem: nome do negócio e segmento; público; diferencial; tom de voz; cores da marca (converta para hexadecimal, ex.: "vermelho e amarelo" → #c62828, #f9a825; se o cliente não tiver cores definidas, ofereça as paletas prontas: ${PALETTE_LIST}); principais produtos com preços; bairro e horário; @ do Instagram; o que evitar.
+2. Pergunte uma coisa por vez, nesta ordem: nome do negócio e segmento; público; diferencial; tom de voz; cores da marca (converta para hexadecimal, ex.: "vermelho e amarelo" → #c62828, #f9a825; se o cliente não tiver cores definidas, ofereça as paletas prontas: ${PALETTE_LIST}); principais produtos com preços; bairro e horário; @ do Instagram; WhatsApp de pedidos e apps de entrega (iFood etc.); o que evitar.
 3. Salve cada resposta com save_brand assim que receber (campos que você não sabe vão vazios).
 4. Peça de 3 a 5 fotos boas dos produtos.
 5. Quando tiver pelo menos nome, segmento, produtos e tom, chame finish_onboarding e ofereça uma arte de amostra por nossa conta. Durante o onboarding as artes não gastam créditos.`;
@@ -82,8 +86,12 @@ export const TOOLS = [
         caption: str("Legenda completa para o Instagram, com CTA e 3 a 5 hashtags."),
         use_photo: { type: "boolean", description: "true para usar a foto mais recente que o cliente mandou." },
         style: { type: "string", enum: ["promo", "premium", "divertido", "auto"], description: "Clima da arte: promo (preço/oferta), premium (lançamento, visual escuro), divertido (campanha leve), auto." },
+        post_type: { type: "string", enum: ["produto", "enquete", "frase"], description: "produto (venda), enquete (pergunta com opções) ou frase (frase de efeito sem foto)." },
+        details: str("Descrição curta do produto, até 90 caracteres. Vazio se não houver."),
+        kicker: str("Chamada pequena no topo, até 30 caracteres. Vazio para o padrão."),
+        options: { type: "array", items: { type: "string" }, description: "Só para enquete: 2 a 4 respostas curtas (até 22 caracteres). Vazio nos outros tipos." },
       },
-      required: ["format", "title", "badge", "subtitle", "caption", "use_photo", "style"],
+      required: ["format", "title", "badge", "subtitle", "caption", "use_photo", "style", "post_type", "details", "kicker", "options"],
       additionalProperties: false,
     },
   },
@@ -129,9 +137,11 @@ export const TOOLS = [
         location: str("Bairro, cidade ou endereço."),
         hours: str("Horário de funcionamento."),
         instagram: str("@ do Instagram."),
+        whatsapp: str("WhatsApp de pedidos, como aparece para o cliente final (ex.: 81 99999-0000)."),
+        delivery: str("Apps de entrega onde está, ex.: iFood, 99Food."),
         avoid: str("O que evitar na comunicação."),
       },
-      required: ["business_name", "segment", "audience", "differentials", "tone", "colors", "palette", "products", "location", "hours", "instagram", "avoid"],
+      required: ["business_name", "segment", "audience", "differentials", "tone", "colors", "palette", "products", "location", "hours", "instagram", "whatsapp", "delivery", "avoid"],
       additionalProperties: false,
     },
   },

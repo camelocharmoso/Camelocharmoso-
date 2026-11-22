@@ -9,7 +9,11 @@
 import crypto from "node:crypto";
 import { clean, wrap, contrast } from "./art.js";
 
-export const TEMPLATES = ["eco", "script", "oferta", "cinema", "fogo"];
+//  splash  título arredondado em 2 cores, produto na frente, selo de preço em explosão, xadrez de losangos
+//  arco    título curvo por cima do produto e palavra de destaque embaixo (estilo "Seu novo vício")
+//  enquete post de engajamento com pergunta e opções A, B, C, D
+//  frase   frase de efeito numa caixa ondulada com palavra destacada (não precisa de foto)
+export const TEMPLATES = ["eco", "script", "oferta", "cinema", "fogo", "splash", "arco", "enquete", "frase"];
 
 const F = {
   black: "Inter Display", // 800 e 900
@@ -17,10 +21,11 @@ const F = {
   slab: "Alfa Slab One",
   cond: "Anton",
   script: "Great Vibes",
+  round: "Bagel Fat One",
   body: "Inter",
 };
 // largura média de um caractere, em "em", para estimar quanto o texto ocupa
-const WIDTH = { black: 0.62, blackUpper: 0.7, wide: 0.8, slab: 0.66, cond: 0.46, script: 0.4, body: 0.56 };
+const WIDTH = { round: 0.74, black: 0.62, blackUpper: 0.7, wide: 0.8, slab: 0.66, cond: 0.46, script: 0.4, body: 0.56 };
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const fit = (text, kind, maxW, maxSize, minSize = 40) => Math.max(minSize, Math.min(maxSize, Math.floor(maxW / (Math.max(1, text.length) * WIDTH[kind]))));
@@ -346,7 +351,229 @@ function fogo(ctx, W, H) {
   return s;
 }
 
-const BUILDERS = { eco, script, oferta, cinema, fogo };
+
+// ---------- peças dos modelos novos ----------
+/** Selo em explosão (splat) com "POR APENAS R$21". */
+function starburst(cx, cy, r, fill, ink, badge, seed, label = "POR APENAS") {
+  if (!badge) return "";
+  const rnd = seeded(seed);
+  const n = 14;
+  let d = "";
+  for (let i = 0; i < n * 2; i++) {
+    const a = (Math.PI * i) / n - Math.PI / 2;
+    const rr = i % 2 ? r * (0.55 + rnd() * 0.12) : r * (0.85 + rnd() * 0.55);
+    d += `${i ? "L" : "M"}${(cx + Math.cos(a) * rr).toFixed(1)} ${(cy + Math.sin(a) * rr).toFixed(1)} `;
+  }
+  const price = parsePrice(badge);
+  let s = `<path d="${d}Z" fill="${fill}" stroke="${fill}" stroke-width="14" stroke-linejoin="round"/>`;
+  if (price) {
+    s += T(cx, cy - r * 0.2, Math.round(r * 0.13), ink, label, { anchor: "middle", font: F.body, weight: 600, ls: 1 });
+    const big = Math.round(r * (price.int.length > 2 ? 0.42 : 0.52));
+    s += T(cx - big * 0.55, cy + big * 0.55, Math.round(big * 0.34), ink, "R$", { anchor: "end", font: F.wide, weight: 400 });
+    s += T(cx - big * 0.5, cy + big * 0.55, big, ink, price.int, { font: F.wide, weight: 400, ls: -3 });
+  } else {
+    const t = badge.toUpperCase();
+    s += T(cx, cy + r * 0.12, fit(t, "wide", r * 1.3, r * 0.4, 24), ink, t, { anchor: "middle", font: F.wide, weight: 400 });
+  }
+  return s;
+}
+
+/** Faixa "//// PROMOÇÃO RELÂMPAGO DE HOJE". */
+function kicker(W, y, color, text) {
+  if (!text) return "";
+  const t = clean(text).toUpperCase().slice(0, 40);
+  const tw = t.length * 15;
+  const x0 = W / 2 - (tw + 110) / 2;
+  let s = "";
+  for (let i = 0; i < 4; i++) s += `<path d="M${x0 + i * 22 + 10} ${y + 6} l14 -34 h12 l-14 34 Z" fill="${color}"/>`;
+  return s + T(x0 + 110, y - 4, 24, color, t, { font: F.body, weight: 600, ls: 5 });
+}
+
+/** Bloco de descrição em caixa alta espaçada ("CARNE SUCULENTA, BACON CROCANTE..."). */
+function details(x, y, maxChars, color, text, anchor = "start") {
+  if (!text) return "";
+  return wrap(clean(text).toUpperCase(), maxChars, 4).map((l, i) => T(x, y + i * 34, 25, color, l, { anchor, font: F.body, weight: 600, ls: 3 })).join("");
+}
+
+/** Rodapé de pedido: "PEÇA AGORA! 81 99999-9999 · também no iFood". Só texto, sem logos de terceiros. */
+function orderBar(ctx, W, y, color) {
+  const b = ctx.brand;
+  const bits = [];
+  if (b.whatsapp) bits.push(`PEÇA AGORA! ${clean(b.whatsapp)}`);
+  if (b.delivery) bits.push(`TAMBÉM NO ${clean(b.delivery).toUpperCase()}`);
+  if (!bits.length) return footer(ctx, W, y, color);
+  return T(W / 2, y, 26, color, bits.join("   ·   ").slice(0, 80), { anchor: "middle", font: F.body, weight: 600, ls: 2 });
+}
+
+/** Fundo xadrez de losangos (harlequim) na parte de baixo. */
+function harlequin(id, W, H, y0, a, b) {
+  const s = 220;
+  return `<defs><pattern id="${id}h" width="${s}" height="${s}" patternUnits="userSpaceOnUse" patternTransform="rotate(45 ${W / 2} ${y0})">
+      <rect width="${s}" height="${s}" fill="${a}"/><rect width="${s / 2}" height="${s / 2}" fill="${b}"/><rect x="${s / 2}" y="${s / 2}" width="${s / 2}" height="${s / 2}" fill="${b}"/></pattern></defs>
+    <rect x="0" y="${y0}" width="${W}" height="${H - y0}" fill="url(#${id}h)"/>`;
+}
+
+/** Caixa com bordas onduladas (posts de frase). */
+function wavyBox(x, y, w, h, amp, seed) {
+  const rnd = seeded(seed);
+  const pts = [];
+  const step = 46;
+  const edge = (x1, y1, x2, y2, nx, ny) => {
+    const len = Math.hypot(x2 - x1, y2 - y1), n = Math.max(2, Math.round(len / step));
+    for (let i = 0; i < n; i++) {
+      const t = i / n, k = (i % 2 ? 1 : -1) * amp * (0.6 + rnd() * 0.5);
+      pts.push([x1 + (x2 - x1) * t + nx * k, y1 + (y2 - y1) * t + ny * k]);
+    }
+  };
+  edge(x, y, x + w, y, 0, -1); edge(x + w, y, x + w, y + h, 1, 0); edge(x + w, y + h, x, y + h, 0, 1); edge(x, y + h, x, y, -1, 0);
+  // curva suave passando pelos pontos (Catmull-Rom → Bézier)
+  let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < pts.length; i++) {
+    const p0 = pts[(i - 1 + pts.length) % pts.length], p1 = pts[i], p2 = pts[(i + 1) % pts.length], p3 = pts[(i + 2) % pts.length];
+    d += ` C${(p1[0] + (p2[0] - p0[0]) / 6).toFixed(1)} ${(p1[1] + (p2[1] - p0[1]) / 6).toFixed(1)} ${(p2[0] - (p3[0] - p1[0]) / 6).toFixed(1)} ${(p2[1] - (p3[1] - p1[1]) / 6).toFixed(1)} ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+  }
+  return d + " Z";
+}
+
+// ---------- modelos novos ----------
+function splash(ctx, W, H) {
+  const p = ctx.pal;
+  const { oy, end, foot } = frame(H);
+  const id = ctx.id();
+  const bg = p.bg === PALETTES.noite.bg ? p.accent : p.bg;
+  const dark = pick(bg, p.ink, "#0d0f14");
+  const light = pick(bg, p.light, "#ffffff");
+  let s = `<rect width="${W}" height="${H}" fill="${bg}"/>` + harlequin(id, W, H, oy + 780, bg, dark);
+  s += kicker(W, oy + 120, dark, ctx.spec.kicker || "PROMOÇÃO RELÂMPAGO DE HOJE");
+  const words = clean(ctx.spec.title).toUpperCase().split(" ");
+  const half = Math.ceil(words.length / 2);
+  const [l1, l2] = words.length > 1 ? [words.slice(0, half).join(" "), words.slice(half).join(" ")] : [words[0], ""];
+  const sz1 = fit(l1, "round", 900, 190, 80), sz2 = l2 ? fit(l2, "round", 980, 210, 80) : 0;
+  const y1 = oy + 210 + sz1 * 0.8;
+  s += T(W / 2, y1, sz1, light, l1, { anchor: "middle", font: F.round, weight: 400 });
+  const y2 = y1 + sz2 * 0.92;
+  if (l2) s += T(W / 2, y2, sz2, dark, l2, { anchor: "middle", font: F.round, weight: 400 });
+  const top = (l2 ? y2 : y1) - (l2 ? sz2 : sz1) * 0.32;
+  const prod = product(ctx, 90, top, 900, end - 50 - top);
+  s += prod.svg;
+  s += starburst(Math.min(W - 230, prod.box.x + prod.box.w * 0.78), prod.box.y + prod.box.h * 0.62, 150, dark, light, ctx.spec.badge, ctx.spec.title + "s");
+  const bandY = end - (ctx.spec.details ? 34 : -30);
+  s += `<rect x="0" y="${bandY}" width="${W}" height="${(H > 1350 ? foot + 40 : H) - bandY}" fill="${dark}" opacity=".92"/>`;
+  s += details(W / 2, end + 6, 46, light, ctx.spec.details, "middle");
+  s += orderBar(ctx, W, foot + 10, light);
+  if (H > 1350) s += storyCta(W, H, { ...p, accent: dark, accentInk: light });
+  return s;
+}
+
+function arco(ctx, W, H) {
+  const p = ctx.pal;
+  const { oy, end, foot } = frame(H);
+  const id = ctx.id();
+  const bg = "#0d0f14";
+  const hot = contrast(p.accent, bg) > 3 ? p.accent : contrast(p.bg, bg) > 3 ? p.bg : p.title;
+  let s = `<rect width="${W}" height="${H}" fill="${bg}"/>`;
+  s += kicker(W, oy + 110, "#ffffff", ctx.spec.kicker || "PROMOÇÃO RELÂMPAGO DE HOJE");
+  // título em arco por cima do produto
+  const words = clean(ctx.spec.title).toUpperCase().split(" ");
+  const last = words.length > 1 ? words.pop() : "";
+  const arcText = words.join(" ");
+  const cx = W / 2, cy = oy + 700, r = 380;
+  const arcSize = fit(arcText, "round", 1000, 104, 56);
+  s += `<defs><path id="${id}a" d="M${cx - r} ${cy} A${r} ${r * 0.82} 0 0 1 ${cx + r} ${cy}"/></defs>`;
+  s += `<text font-family="${F.round}" font-size="${arcSize}" fill="#ffffff" letter-spacing="2"><textPath href="#${id}a" startOffset="50%" text-anchor="middle">${esc(arcText)}</textPath></text>`;
+  const prod = product(ctx, 230, oy + 470, 620, 460, { align: "center" });
+  s += prod.svg;
+  if (ctx.spec.badge) s += priceDrop(W - 200, oy + 640, { ...p, accent: hot, accentInk: pick(hot, "#ffffff", "#111111") }, ctx.spec.badge);
+  if (last) {
+    const lz = fit(last, "round", 900, 180, 90);
+    s += T(W / 2, oy + 945 + lz * 0.72, lz, hot, last, { anchor: "middle", font: F.round, weight: 400 });
+  }
+  s += `<path d="M${W / 2} ${end - 100} l10 18 l18 10 l-18 10 l-10 18 l-10 -18 l-18 -10 l18 -10 Z" fill="none" stroke="${hot}" stroke-width="3"/>`;
+  s += details(W / 2, end + 2, 52, "#ffffff", ctx.spec.details, "middle");
+  s += orderBar(ctx, W, foot + 10, "#ffffff");
+  if (H > 1350) s += storyCta(W, H, { ...p, accent: hot, accentInk: pick(hot, "#ffffff", "#111111") });
+  return s;
+}
+
+function enquete(ctx, W, H) {
+  const p = ctx.pal;
+  const { oy, foot } = frame(H);
+  const dark = "#0d0f14";
+  const hot = contrast(p.accent, dark) > 3 ? p.accent : contrast(p.bg, dark) > 3 ? p.bg : "#ff4d1a";
+  let s = `<rect width="${W}" height="${H}" fill="${dark}"/>`;
+  // produto saindo pelas laterais
+  if (ctx.cutout || ctx.photo) {
+    const py = (oy + foot) / 2 - 260;
+    s += product(ctx, -300, py, 560, 520, { align: "center", frameRotate: 6 }).svg;
+    s += product(ctx, W - 260, py, 560, 520, { align: "center", frameRotate: -6 }).svg;
+  }
+  const words = clean(ctx.spec.title || "Hora da enquete!").toUpperCase().split(" ");
+  const half = Math.ceil(words.length / 2);
+  const [l1, l2] = words.length > 1 ? [words.slice(0, half).join(" "), words.slice(half).join(" ")] : [words[0], ""];
+  const sz = Math.min(fit(l1, "round", 760, 170, 70), l2 ? fit(l2, "round", 760, 170, 70) : 999);
+  const qLines = wrap(ctx.spec.subtitle || "O que você prefere?", 34, 2);
+  const opts = (ctx.spec.options || []).filter(Boolean).slice(0, 4);
+  // altura total do bloco, para centralizar entre o topo e o rodapé
+  const blockH = 60 + sz * (l2 ? 1.75 : 0.8) + 90 + qLines.length * 50 + 30 + opts.length * 110 + 60;
+  const top0 = Math.max(oy + 70, (oy + foot) / 2 - blockH / 2);
+  for (let i = 0; i < 4; i++) s += `<path d="M${W / 2 - 50 + i * 24} ${top0 + 34} l14 -34 h12 l-14 34 Z" fill="${hot}"/>`;
+  s += T(W / 2, top0 + 60 + sz * 0.8, sz, "#ffffff", l1, { anchor: "middle", font: F.round, weight: 400 });
+  if (l2) s += T(W / 2, top0 + 60 + sz * 1.75, sz, hot, l2, { anchor: "middle", font: F.round, weight: 400 });
+  let y = top0 + 60 + sz * (l2 ? 1.75 : 0.8) + 90;
+  qLines.forEach((l) => { s += T(W / 2, y, 40, "#ffffff", l, { anchor: "middle", font: F.body, weight: 600 }); y += 50; });
+  y += 30;
+  opts.forEach((o, i) => {
+    const x = W / 2 - 280, h = 88;
+    const last = i === opts.length - 1 && opts.length > 2;
+    s += `<rect x="${x}" y="${y}" width="560" height="${h}" rx="${h / 2}" fill="${last ? hot : "#ffffff"}"/>`;
+    s += `<rect x="${x}" y="${y}" width="${h + 20}" height="${h}" rx="${h / 2}" fill="${last ? "#ffffff" : hot}"/>`;
+    s += T(x + (h + 20) / 2, y + h * 0.66, 40, last ? hot : "#ffffff", String.fromCharCode(65 + i), { anchor: "middle", font: F.body, weight: 600 });
+    s += T(x + h + 50, y + h * 0.66, fit(clean(o), "body", 400, 40, 26), last ? "#ffffff" : dark, clean(o).slice(0, 26), { font: F.body, weight: 600 });
+    y += h + 22;
+  });
+  s += T(W / 2, Math.min(foot - 50, y + 60), 26, "#ffffff", "RESPONDE AQUI NOS COMENTÁRIOS 👇".replace(/👇/u, "").trim(), { anchor: "middle", font: F.body, weight: 600, ls: 3 });
+  s += orderBar(ctx, W, foot + 10, "#ffffff");
+  if (H > 1350) s += storyCta(W, H, { ...p, accent: hot, accentInk: "#ffffff" });
+  return s;
+}
+
+function frase(ctx, W, H) {
+  const p = ctx.pal;
+  const id = ctx.id();
+  const bg = p.soft;
+  const box = contrast(p.ink, bg) > 6 ? p.ink : mix(p.bg, "#000000", 0.45);
+  const hot = contrast(p.bg, bg) > 2 ? p.bg : p.accent;
+  const cy = H / 2;
+  let s = `<rect width="${W}" height="${H}" fill="${bg}"/>`;
+  // manchas suaves no fundo
+  s += `<path d="M-40 ${cy - 520} C200 ${cy - 600} 380 ${cy - 420} 260 ${cy - 300} C150 ${cy - 190} -40 ${cy - 260} -40 ${cy - 520} Z" fill="${hot}" opacity=".12"/>`;
+  s += `<path d="M${W + 40} ${cy + 300} C${W - 260} ${cy + 260} ${W - 300} ${cy + 520} ${W - 120} ${cy + 620} C${W} ${cy + 680} ${W + 40} ${cy + 560} ${W + 40} ${cy + 300} Z" fill="${hot}" opacity=".12"/>`;
+  const lines = wrap(clean(ctx.spec.title).toUpperCase(), 13, 6);
+  const size = Math.min(...lines.map((l) => fit(l, "black", 560, 84, 48)));
+  const bw = 700, bh = lines.length * size * 1.08 + 170;
+  const bx = (W - bw) / 2, by = cy - bh / 2 - 40;
+  s += `<path d="${wavyBox(bx - 26, by - 26, bw + 52, bh + 52, 9, ctx.spec.title + "o")}" fill="${box}" opacity=".45"/>`;
+  s += `<path d="${wavyBox(bx, by, bw, bh, 8, ctx.spec.title)}" fill="${box}"/>`;
+  lines.forEach((l, i) => { s += T(bx + 90, by + 110 + i * size * 1.08, size, pick(box, "#fbf3e8", "#ffffff"), l, { font: F.black, weight: 800, ls: -1 }); });
+  const hl = clean(ctx.spec.subtitle).toUpperCase();
+  if (hl) {
+    const hs = fit(hl, "round", 520, 110, 60);
+    const hw = hl.length * hs * 0.74 + 90, hh = hs * 1.35;
+    const hx = bx + bw - hw + 70, hy = by + bh - hh / 2;
+    s += `<path d="${wavyBox(hx, hy, hw, hh, 6, hl)}" fill="${hot}"/>`;
+    s += T(hx + hw / 2, hy + hh * 0.72, hs, pick(hot, "#ffffff", "#111111"), hl, { anchor: "middle", font: F.round, weight: 400 });
+  }
+  // selo circular com o nome girando
+  const r = 120, sx = 170, sy = by + bh + 210;
+  s += `<defs><path id="${id}c" d="M${sx - r} ${sy} a${r} ${r} 0 1 1 ${2 * r} 0 a${r} ${r} 0 1 1 ${-2 * r} 0"/></defs>
+    <circle cx="${sx}" cy="${sy}" r="${r + 34}" fill="none" stroke="${hot}" stroke-width="2" opacity=".6"/>
+    <text font-family="${F.body}" font-size="26" font-weight="600" fill="${hot}" letter-spacing="3"><textPath href="#${id}c">${esc((ctx.name + " · " + ctx.name + " · ").toUpperCase().slice(0, 46))}</textPath></text>`;
+  s += brandTag(ctx, W, H > 1350 ? 200 : 110, box);
+  s += footer(ctx, W, H - (H > 1350 ? 120 : 60), box);
+  return s;
+}
+
+const BUILDERS = { eco, script, oferta, cinema, fogo, splash, arco, enquete, frase };
 
 /**
  * Monta a arte.
@@ -361,7 +588,10 @@ export function renderTemplate({ client, spec, template, format = "feed", photo 
     brand,
     name: clean(brand.business_name || client.business || ""),
     pal: paletteFor(brand),
-    spec: { title: clean(spec.title) || clean(client.business), badge: clean(spec.badge), subtitle: clean(spec.subtitle) },
+    spec: {
+      title: clean(spec.title) || clean(client.business), badge: clean(spec.badge), subtitle: clean(spec.subtitle),
+      details: clean(spec.details), kicker: clean(spec.kicker), options: (spec.options || []).map(clean).filter(Boolean),
+    },
     photo, cutout,
     words: /burg|hamb|lanch|smash/i.test(`${brand.segment || ""}`) ? ["SUCULENTO", "NA BRASA", "PEÇA JÁ", "SABOR"] : ["NOVIDADE", "PEÇA JÁ", "QUALIDADE", "SABOR"],
     id: () => `t${salt}${++n}`,
@@ -371,15 +601,18 @@ export function renderTemplate({ client, spec, template, format = "feed", photo 
 }
 
 /** Quais modelos combinam com o pedido e com o material que o cliente mandou. */
-export function templatesFor(style, { hasCutout, hasPhoto }) {
+export function templatesFor(style, { hasCutout, hasPhoto, postType = "produto" }) {
+  if (postType === "enquete") return ["enquete"];
+  if (postType === "frase") return ["frase"];
   const byStyle = {
-    promo: ["oferta", "eco", "script", "fogo", "cinema"],
-    premium: ["cinema", "fogo", "eco", "script", "oferta"],
-    divertido: ["script", "eco", "oferta", "fogo", "cinema"],
-    auto: ["eco", "oferta", "script", "fogo", "cinema"],
+    promo: ["splash", "oferta", "eco", "arco", "script", "fogo", "cinema"],
+    premium: ["cinema", "fogo", "arco", "eco", "script", "oferta", "splash"],
+    divertido: ["script", "splash", "eco", "arco", "oferta", "fogo", "cinema"],
+    auto: ["eco", "splash", "oferta", "arco", "script", "fogo", "cinema"],
   };
   let list = byStyle[style] || byStyle.auto;
-  if (!hasCutout && hasPhoto) list = ["cinema", ...list.filter((t) => t !== "cinema" && t !== "fogo")];
+  // sem recorte, só a foto inteira fica boa; os modelos de produto "solto" ficam por último
+  if (!hasCutout && hasPhoto) list = ["cinema", "oferta", "eco", ...list.filter((t) => !["cinema", "oferta", "eco", "fogo", "arco"].includes(t))];
   if (!hasCutout && !hasPhoto) list = list.filter((t) => t !== "cinema");
   return list;
 }

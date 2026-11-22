@@ -73,7 +73,7 @@ test("onboarding salva a marca e conclui", async () => {
   assert.ok(calls[1].messages.at(-1).content[0].type === "tool_result");
 });
 
-const ART = { format: "feed", title: "X-Bacon", badge: "20% OFF", subtitle: "só até domingo", caption: "X-Bacon na brasa 🔥 #burger", use_photo: false, style: "promo" };
+const ART = { format: "feed", title: "X-Bacon", badge: "20% OFF", subtitle: "só até domingo", caption: "X-Bacon na brasa 🔥 #burger", use_photo: false, style: "promo", post_type: "produto", details: "", kicker: "", options: [] };
 
 test("pedido de arte: 2 opções + botões, sem chamar o modelo de novo", async () => {
   reset([toolUse("create_art", ART)]);

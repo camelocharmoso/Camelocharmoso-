@@ -67,13 +67,16 @@ export class Actions {
 
     const { photo, cutout } = this.photoFor(spec.use_photo);
     // Cada "Refazer" passa para os próximos modelos da lista, sem repetir.
-    const list = templatesFor(spec.style, { hasCutout: !!cutout, hasPhoto: !!photo });
+    const list = templatesFor(spec.style, { hasCutout: !!cutout, hasPhoto: !!photo, postType: spec.post_type });
     const n = kind === "feed" ? 2 : 1;
+    // enquete e frase têm um modelo só: as 2 opções variam a paleta
     const chosen = Array.from({ length: n }, (_, i) => list[(redo * n + i) % list.length]);
+    const altPalette = list.length === 1 && n > 1;
     const group = newGroup();
     const ids = [];
-    for (const template of chosen) {
-      const file = saveMedia(renderPng(renderTemplate({ client, spec, template, format: kind, photo, cutout })));
+    for (const [i, template] of chosen.entries()) {
+      const c = altPalette && i === 1 ? { ...client, brand: { ...client.brand, colors: [], palette: client.brand.palette === "noite" ? "retro" : "noite" } } : client;
+      const file = saveMedia(renderPng(renderTemplate({ client: c, spec, template, format: kind, photo, cutout })));
       ids.push(this.store.addArt({ phone: this.phone, group, kind, variant: template, file, spec: { ...spec, format: kind, free: cost === 0, redo } }));
     }
     for (let i = 0; i < ids.length; i++) {

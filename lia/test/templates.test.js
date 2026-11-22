@@ -75,3 +75,10 @@ test("recorte de fundo: envia a foto e aceita só PNG de volta", async () => {
     srv.close();
   }
 });
+
+test("enquete e frase usam o modelo próprio", () => {
+  assert.deepEqual(templatesFor("promo", { hasCutout: true, hasPhoto: true, postType: "enquete" }), ["enquete"]);
+  assert.deepEqual(templatesFor("auto", { hasCutout: false, hasPhoto: false, postType: "frase" }), ["frase"]);
+  const svg = renderTemplate({ client, spec: { title: "Hora da enquete!", subtitle: "App ou balcão?", options: ["App", "Balcão", "<b>x</b>"] }, template: "enquete" });
+  assert.ok(svg.includes(">A<") && svg.includes(">C<") && !svg.includes("<b>x"));
+});
