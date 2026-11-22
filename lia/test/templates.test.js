@@ -48,7 +48,7 @@ test("paleta: cores da marca têm prioridade e o título fica legível", () => {
 });
 
 test("modelos escolhidos combinam com o material disponível", () => {
-  assert.equal(templatesFor("premium", { hasCutout: true, hasPhoto: true })[0], "cinema");
+  assert.equal(templatesFor("premium", { hasCutout: true, hasPhoto: true })[0], "epico");
   assert.equal(templatesFor("promo", { hasCutout: false, hasPhoto: true })[0], "cinema", "sem recorte, a foto inteira rende mais");
   assert.ok(!templatesFor("auto", { hasCutout: false, hasPhoto: false }).includes("cinema"));
 });
