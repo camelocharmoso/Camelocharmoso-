@@ -38,6 +38,10 @@ Inspirados em artes profissionais de hamburgueria e food service. A Lia escolhe 
 | `frase` | Frase de efeito numa caixa ondulada com a última palavra em destaque | sem foto |
 | `combo` | Palavra gigante acima e abaixo do produto, fita ondulada e selo redondo | produto recortado |
 | `destaque` | Título à esquerda, produto enorme saindo pela borda, etiqueta de preço vertical | produto recortado |
+| `versus` | Dois lanches em cartões lado a lado, ingredientes, preço e "Quero esse!" | as 2 últimas fotos |
+| `fichado` | Régua de altura de delegacia com carimbo "CULPADO" ("Se ser gostoso demais fosse crime") | produto recortado |
+
+**QR do cardápio**: se o cliente tiver cardápio online (`menu_url`, só `https`), as artes ganham a etiqueta "Aponte a câmera e acesse nosso cardápio" com QR de verdade.
 
 **Carrossel editorial**: capa com gancho em letras condensadas e complemento manuscrito, slides de frase com uma palavra em *itálico colorido*, régua lateral, cabeçalho "@perfil | Nome" em todos e um slide final de chamada ("Comenta *EU QUERO*…").
 

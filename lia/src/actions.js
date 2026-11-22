@@ -66,6 +66,10 @@ export class Actions {
     if (client.credits < cost) return this.insufficient(cost);
 
     const { photo, cutout } = this.photoFor(spec.use_photo);
+    // versus: um lanche por foto (as duas mais recentes, a mais antiga primeiro)
+    const extra = spec.post_type === "versus" && spec.use_photo
+      ? this.store.recentPhotos(this.phone, 2).reverse().map((r) => { const a = loadPhotoAssets(r); return a.cutout ? { ...a.cutout, cut: true } : a.photo; }).filter(Boolean)
+      : [];
     // Cada "Refazer" passa para os próximos modelos da lista, sem repetir.
     const list = templatesFor(spec.style, { hasCutout: !!cutout, hasPhoto: !!photo, postType: spec.post_type });
     const n = kind === "feed" ? 2 : 1;
@@ -76,7 +80,7 @@ export class Actions {
     const ids = [];
     for (const [i, template] of chosen.entries()) {
       const c = altPalette && i === 1 ? { ...client, brand: { ...client.brand, colors: [], palette: client.brand.palette === "noite" ? "retro" : "noite" } } : client;
-      const file = saveMedia(renderPng(renderTemplate({ client: c, spec, template, format: kind, photo, cutout })));
+      const file = saveMedia(renderPng(renderTemplate({ client: c, spec, template, format: kind, photo, cutout, extra })));
       ids.push(this.store.addArt({ phone: this.phone, group, kind, variant: template, file, spec: { ...spec, format: kind, free: cost === 0, redo } }));
     }
     for (let i = 0; i < ids.length; i++) {

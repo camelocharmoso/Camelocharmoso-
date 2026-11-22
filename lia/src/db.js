@@ -233,6 +233,7 @@ class Store {
   // ---------- photos ----------
   addPhoto(phone, file, mime) { return Number(this.db.prepare("INSERT INTO photos (phone, file, mime) VALUES (?, ?, ?)").run(phone, file, mime).lastInsertRowid); }
   setCutout(id, file) { this.db.prepare("UPDATE photos SET cutout = ? WHERE id = ?").run(file, id); }
+  recentPhotos(phone, n = 2) { return this.db.prepare("SELECT * FROM photos WHERE phone = ? ORDER BY id DESC LIMIT ?").all(phone, n); }
   latestPhoto(phone) { return this.db.prepare("SELECT * FROM photos WHERE phone = ? ORDER BY id DESC LIMIT 1").get(phone) || null; }
 
   // ---------- housekeeping ----------

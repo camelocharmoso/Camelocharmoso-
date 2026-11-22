@@ -39,6 +39,10 @@ São livres e você responde direto no texto: legendas, ideias de conteúdo, rot
 - details: descrição curta do produto em uma frase ("carne suculenta, queijo cremoso e bacon crocante"), vazio se não houver.
 - kicker: chamada pequena no topo ("promoção relâmpago de hoje", "corre que é só hoje"), vazio para usar o padrão.
 - Carrossel bom conta uma história: capa com gancho que gera curiosidade, um slide por ideia com uma palavra destacada entre *asteriscos*, e no fim uma chamada para comentar uma palavra (que vira conversa no direct).
+- versus: compara 2 lanches do cardápio ("Qual a sua escolha hoje?"). Peça as fotos dos dois (o primeiro enviado entra à esquerda). Ótimo para gerar comentários e mostrar o cardápio.
+- Humor funciona: com style "divertido" um dos modelos é a "ficha policial" (kicker "Se ser", title "Gostoso demais", subtitle "fosse crime:").
+- Linha visual: o feed do cliente fica profissional quando repete o mesmo cabeçalho, rodapé e 2 ou 3 modelos. Prefira manter o estilo que o cliente já aprovou nas últimas artes, variando só o conteúdo.
+- Se o cliente tiver cardápio online (link https), salve em menu_url: as artes passam a ter um QR "aponte a câmera e acesse nosso cardápio".
 - Sugira enquetes e frases de vez em quando: geram comentários e mantêm o perfil vivo entre as promoções.
 - Para os modelos com título gigante, prefira um title de 1 ou 2 palavras fortes ("Exagero", "Nostalgia", "Smash duplo"). No subtitle, uma expressão curta que combina com letra manuscrita ("pura", "do século", "de verdade") ou o prazo.
 
@@ -87,12 +91,17 @@ export const TOOLS = [
         caption: str("Legenda completa para o Instagram, com CTA e 3 a 5 hashtags."),
         use_photo: { type: "boolean", description: "true para usar a foto mais recente que o cliente mandou." },
         style: { type: "string", enum: ["promo", "premium", "divertido", "auto"], description: "Clima da arte: promo (preço/oferta), premium (lançamento, visual escuro), divertido (campanha leve), auto." },
-        post_type: { type: "string", enum: ["produto", "enquete", "frase"], description: "produto (venda), enquete (pergunta com opções) ou frase (frase de efeito sem foto)." },
+        post_type: { type: "string", enum: ["produto", "enquete", "frase", "versus"], description: "produto (venda), enquete (pergunta com opções), frase (frase de efeito sem foto) ou versus (2 lanches lado a lado)." },
+        items: {
+          type: "array",
+          description: "Só para versus: os 2 lanches. Vazio nos outros tipos.",
+          items: { type: "object", properties: { name: str("Nome curto, até 18 caracteres."), details: str("Ingredientes separados por ponto e vírgula."), price: str("Preço, ex.: R$ 29,90.") }, required: ["name", "details", "price"], additionalProperties: false },
+        },
         details: str("Descrição curta do produto, até 90 caracteres. Vazio se não houver."),
         kicker: str("Chamada pequena no topo, até 30 caracteres. Vazio para o padrão."),
         options: { type: "array", items: { type: "string" }, description: "Só para enquete: 2 a 4 respostas curtas (até 22 caracteres). Vazio nos outros tipos." },
       },
-      required: ["format", "title", "badge", "subtitle", "caption", "use_photo", "style", "post_type", "details", "kicker", "options"],
+      required: ["format", "title", "badge", "subtitle", "caption", "use_photo", "style", "post_type", "details", "kicker", "options", "items"],
       additionalProperties: false,
     },
   },
@@ -142,10 +151,11 @@ export const TOOLS = [
         instagram: str("@ do Instagram."),
         whatsapp: str("WhatsApp de pedidos, como aparece para o cliente final (ex.: 81 99999-0000)."),
         delivery: str("Apps de entrega onde está, ex.: iFood, 99Food."),
+        menu_url: str("Link https do cardápio online (vira QR code nas artes). Vazio se não houver."),
         tagline: str("Slogan curto da marca, até 30 caracteres (ex.: \"Melhor hambúrguer da cidade\"). Vazio se não houver."),
         avoid: str("O que evitar na comunicação."),
       },
-      required: ["business_name", "segment", "audience", "differentials", "tone", "colors", "palette", "products", "location", "hours", "instagram", "whatsapp", "delivery", "tagline", "avoid"],
+      required: ["business_name", "segment", "audience", "differentials", "tone", "colors", "palette", "products", "location", "hours", "instagram", "whatsapp", "delivery", "menu_url", "tagline", "avoid"],
       additionalProperties: false,
     },
   },

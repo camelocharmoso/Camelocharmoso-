@@ -7,6 +7,7 @@
 //  cinema  foto ocupando tudo, escurecida, com título embaixo (estilo foto de estúdio)
 //  fogo    fundo escuro com brilho, faíscas, título vazado gigante e reflexo do produto
 import crypto from "node:crypto";
+import QRCode from "qrcode";
 import { clean, wrap, contrast } from "./art.js";
 
 //  splash  título arredondado em 2 cores, produto na frente, selo de preço em explosão, xadrez de losangos
@@ -15,7 +16,9 @@ import { clean, wrap, contrast } from "./art.js";
 //  frase   frase de efeito numa caixa ondulada com palavra destacada (não precisa de foto)
 //  combo   palavra gigante acima e abaixo do produto, fita ondulada e selo redondo (estilo "COMBO")
 //  destaque título à esquerda, produto enorme saindo pela borda e etiqueta de preço vertical
-export const TEMPLATES = ["eco", "script", "oferta", "cinema", "fogo", "splash", "arco", "enquete", "frase", "combo", "destaque"];
+//  versus   dois lanches lado a lado em cartões ("qual a sua escolha hoje?")
+//  fichado  régua de altura de delegacia com carimbo "CULPADO" (humor)
+export const TEMPLATES = ["eco", "script", "oferta", "cinema", "fogo", "splash", "arco", "enquete", "frase", "combo", "destaque", "versus", "fichado"];
 
 const F = {
   black: "Inter Display", // 800 e 900
@@ -286,6 +289,7 @@ function oferta(ctx, W, H) {
   const prod = product(ctx, 150, top, 780, end - 10 - top);
   s += prod.svg;
   s += pricePlaque(130, Math.min(end - 180, prod.box.y + prod.box.h - 150), p, ctx.spec.badge);
+  s += qrTag(ctx, W - 470, end - 210, 5);
   s += footer(ctx, W, foot, titleColor);
   if (H > 1350) s += storyCta(W, H, p);
   return s;
@@ -788,13 +792,144 @@ export function renderCarousel({ client, spec, photo = null, cutout = null, alt 
   return out;
 }
 
-const BUILDERS = { eco, script, oferta, cinema, fogo, splash, arco, enquete, frase, combo, destaque };
+
+// ---------- QR code e chamas desenhadas ----------
+/** Só aceita link https curto (o QR leva o cliente final para lá). */
+export function safeMenuUrl(u) {
+  try {
+    const url = new URL(String(u || "").trim());
+    return url.protocol === "https:" && url.href.length <= 300 ? url.href : null;
+  } catch { return null; }
+}
+
+/** Etiqueta "Aponte a câmera e acesse nosso cardápio" com QR de verdade. */
+function qrTag(ctx, x, y, rotate = -6) {
+  const url = safeMenuUrl(ctx.brand.menu_url);
+  if (!url) return "";
+  const q = QRCode.create(url, { errorCorrectionLevel: "M" });
+  const n = q.modules.size, cell = 132 / n;
+  let mods = "";
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.modules.get(r, c)) mods += `M${(c * cell).toFixed(2)} ${(r * cell).toFixed(2)}h${cell.toFixed(2)}v${cell.toFixed(2)}h-${cell.toFixed(2)}Z`;
+  return `<g transform="rotate(${rotate} ${x + 210} ${y + 90})">
+    <rect x="${x + 6}" y="${y + 10}" width="420" height="172" rx="20" fill="#000" opacity=".25"/>
+    <rect x="${x}" y="${y}" width="420" height="172" rx="20" fill="#fbf1d6"/>
+    <rect x="${x + 16}" y="${y + 16}" width="140" height="140" rx="8" fill="#ffffff"/>
+    <path transform="translate(${x + 20} ${y + 20})" d="${mods}" fill="#111111"/>
+    ${T(x + 172, y + 62, 26, "#3a1606", "Aponte a câmera", { font: F.body, weight: 600 })}
+    ${T(x + 172, y + 96, 26, "#3a1606", "e acesse agora", { font: F.body, weight: 600 })}
+    ${T(x + 172, y + 134, 26, "#3a1606", "nosso cardápio", { font: F.wide, weight: 400 })}</g>`;
+}
+
+/** Chama desenhada (contorno escuro, miolo laranja e amarelo), como nas artes ilustradas. */
+function flame(x, y, s, rot = 0) {
+  return `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${s})">
+    <path d="M0 0 C-40 -40 -30 -90 0 -150 C10 -110 40 -100 45 -60 C50 -30 30 0 0 0 Z" fill="#ff6a1a" stroke="#4a1406" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M2 -12 C-18 -34 -12 -66 4 -96 C10 -70 26 -60 26 -40 C26 -22 16 -12 2 -12 Z" fill="#ffc531"/></g>`;
+}
+
+/** Placa "APENAS: 40,99" do estilo ilustrado. */
+function pricePlate(cx, cy, p, badge, label = "APENAS:") {
+  const price = parsePrice(badge);
+  if (!badge) return "";
+  const main = price ? price.int : clean(badge).toUpperCase();
+  const msz = price ? 120 : fit(main, "wide", 300, 80, 36);
+  const mw = main.length * msz * (price ? 0.72 : 0.8);
+  const w = 200 + mw + (price?.cents ? 70 : 20), h = 130, x = cx - w / 2, y = cy - h / 2;
+  let s = `<g transform="rotate(-4 ${cx} ${cy})"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="#5a1708"/>`;
+  s += `<rect x="${x + 18}" y="${y + 34}" width="160" height="62" rx="16" fill="#ffffff"/>` + T(x + 98, y + 76, 26, "#5a1708", label, { anchor: "middle", font: F.wide, weight: 400 });
+  s += T(x + 200, y + h / 2 + msz * 0.36, msz, p.accent === "#000000" ? "#ff5a1f" : "#ff5a1f", main, { font: F.wide, weight: 400, ls: -4 });
+  if (price?.cents) s += T(x + 204 + mw, y + 54, 40, "#ffffff", "," + price.cents, { font: F.wide, weight: 400 });
+  return s + "</g>";
+}
+
+function versus(ctx, W, H) {
+  const p = ctx.pal;
+  const { oy, foot } = frame(H);
+  const bg = "#4a1208";
+  let s = `<rect width="${W}" height="${H}" fill="${bg}"/>`;
+  s += flame(70, oy + 420, 1.6, -15) + flame(1010, oy + 380, 1.7, 18) + flame(60, H - 230, 1.3, -25) + flame(1030, H - 260, 1.4, 20);
+  const words = clean(ctx.spec.title || "Qual a sua escolha hoje?").toUpperCase();
+  const tl = wrap(words, 18, 2);
+  const tsz = Math.min(...tl.map((l) => fit(l, "wide", 860, 86, 50)));
+  tl.forEach((l, i) => { s += T(W / 2, oy + 150 + i * tsz * 1.02, tsz, "#f6dca6", l, { anchor: "middle", font: F.wide, weight: 400, ls: -2 }); });
+  const sub = clean(ctx.spec.subtitle || "entre esses 2?").toUpperCase();
+  s += T(W / 2, oy + 150 + tl.length * tsz * 1.02 + 6, 44, "#ff5a1f", sub, { anchor: "middle", font: F.wide, weight: 400 });
+  const items = (ctx.spec.items || []).slice(0, 2);
+  while (items.length < 2) items.push({ name: `Burguer 0${items.length + 1}`, details: "", price: "" });
+  const top = oy + 330, cw = 420, ch = Math.min((H > 1350 ? foot - 140 : 1180) - top, 760);
+  items.forEach((it, i) => {
+    const x = i ? W / 2 + 25 : W / 2 - 25 - cw;
+    s += `<rect x="${x}" y="${top}" width="${cw}" height="${ch}" rx="40" fill="#fbf7f2"/>`;
+    s += `<rect x="${x + 24}" y="${top + 24}" width="${cw - 48}" height="${cw - 80}" rx="28" fill="#ff5a1f"/>`;
+    const asset = (ctx.extra || [])[i] || ctx.cutout || ctx.photo;
+    const sub = { ...ctx, cutout: asset && asset.cut ? asset : ctx.cutout, photo: asset && !asset.cut ? asset : ctx.photo };
+    if ((ctx.extra || [])[i]) { sub.cutout = ctx.extra[i].cut ? ctx.extra[i] : null; sub.photo = ctx.extra[i].cut ? null : ctx.extra[i]; }
+    s += product(sub, x + 10, top + 10, cw - 20, cw - 40, { align: "center", frameRotate: 0 }).svg;
+    let y = top + cw - 10;
+    const nm = clean(it.name).slice(0, 18);
+    s += T(x + cw / 2, y + 40, fit(nm, "wide", cw - 50, 50, 28), "#5a1708", nm, { anchor: "middle", font: F.wide, weight: 400, ls: -1 });
+    y += 90;
+    String(it.details || "").split(/[;\n]|,\s*(?=[A-ZÀ-Ú])/).map(clean).filter(Boolean).slice(0, 5).forEach((item) => {
+      wrap(item, 24, 2).forEach((l, k) => {
+        if (!k) s += `<rect x="${x + 36}" y="${y - 16}" width="10" height="10" fill="#ffb300"/>`;
+        s += T(x + 56, y - 6, 26, "#3a1606", l, { font: F.body, weight: 600 }); y += 36;
+      });
+      y += 8;
+    });
+    if (it.price) s += T(x + cw / 2, y + 10, 28, "#3a1606", `Custa apenas ${clean(it.price)}`, { anchor: "middle", font: F.body, weight: 600 });
+    const by = top + ch - 90;
+    s += `<rect x="${x + 70}" y="${by}" width="${cw - 140}" height="62" rx="31" fill="#d8261a"/>` + T(x + cw / 2, by + 42, 28, "#ffffff", "Quero esse!", { anchor: "middle", font: F.wide, weight: 400 });
+  });
+  s += `<circle cx="${W / 2}" cy="${top + cw / 2 - 20}" r="54" fill="${bg}"/>` + T(W / 2, top + cw / 2 + 4, 70, "#f6dca6", "X", { anchor: "middle", font: F.wide, weight: 400 });
+  s += pillBar(ctx, W, foot + 6, "#2a0904", "#ffffff");
+  if (H > 1350) s += storyCta(W, H, { ...p, accent: "#d8261a", accentInk: "#ffffff" });
+  return s;
+}
+
+function fichado(ctx, W, H) {
+  const p = ctx.pal;
+  const { oy, end, foot } = frame(H);
+  const bg = "#f3e2a6", ink = "#5a1708", hot = "#e8401c";
+  let s = `<rect width="${W}" height="${H}" fill="${bg}"/>`;
+  s += `<path d="M-60 ${oy + 250} C200 ${oy + 120} 380 ${oy + 380} 640 ${oy + 240} S1000 ${oy + 120} 1140 ${oy + 220}" stroke="#e9cf86" stroke-width="80" fill="none" opacity=".6"/>`;
+  const head = clean(ctx.spec.kicker || "Se ser").toUpperCase();
+  const mid = wrap(clean(ctx.spec.title || "Gostoso demais").toUpperCase(), 14, 2);
+  const tail = clean(ctx.spec.subtitle || "fosse crime:").toUpperCase();
+  let y = oy + 150;
+  s += T(W / 2, y, 82, ink, head, { anchor: "middle", font: F.wide, weight: 400, ls: -3 }); y += 4;
+  const msz = Math.min(...mid.map((l) => fit(l, "wide", 820, 120, 60)));
+  mid.forEach((l) => { y += msz * 0.98; s += T(W / 2, y, msz, hot, l, { anchor: "middle", font: F.wide, weight: 400, ls: -4 }); });
+  y += 70; s += T(W / 2, y, 56, ink, tail, { anchor: "middle", font: F.wide, weight: 400, ls: -2 });
+  // régua de altura
+  const top = y + 50, bottom = end - 10, rows = 7;
+  for (let i = 0; i < rows; i++) {
+    const ly = top + 20 + i * ((bottom - top - 40) / (rows - 1));
+    const lbl = (1.9 - i * 0.1).toFixed(2).replace(".", ",") + "m";
+    s += `<line x1="170" y1="${ly}" x2="${W - 170}" y2="${ly}" stroke="${ink}" stroke-width="${i === 0 ? 5 : 3}"/>`;
+    s += T(150, ly + 12, 34, ink, lbl, { anchor: "end", font: F.cond, weight: 400 }) + T(W - 150, ly + 12, 34, ink, lbl, { font: F.cond, weight: 400 });
+  }
+  s += flame(210, bottom - 60, 1.2, -10) + flame(870, top + 300, 1.3, 15) + flame(840, bottom - 40, 1.0, 10);
+  const prod = product(ctx, 220, top + 40, W - 440, bottom - top - 30, { align: "bottom", frameRotate: 0 });
+  s += prod.svg;
+  const stamp = clean(ctx.spec.badge && !parsePrice(ctx.spec.badge) ? ctx.spec.badge : "CULPADO").toUpperCase().slice(0, 12);
+  const ssz = fit(stamp, "wide", 360, 64, 34), sw = stamp.length * ssz * 0.8 + 60;
+  const sx = W / 2 - sw / 2 - 40, sy = prod.box.y + 40;
+  s += `<g transform="rotate(-12 ${sx + sw / 2} ${sy + 50})"><rect x="${sx}" y="${sy}" width="${sw}" height="${ssz * 1.6}" rx="10" fill="#fbf1d6" fill-opacity=".9" stroke="#c1121f" stroke-width="8"/>` +
+    T(sx + sw / 2, sy + ssz * 1.15, ssz, "#c1121f", stamp, { anchor: "middle", font: F.wide, weight: 400 }) + "</g>";
+  if (parsePrice(ctx.spec.badge)) s += pricePlate(W - 260, prod.box.y + prod.box.h - 80, p, ctx.spec.badge);
+  s += qrTag(ctx, 60, bottom - 150, -6);
+  s += pillBar(ctx, W, foot + 6, ink, "#ffffff");
+  if (H > 1350) s += storyCta(W, H, { ...p, accent: hot, accentInk: "#ffffff" });
+  return s;
+}
+
+const BUILDERS = { eco, script, oferta, cinema, fogo, splash, arco, enquete, frase, combo, destaque, versus, fichado };
 
 /**
  * Monta a arte.
  * input: { client, spec: {title, badge, subtitle}, template, format: "feed"|"story", photo: {uri,w,h}|null, cutout: {uri,w,h}|null }
  */
-export function renderTemplate({ client, spec, template, format = "feed", photo = null, cutout = null }) {
+export function renderTemplate({ client, spec, template, format = "feed", photo = null, cutout = null, extra = [] }) {
   const W = 1080, H = format === "story" ? 1920 : 1350;
   const brand = client.brand || {};
   let n = 0;
@@ -806,8 +941,9 @@ export function renderTemplate({ client, spec, template, format = "feed", photo 
     spec: {
       title: clean(spec.title) || clean(client.business), badge: clean(spec.badge), subtitle: clean(spec.subtitle),
       details: clean(spec.details), kicker: clean(spec.kicker), options: (spec.options || []).map(clean).filter(Boolean),
+      items: (spec.items || []).slice(0, 2).map((i) => ({ name: clean(i.name), details: clean(i.details), price: clean(i.price) })),
     },
-    photo, cutout,
+    photo, cutout, extra,
     words: /burg|hamb|lanch|smash/i.test(`${brand.segment || ""}`) ? ["SUCULENTO", "NA BRASA", "PEÇA JÁ", "SABOR"] : ["NOVIDADE", "PEÇA JÁ", "QUALIDADE", "SABOR"],
     id: () => `t${salt}${++n}`,
   };
@@ -819,15 +955,16 @@ export function renderTemplate({ client, spec, template, format = "feed", photo 
 export function templatesFor(style, { hasCutout, hasPhoto, postType = "produto" }) {
   if (postType === "enquete") return ["enquete"];
   if (postType === "frase") return ["frase"];
+  if (postType === "versus") return ["versus"];
   const byStyle = {
     promo: ["splash", "combo", "destaque", "oferta", "eco", "arco", "script", "fogo", "cinema"],
     premium: ["cinema", "fogo", "arco", "destaque", "eco", "script", "combo", "oferta", "splash"],
-    divertido: ["script", "splash", "combo", "eco", "arco", "destaque", "oferta", "fogo", "cinema"],
+    divertido: ["fichado", "script", "splash", "combo", "eco", "arco", "destaque", "oferta", "fogo", "cinema"],
     auto: ["eco", "splash", "destaque", "combo", "oferta", "arco", "script", "fogo", "cinema"],
   };
   let list = byStyle[style] || byStyle.auto;
   // sem recorte, só a foto inteira fica boa; os modelos de produto "solto" ficam por último
-  if (!hasCutout && hasPhoto) list = ["cinema", "oferta", "eco", ...list.filter((t) => !["cinema", "oferta", "eco", "fogo", "arco", "combo", "destaque"].includes(t))];
+  if (!hasCutout && hasPhoto) list = ["cinema", "oferta", "eco", ...list.filter((t) => !["cinema", "oferta", "eco", "fogo", "arco", "combo", "destaque", "fichado"].includes(t))];
   if (!hasCutout && !hasPhoto) list = list.filter((t) => t !== "cinema");
   return list;
 }

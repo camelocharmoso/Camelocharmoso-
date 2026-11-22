@@ -91,3 +91,16 @@ test("carrossel editorial: capa, slides com destaque e chamada final", () => {
   assert.ok(svgs[1].includes("font-style=\"italic\"") && !svgs[1].includes("<script>"));
   for (const s of svgs) assert.deepEqual(imageSize(renderPng(s)), { w: 1080, h: 1350 });
 });
+
+test("versus, fichado e QR do cardápio", () => {
+  const { safeMenuUrl } = templates;
+  assert.equal(safeMenuUrl("javascript:alert(1)"), null);
+  assert.equal(safeMenuUrl("http://site.com"), null, "só https");
+  assert.equal(safeMenuUrl("https://site.com/cardapio"), "https://site.com/cardapio");
+  const c2 = { ...client, brand: { ...client.brand, menu_url: "https://site.com/cardapio" } };
+  const svg = renderTemplate({ client: c2, spec: { title: "Gostoso demais" }, template: "fichado", cutout: asset });
+  assert.ok(svg.includes("nosso cardápio") && svg.includes("CULPADO"));
+  const vs = renderTemplate({ client, spec: { items: [{ name: "A", details: "x; y", price: "R$ 10" }, { name: "B", details: "z", price: "R$ 12" }] }, template: "versus", extra: [asset, asset] });
+  assert.ok(vs.includes("Quero esse!"));
+  assert.deepEqual(imageSize(renderPng(vs)), { w: 1080, h: 1350 });
+});
