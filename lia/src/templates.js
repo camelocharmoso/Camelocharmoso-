@@ -18,7 +18,8 @@ import { clean, wrap, contrast } from "./art.js";
 //  destaque título à esquerda, produto enorme saindo pela borda e etiqueta de preço vertical
 //  versus   dois lanches lado a lado em cartões ("qual a sua escolha hoje?")
 //  fichado  régua de altura de delegacia com carimbo "CULPADO" (humor)
-export const TEMPLATES = ["eco", "script", "oferta", "cinema", "fogo", "splash", "arco", "enquete", "frase", "combo", "destaque", "versus", "fichado"];
+//  epico    fundo escuro cinematográfico: brilho, fumaça, faíscas, luz de contorno, título metálico e escudo de preço
+export const TEMPLATES = ["epico", "eco", "script", "oferta", "cinema", "fogo", "splash", "arco", "enquete", "frase", "combo", "destaque", "versus", "fichado"];
 
 const F = {
   black: "Inter Display", // 800 e 900
@@ -940,7 +941,120 @@ function fichado(ctx, W, H) {
   return s;
 }
 
-const BUILDERS = { eco, script, oferta, cinema, fogo, splash, arco, enquete, frase, combo, destaque, versus, fichado };
+
+// ---------- modelo épico (cinematográfico) ----------
+function shield(cx, cy, r, glow, badge, seed) {
+  if (!badge) return "";
+  const price = parsePrice(badge);
+  const rnd = seeded(seed);
+  let rivets = "";
+  for (let i = 0; i < 12; i++) { const a = (i / 12) * Math.PI * 2; rivets += `<circle cx="${(cx + Math.cos(a) * r * 0.88).toFixed(1)}" cy="${(cy + Math.sin(a) * r * 0.88).toFixed(1)}" r="${r * 0.035}" fill="#e9d2a6"/>`; }
+  let planks = "";
+  for (let i = -2; i <= 2; i++) planks += `<line x1="${cx + i * r * 0.32}" y1="${cy - r}" x2="${cx + i * r * 0.32}" y2="${cy + r}" stroke="#000" stroke-opacity=".25" stroke-width="4"/>`;
+  const id = "sh" + Math.floor(rnd() * 1e9);
+  let s = `<defs><radialGradient id="${id}" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="${mix(glow, "#ffffff", 0.15)}"/><stop offset="1" stop-color="${mix(glow, "#000000", 0.45)}"/></radialGradient>
+    <clipPath id="${id}c"><circle cx="${cx}" cy="${cy}" r="${r * 0.8}"/></clipPath></defs>
+    <circle cx="${cx + 8}" cy="${cy + 14}" r="${r}" fill="#000" opacity=".45" filter="url(#blur8)"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#gold)"/>
+    <circle cx="${cx}" cy="${cy}" r="${r * 0.8}" fill="url(#${id})"/>
+    <g clip-path="url(#${id}c)">${planks}</g>${rivets}
+    <circle cx="${cx}" cy="${cy}" r="${r * 0.8}" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="3"/>`;
+  if (price) {
+    s += T(cx, cy - r * 0.42, r * 0.14, "#f6e7c8", "SÓ", { anchor: "middle", font: "Archivo Black", weight: 400, ls: 3 });
+    const big = r * (price.int.length > 2 ? 0.5 : 0.62);
+    s += T(cx - big * 0.62, cy + big * 0.38, big * 0.3, "#f6e7c8", "R$", { anchor: "end", font: "Archivo Black", weight: 400 });
+    s += `<text x="${cx - big * 0.58}" y="${cy + big * 0.38}" font-family="Anton" font-size="${big}" fill="#fff6e2" filter="url(#txtShadow)">${esc(price.int)}</text>`;
+    if (price.cents) s += T(cx + big * 0.62, cy - big * 0.05, big * 0.32, "#f6e7c8", "," + price.cents, { font: "Anton", weight: 400 });
+  } else {
+    const t = clean(badge).toUpperCase();
+    s += T(cx, cy + r * 0.12, fit(t, "wide", r * 1.3, r * 0.36, 24), "#fff6e2", t, { anchor: "middle", font: "Archivo Black", weight: 400 });
+  }
+  return s;
+}
+
+function epico(ctx, W, H) {
+  const p = ctx.pal;
+  const { oy, end, foot } = frame(H);
+  const glow = contrast(p.bg, "#0b0706") > 1.6 ? p.bg : p.accent;
+  const rnd = seeded(ctx.spec.title + "e" + W + H);
+  const goldA = "#fff1cf", goldB = "#e3b15c", goldC = "#9a5b1c";
+  let s = `<defs>
+    <radialGradient id="glow" cx="50%" cy="62%" r="62%"><stop offset="0" stop-color="${mix(glow, "#ff7a2a", 0.3)}" stop-opacity="1"/><stop offset=".4" stop-color="${glow}" stop-opacity=".75"/><stop offset=".75" stop-color="${mix(glow, "#000000", 0.6)}" stop-opacity=".5"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+    <radialGradient id="vig" cx="50%" cy="50%" r="75%"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".85"/></radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${goldA}"/><stop offset=".55" stop-color="${goldB}"/><stop offset="1" stop-color="${goldC}"/></linearGradient>
+    <filter id="blur8" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="blur30" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="30"/></filter>
+    <filter id="blur70" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="70"/></filter>
+    <filter id="txtShadow" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity=".75"/></filter>
+    <filter id="smoke" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.0035 0.009" numOctaves="4" seed="${Math.floor(rnd() * 99)}"/><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 0.92  0 0 0 0 0.85  0 0 0 -1.4 0.95"/><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7"/><feColorMatrix type="saturate" values="0"/></filter>
+    <filter id="grade" x="-5%" y="-5%" width="110%" height="110%"><feComponentTransfer><feFuncR type="linear" slope="1.12" intercept="-0.03"/><feFuncG type="linear" slope="1.08" intercept="-0.03"/><feFuncB type="linear" slope="1.0" intercept="-0.04"/></feComponentTransfer><feColorMatrix type="saturate" values="1.18"/></filter>
+    <filter id="rim" x="-20%" y="-20%" width="140%" height="140%"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 0.38  0 0 0 0 0.1  0 0 0 1 0"/><feGaussianBlur stdDeviation="10"/></filter>
+  </defs>
+  <rect width="${W}" height="${H}" fill="#0b0706"/>
+  <rect width="${W}" height="${H}" fill="url(#glow)"/>
+  <rect x="0" y="${H * 0.25}" width="${W}" height="${H * 0.75}" filter="url(#smoke)" opacity=".18"/>`;
+  // título gigante metálico atrás do produto
+  const word = wrap(clean(ctx.spec.title).toUpperCase(), 10, 1)[0];
+  const tsz = fit(word, "wide", 1000, 300, 130);
+  const ty = oy + 260 + tsz * 0.75;
+  s += `<text x="${W / 2}" y="${ty}" font-family="${F.wide}" font-size="${tsz}" fill="url(#gold)" text-anchor="middle" stroke="#2a0d05" stroke-width="3" filter="url(#txtShadow)">${esc(word)}</text>`;
+  // produto com luz de contorno, sombra de contato e tratamento de cor
+  const asset = ctx.cutout;
+  const story = H > 1350;
+  const pTop = ty + (clean(ctx.spec.subtitle) ? 95 : 40), pBottom = story ? end - 110 : end - (ctx.spec.details ? 70 : 30);
+  // núcleo de luz quente atrás do produto
+  s += `<ellipse cx="${W / 2}" cy="${(pTop + pBottom) / 2 + 40}" rx="${W * 0.34}" ry="${(pBottom - pTop) * 0.36}" fill="${mix(glow, "#ff8a3a", 0.45)}" opacity=".85" filter="url(#blur70)"/>`;
+  let box;
+  if (asset) {
+    const r = asset.w / asset.h;
+    let pw = W * (story ? 0.9 : 0.8), ph = pw / r;
+    if (ph > pBottom - pTop) { ph = pBottom - pTop; pw = ph * r; }
+    const px = (W - pw) / 2, py = pBottom - ph;
+    box = { x: px, y: py, w: pw, h: ph };
+    s += `<ellipse cx="${W / 2}" cy="${pBottom - 6}" rx="${pw * 0.5}" ry="${ph * 0.07}" fill="#000" opacity=".8" filter="url(#blur30)"/>`;
+    s += `<ellipse cx="${W / 2}" cy="${pBottom - 4}" rx="${pw * 0.4}" ry="${ph * 0.025}" fill="#000" opacity=".9" filter="url(#blur8)"/>`;
+    s += `<image href="${asset.uri}" x="${px - 6}" y="${py - 12}" width="${pw + 12}" height="${ph + 12}" filter="url(#rim)" opacity=".55"/>`;
+    s += `<image href="${asset.uri}" x="${px}" y="${py}" width="${pw}" height="${ph}" filter="url(#grade)"/>`;
+  } else {
+    const pr = product(ctx, 120, pTop, W - 240, pBottom - pTop, { align: "bottom", frameRotate: 0 });
+    s += pr.svg; box = pr.box;
+  }
+  // faíscas
+  let em = "";
+  for (let i = 0; i < 90; i++) {
+    const x = rnd() * W, y = H * (0.25 + rnd() * 0.75), r = 0.8 + rnd() * rnd() * 4.5;
+    const c = rnd() > 0.4 ? "#ffb347" : "#ff6a1f", o = 0.35 + rnd() * 0.65;
+    em += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(r * 3.2).toFixed(1)}" fill="${c}" opacity="${(o * 0.18).toFixed(2)}"/><circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${r.toFixed(1)}" fill="#ffe2a8" opacity="${o.toFixed(2)}"/>`;
+  }
+  s += em;
+  s += `<rect width="${W}" height="${H}" fill="url(#vig)"/>`;
+  // logo e linha de apoio
+  if (ctx.logo) s += logoImg(ctx, W / 2, oy + 36, 200);
+  else s += T(W / 2, oy + 120, 34, goldA, ctx.name.toUpperCase(), { anchor: "middle", font: "Archivo Black", weight: 400, ls: 8 });
+  const sub = clean(ctx.spec.subtitle).toUpperCase();
+  if (sub) {
+    const sy = ty + 70;
+    const sw = sub.length * 17 + 40;
+    s += `<line x1="${W / 2 - sw / 2 - 80}" y1="${sy - 12}" x2="${W / 2 - sw / 2 - 16}" y2="${sy - 12}" stroke="${goldB}" stroke-width="2"/><line x1="${W / 2 + sw / 2 + 16}" y1="${sy - 12}" x2="${W / 2 + sw / 2 + 80}" y2="${sy - 12}" stroke="${goldB}" stroke-width="2"/>`;
+    s += T(W / 2, sy, 30, goldA, sub, { anchor: "middle", font: "Inter", weight: 600, ls: 6 });
+  }
+  s += shield(Math.min(W - 170, box.x + box.w * 0.9), box.y + box.h * 0.3, 135, glow, ctx.spec.badge, ctx.spec.title);
+  // detalhes e rodapé
+  if (ctx.spec.details) s += details(W / 2, pBottom + (story ? 70 : 40), 58, "#f3e6cc", ctx.spec.details, "middle");
+  const b = ctx.brand;
+  const bits = [b.whatsapp && `PEÇA: ${clean(b.whatsapp)}`, b.delivery && `TAMBÉM NO ${clean(b.delivery).toUpperCase()}`, b.instagram && "@" + clean(b.instagram).replace(/^@/, "")].filter(Boolean);
+  if (bits.length) {
+    const fy = story ? H - 250 : foot + 8;
+    s += `<line x1="140" y1="${fy - 40}" x2="${W - 140}" y2="${fy - 40}" stroke="${goldB}" stroke-opacity=".5" stroke-width="1.5"/>`;
+    s += T(W / 2, fy, 24, "#f3e6cc", bits.join("    ·    "), { anchor: "middle", font: "Inter", weight: 600, ls: 3 });
+  }
+  if (H > 1350) s += storyCta(W, H, { ...p, accent: glow, accentInk: "#ffffff" });
+  s += `<rect width="${W}" height="${H}" filter="url(#grain)" opacity=".07"/>`;
+  return s;
+}
+
+const BUILDERS = { epico, eco, script, oferta, cinema, fogo, splash, arco, enquete, frase, combo, destaque, versus, fichado };
 
 /**
  * Monta a arte.
@@ -982,14 +1096,14 @@ export function templatesFor(style, { hasCutout, hasPhoto, postType = "produto" 
   if (postType === "frase") return ["frase"];
   if (postType === "versus") return ["versus"];
   const byStyle = {
-    promo: ["splash", "combo", "destaque", "oferta", "eco", "arco", "script", "fogo", "cinema"],
-    premium: ["cinema", "fogo", "arco", "destaque", "eco", "script", "combo", "oferta", "splash"],
+    promo: ["epico", "splash", "combo", "destaque", "oferta", "eco", "arco", "script", "fogo", "cinema"],
+    premium: ["epico", "cinema", "fogo", "arco", "destaque", "eco", "script", "combo", "oferta", "splash"],
     divertido: ["fichado", "script", "splash", "combo", "eco", "arco", "destaque", "oferta", "fogo", "cinema"],
-    auto: ["eco", "splash", "destaque", "combo", "oferta", "arco", "script", "fogo", "cinema"],
+    auto: ["epico", "eco", "splash", "destaque", "combo", "oferta", "arco", "script", "fogo", "cinema"],
   };
   let list = byStyle[style] || byStyle.auto;
   // sem recorte, só a foto inteira fica boa; os modelos de produto "solto" ficam por último
-  if (!hasCutout && hasPhoto) list = ["cinema", "oferta", "eco", ...list.filter((t) => !["cinema", "oferta", "eco", "fogo", "arco", "combo", "destaque", "fichado"].includes(t))];
+  if (!hasCutout && hasPhoto) list = ["cinema", "oferta", "eco", ...list.filter((t) => !["cinema", "oferta", "eco", "fogo", "arco", "combo", "destaque", "fichado", "epico"].includes(t))];
   if (!hasCutout && !hasPhoto) list = list.filter((t) => t !== "cinema");
   return list;
 }
