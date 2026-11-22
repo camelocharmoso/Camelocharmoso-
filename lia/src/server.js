@@ -21,6 +21,22 @@ if (problems.length) {
   process.exit(1);
 }
 
+// Hospedagens montam o disco como root. Ajusta o dono da pasta e roda sem privilégios.
+if (process.getuid?.() === 0) {
+  try {
+    const { execFileSync } = await import("node:child_process");
+    const uid = Number(execFileSync("id", ["-u", "node"]).toString()), gid = Number(execFileSync("id", ["-g", "node"]).toString());
+    fs.mkdirSync(config.dataDir, { recursive: true });
+    const walk = (p) => { fs.chownSync(p, uid, gid); if (fs.statSync(p).isDirectory()) for (const f of fs.readdirSync(p)) walk(path.join(p, f)); };
+    walk(config.dataDir);
+    process.setgid(gid);
+    process.setuid(uid);
+    console.log("[lia] rodando como usuário sem privilégios (node)");
+  } catch (e) {
+    console.warn("[lia] não deu para trocar de usuário:", e.message);
+  }
+}
+
 const here = path.dirname(fileURLToPath(import.meta.url));
 const store = openDb();
 const handler = createHandler({

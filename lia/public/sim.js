@@ -5,6 +5,7 @@ const headers = () => (token ? { 'x-admin-token': token } : {});
 const $ = (s) => document.querySelector(s);
 const ADMIN = 'admin';
 let after = 0, current = '';
+const newPhones = [];
 const local = []; // mensagens que você digitou: {to: phone|admin, kind, text, img}
 const outbox = [];
 
@@ -59,8 +60,17 @@ async function refreshClients() {
   const list = await api('/sim/clients');
   const sel = $('#client');
   const prev = sel.value;
-  sel.innerHTML = list.length ? list.map((c) => `<option value="${esc(c.phone)}">${esc(c.business)} · ${esc(c.phone)}</option>`).join('') : '<option value="">nenhum cliente: use /add à direita</option>';
-  sel.value = prev && list.some((c) => c.phone === prev) ? prev : (list[0]?.phone || '');
+  // Números novos (sem cadastro) caem na Lia vendedora.
+  const leads = [...new Set([...newPhones, ...local.map((m) => m.to)].filter((p) => p !== ADMIN && !list.some((c) => c.phone === p)))];
+  sel.innerHTML = list.map((c) => `<option value="${esc(c.phone)}">${esc(c.business)} · ${esc(c.phone)}</option>`).join('') +
+    leads.map((p) => `<option value="${esc(p)}">Novo contato (venda) · ${esc(p)}</option>`).join('') +
+    '<option value="__new">➕ Testar como número novo (vendas)</option>';
+  if (prev === '__new') {
+    const p = '5500' + String(Math.floor(Math.random() * 1e7)).padStart(7, '0');
+    newPhones.push(p);
+    sel.insertAdjacentHTML('afterbegin', `<option value="${p}">Novo contato (venda) · ${p}</option>`);
+    sel.value = p;
+  } else sel.value = prev && [...sel.options].some((o) => o.value === prev) ? prev : (sel.options[0]?.value || '');
   current = sel.value;
   const c = list.find((x) => x.phone === current);
   $('#info').textContent = c ? `Plano ${c.plan} · ${c.credits} créditos · ${c.onboarded ? 'onboarding feito' : 'onboarding pendente'}` : '';

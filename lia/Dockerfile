@@ -3,9 +3,9 @@ ENV NODE_ENV=production DATA_DIR=/data
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
-COPY --chown=node:node . .
-RUN mkdir -p /data && chown node:node /data
-# Roda sem privilégios de administrador: se alguém invadir o processo, não manda na máquina.
-USER node
+COPY . .
+RUN mkdir -p /data
+# Começa como root só para ajustar o dono do disco montado (/data);
+# o servidor troca para o usuário "node", sem privilégios, antes de abrir qualquer porta.
 EXPOSE 3000
 CMD ["npm", "start"]
