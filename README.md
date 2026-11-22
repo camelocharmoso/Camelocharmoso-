@@ -45,3 +45,9 @@ O Claude Code oferece instalar estes plugins oficiais (marketplace `claude-plugi
 ## Pelo claude.ai (web, desktop e celular)
 
 Mobbin, Figma, Expo e Higgsfield também existem como conectores em claude.ai → Configurações → Conectores. Conectando lá, eles funcionam em todas as suas conversas e também no Claude Code.
+
+## Projetos
+
+| Pasta | O que é |
+|---|---|
+| `lia/` | Lia, a equipe de marketing com IA que atende pelo WhatsApp. Veja `lia/README.md`. |
