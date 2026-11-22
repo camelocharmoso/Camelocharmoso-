@@ -36,7 +36,10 @@ const WIDTH = { round: 0.74, black: 0.62, blackUpper: 0.7, wide: 0.8, slab: 0.66
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const fit = (text, kind, maxW, maxSize, minSize = 40) => Math.max(minSize, Math.min(maxSize, Math.floor(maxW / (Math.max(1, text.length) * WIDTH[kind]))));
 
+let THEMED = null; // fonte temática ativa (só para títulos grandes)
 function T(x, y, size, fill, txt, { anchor = "start", font = F.body, weight = 600, ls = 0, opacity, rotate, stroke, strokeW, italic } = {}) {
+  // fonte temática (gótica, por exemplo) só fica legível em tamanho grande
+  if (THEMED && font === THEMED && size < 56) font = "Archivo Black";
   const attrs = [
     italic ? `font-style="italic"` : "",
     `x="${x}"`, `y="${y}"`, `font-family="${font}"`, `font-size="${size}"`, `font-weight="${weight}"`,
@@ -199,7 +202,15 @@ function footer(ctx, W, y, color) {
   return T(W / 2, y, 28, color, txt, { anchor: "middle", font: F.body, weight: 600, opacity: 0.85 });
 }
 
+/** Logo do cliente (PNG com fundo transparente), centralizado em cx, com a altura pedida. */
+function logoImg(ctx, cx, top, h) {
+  const l = ctx.logo;
+  const w = h * (l.w / l.h);
+  return `<image href="${l.uri}" x="${cx - w / 2}" y="${top}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet"/>`;
+}
+
 function brandTag(ctx, W, y, color) {
+  if (ctx.logo) return logoImg(ctx, W / 2, Math.max(16, y - 110), 175);
   return T(W / 2, y, 30, color, ctx.name.toUpperCase().slice(0, 30), { anchor: "middle", font: F.black, weight: 800, ls: 7 });
 }
 
@@ -278,7 +289,8 @@ function oferta(ctx, W, H) {
   // selo do nome no topo
   const nm = ctx.name.toUpperCase().slice(0, 26);
   const tw = Math.max(240, nm.length * 19 + 70);
-  s += `<rect x="${W / 2 - tw / 2}" y="${oy + 70}" width="${tw}" height="64" rx="32" fill="${p.bg}"/>` + T(W / 2, oy + 113, 28, pick(p.bg, p.light, p.ink), nm, { anchor: "middle", font: F.black, weight: 800, ls: 5 });
+  if (ctx.logo) s += logoImg(ctx, W / 2, oy + 30, 170);
+  else s += `<rect x="${W / 2 - tw / 2}" y="${oy + 70}" width="${tw}" height="64" rx="32" fill="${p.bg}"/>` + T(W / 2, oy + 113, 28, pick(p.bg, p.light, p.ink), nm, { anchor: "middle", font: F.black, weight: 800, ls: 5 });
   const lines = wrap(ctx.spec.title, 13, 2);
   const size = Math.min(...lines.map((l) => fit(l, "slab", 900, 128, 70)));
   lines.forEach((l, i) => { s += T(W / 2, oy + 250 + size * 0.78 + i * size * 0.98, size, titleColor, l, { anchor: "middle", font: F.slab, weight: 400, ls: -1 }); });
@@ -306,7 +318,7 @@ function cinema(ctx, W, H) {
     <linearGradient id="${id}t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".65"/><stop offset=".3" stop-color="#000" stop-opacity="0"/></linearGradient>
     <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".9"/></linearGradient></defs>
     <rect width="${W}" height="${H}" fill="url(#${id}t)"/><rect width="${W}" height="${H}" fill="url(#${id}b)"/>`;
-  s += T(70, 110, 30, "#ffffff", ctx.name.toUpperCase().slice(0, 30), { font: F.black, weight: 800, ls: 8 });
+  s += ctx.logo ? logoImg(ctx, 160, 36, 230) : T(70, 110, 30, "#ffffff", ctx.name.toUpperCase().slice(0, 30), { font: F.black, weight: 800, ls: 8 });
   const lines = wrap(clean(ctx.spec.title).toUpperCase(), 13, 3);
   const size = Math.min(...lines.map((l) => fit(l, "wide", 900, 124, 60)));
   const sub = clean(ctx.spec.subtitle);
@@ -683,7 +695,11 @@ function richLines(text, maxChars) {
   const tokens = [];
   String(text || "").split(/(\*[^*]+\*)/).forEach((part) => {
     const hl = /^\*[^*]+\*$/.test(part);
-    clean(hl ? part.slice(1, -1) : part).split(" ").filter(Boolean).forEach((w) => tokens.push({ w, hl }));
+    clean(hl ? part.slice(1, -1) : part).split(" ").filter(Boolean).forEach((w) => {
+      // pontuação logo depois de um destaque gruda na palavra anterior (sem espaço)
+      if (/^[.,!?;:…)]+/.test(w) && tokens.length && !part.startsWith(" ")) { const m = w.match(/^[.,!?;:…)]+/)[0]; tokens[tokens.length - 1].tail = m; w = w.slice(m.length); if (!w) return; }
+      tokens.push({ w, hl });
+    });
   });
   const lines = [[]];
   let len = 0;
@@ -699,9 +715,10 @@ function richText(x, y, size, color, hlColor, lines, { anchor = "start", lh = 1.
   return lines.map((line, i) => {
     const spans = line.map((t, k) => {
       const sp = k < line.length - 1 ? " " : "";
+      const tail = t.tail ? `<tspan>${esc(t.tail)}</tspan>` : "";
       return t.hl
-        ? `<tspan font-family="${F.serif}" font-style="italic" font-weight="400" font-size="${Math.round(size * 1.18)}" fill="${hlColor}">${esc(t.w + sp)}</tspan>`
-        : `<tspan>${esc(t.w + sp)}</tspan>`;
+        ? `<tspan font-family="${F.serif}" font-style="italic" font-weight="400" font-size="${Math.round(size * 1.18)}" fill="${hlColor}">${esc(t.w)}</tspan>${tail}<tspan>${sp}</tspan>`
+        : `<tspan>${esc(t.w)}</tspan>${tail}<tspan>${sp}</tspan>`;
     }).join("");
     return `<text x="${x}" y="${y + i * size * lh}" font-family="${F.body}" font-weight="600" font-size="${size}" fill="${color}" text-anchor="${anchor}" xml:space="preserve">${spans}</text>`;
   }).join("");
@@ -929,7 +946,9 @@ const BUILDERS = { eco, script, oferta, cinema, fogo, splash, arco, enquete, fra
  * Monta a arte.
  * input: { client, spec: {title, badge, subtitle}, template, format: "feed"|"story", photo: {uri,w,h}|null, cutout: {uri,w,h}|null }
  */
-export function renderTemplate({ client, spec, template, format = "feed", photo = null, cutout = null, extra = [] }) {
+export const TITLE_FONTS = { gotica: "Pirata One" };
+
+export function renderTemplate({ client, spec, template, format = "feed", photo = null, cutout = null, extra = [], logo = null }) {
   const W = 1080, H = format === "story" ? 1920 : 1350;
   const brand = client.brand || {};
   let n = 0;
@@ -943,12 +962,18 @@ export function renderTemplate({ client, spec, template, format = "feed", photo 
       details: clean(spec.details), kicker: clean(spec.kicker), options: (spec.options || []).map(clean).filter(Boolean),
       items: (spec.items || []).slice(0, 2).map((i) => ({ name: clean(i.name), details: clean(i.details), price: clean(i.price) })),
     },
-    photo, cutout, extra,
+    photo, cutout, extra, logo,
     words: /burg|hamb|lanch|smash/i.test(`${brand.segment || ""}`) ? ["SUCULENTO", "NA BRASA", "PEÇA JÁ", "SABOR"] : ["NOVIDADE", "PEÇA JÁ", "QUALIDADE", "SABOR"],
     id: () => `t${salt}${++n}`,
   };
   const build = BUILDERS[template] || eco;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${build(ctx, W, H)}</svg>`;
+  // Fonte de título temática da marca (ex.: gótica para uma hamburgueria viking).
+  const themed = TITLE_FONTS[brand.title_font];
+  const saved = { black: F.black, wide: F.wide, cond: F.cond, slab: F.slab, round: F.round };
+  if (themed) { Object.assign(F, { black: themed, wide: themed, cond: themed, slab: themed, round: themed }); THEMED = themed; }
+  let body;
+  try { body = build(ctx, W, H); } finally { Object.assign(F, saved); THEMED = null; }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${body}</svg>`;
 }
 
 /** Quais modelos combinam com o pedido e com o material que o cliente mandou. */
