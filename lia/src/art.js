@@ -232,18 +232,22 @@ export function renderPng(svg) {
 
 export const mediaDir = () => path.join(config.dataDir, "media");
 
+export const MEDIA_NAME = /^[a-f0-9]{24}\.(png|jpg|webp)$/;
+const PHOTO_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+
 export function saveMedia(buffer, ext = "png") {
+  if (!["png", "jpg", "webp"].includes(ext)) throw new Error("extensão não permitida");
   fs.mkdirSync(mediaDir(), { recursive: true });
   const name = `${crypto.randomBytes(12).toString("hex")}.${ext}`;
   fs.writeFileSync(path.join(mediaDir(), name), buffer);
   return name;
 }
 
-export const mediaPath = (name) => path.join(mediaDir(), path.basename(name));
+export const mediaPath = (name) => path.join(mediaDir(), path.basename(String(name)));
 
 /** Lê uma foto salva como data URI para entrar na arte. */
 export function photoDataUri(photo) {
-  if (!photo) return null;
+  if (!photo || !PHOTO_TYPES.has(photo.mime) || !MEDIA_NAME.test(photo.file)) return null;
   try {
     const buf = fs.readFileSync(mediaPath(photo.file));
     return `data:${photo.mime};base64,${buf.toString("base64")}`;

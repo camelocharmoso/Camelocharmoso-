@@ -4,12 +4,13 @@ import { Actions, ADMIN_SIM_ID } from "./actions.js";
 import { saveMedia } from "./art.js";
 import { PLANS, planOf } from "./plans.js";
 import { transcribe, transcribeEnabled } from "./transcribe.js";
+import { RateLimiter, sniffImage } from "./security.js";
 
 const digits = (s) => String(s || "").replace(/\D/g, "");
-const MAX_IMAGE_BYTES = 4.5 * 1024 * 1024;
-const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+const MIN = 60_000;
 
-export function createHandler({ store, brain, channels, adminChannel }) {
+export function createHandler({ store, brain, channels, adminChannel, limiter = new RateLimiter() }) {
+  const L = config.limits;
   // Uma mensagem por vez para cada número, na ordem em que chegaram.
   const queues = new Map();
   const enqueue = (phone, job) => {
@@ -19,11 +20,14 @@ export function createHandler({ store, brain, channels, adminChannel }) {
     return next;
   };
 
+  // Operador: no WhatsApp, só o ADMIN_PHONE (a Meta garante o remetente, e o webhook confere a assinatura).
   const isAdmin = (msg) =>
-    (config.adminPhone && msg.from === config.adminPhone) || (msg.channel === "sim" && msg.from === ADMIN_SIM_ID);
+    (msg.channel === "whatsapp" && config.adminPhone && msg.from === config.adminPhone) || (msg.channel === "sim" && msg.from === ADMIN_SIM_ID);
 
   async function handle(msg) {
-    if (!store.markProcessed(`${msg.channel}:${msg.id}`)) return;
+    if (!msg.id || !store.markProcessed(`${msg.channel}:${msg.id}`)) return;
+    // Ignora mensagens antigas reenviadas (proteção contra repetição).
+    if (msg.timestamp && Date.now() / 1000 - msg.timestamp > L.maxMessageAgeSec) return;
     const channel = channels[msg.channel];
     msg.from = msg.from === ADMIN_SIM_ID ? ADMIN_SIM_ID : digits(msg.from);
     if (isAdmin(msg) && (msg.text || "").trim().startsWith("/")) return enqueue(msg.from, () => admin(msg, channel));
@@ -34,8 +38,9 @@ export function createHandler({ store, brain, channels, adminChannel }) {
     const phone = msg.from;
     const client = store.getClient(phone);
     if (!client) {
-      await channel.sendText(phone, `Oi! Eu sou a Lia, a equipe de marketing com IA 👋 Este número atende só clientes. ${config.salesContact}`);
+      // Responde e avisa no máximo uma vez por dia por número, para spam não custar nada.
       if (store.shouldNotifyStranger(phone)) {
+        await channel.sendText(phone, `Oi! Eu sou a Lia, a equipe de marketing com IA 👋 Este número atende só clientes. ${config.salesContact}`);
         const a = new Actions({ store, channel, adminChannel, phone });
         await a.notifyAdmin(`👀 Número novo falou com a Lia: ${phone}\nMensagem: ${(msg.text || `[${msg.type}]`).slice(0, 300)}\n\nPara cadastrar: /add ${phone} pro Nome do Negócio`);
       }
@@ -48,21 +53,35 @@ export function createHandler({ store, brain, channels, adminChannel }) {
 
     store.ensurePeriod(phone);
     channel.markRead?.(msg.id);
-    const actions = new Actions({ store, channel, adminChannel, phone });
+    const actions = new Actions({ store, channel, adminChannel, phone, limiter });
+
+    // Limite de mensagens: protege contra spam e contra conta invadida queimando créditos de IA.
+    const recent = limiter.hit(`msg:${phone}`, 10 * MIN);
+    if (recent > L.messagesPer10Min) {
+      if (recent === L.messagesPer10Min + 1) {
+        await actions.say("Opa, chegou muita mensagem de uma vez 😅 Me dá uns minutinhos e manda de novo?");
+        await actions.notifyAdmin(`⚠️ ${client.business} (${phone}) passou de ${L.messagesPer10Min} mensagens em 10 minutos. Pausei as respostas por alguns minutos.`);
+      }
+      return;
+    }
 
     try {
       if (msg.type === "button") return await button(actions, msg);
 
-      let text = (msg.text || "").trim();
+      let text = (msg.text || "").trim().slice(0, L.maxTextChars);
       let image = null;
       let label = text;
 
       if (msg.type === "image") {
         const media = await channel.downloadMedia(msg.mediaId);
-        const mime = IMAGE_TYPES.has(media.mime) ? media.mime : "image/jpeg";
-        const file = saveMedia(media.buffer, mime === "image/png" ? "png" : "jpg");
+        // O tipo vem dos bytes do arquivo, não do que foi declarado.
+        const mime = sniffImage(media.buffer);
+        if (!mime || media.buffer.length > L.maxImageBytes) {
+          return await actions.say("Não consegui abrir essa imagem 😕 Manda como foto (JPG ou PNG), de até 5 MB?");
+        }
+        const file = saveMedia(media.buffer, { "image/png": "png", "image/webp": "webp" }[mime] || "jpg");
         store.addPhoto(phone, file, mime);
-        if (media.buffer.length <= MAX_IMAGE_BYTES) image = { data: media.buffer.toString("base64"), mime };
+        image = { data: media.buffer.toString("base64"), mime };
         label = `[foto]${text ? " " + text : ""}`;
       } else if (msg.type === "audio") {
         if (!transcribeEnabled()) {
@@ -70,7 +89,8 @@ export function createHandler({ store, brain, channels, adminChannel }) {
           return await actions.say("Ainda não consigo ouvir áudio por aqui 🙈 Me manda por escrito?");
         }
         const media = await channel.downloadMedia(msg.mediaId);
-        text = await transcribe(media.buffer, media.mime);
+        if (media.buffer.length > 16 * 1024 * 1024) return await actions.say("Esse áudio ficou muito longo 😅 Manda um mais curto?");
+        text = (await transcribe(media.buffer, media.mime)).slice(0, L.maxTextChars);
         if (!text) return await actions.say("Não consegui entender o áudio 😕 Pode mandar de novo ou escrever?");
         label = `[áudio] ${text}`;
       } else if (msg.type === "video") {
@@ -92,11 +112,20 @@ export function createHandler({ store, brain, channels, adminChannel }) {
         return await actions.schedule(awaiting.group, text.slice(0, 80));
       }
 
+      const turns = limiter.hit(`ai:${phone}`, 24 * 60 * MIN);
+      if (turns > L.aiTurnsPerDay) {
+        if (turns === L.aiTurnsPerDay + 1) {
+          await actions.say("Hoje a gente já conversou bastante 😄 Amanhã cedo eu volto com tudo. Se for urgente, me fala que eu chamo alguém da equipe.");
+          await actions.notifyAdmin(`⚠️ ${client.business} (${phone}) chegou ao limite diário de ${L.aiTurnsPerDay} conversas com a IA.`);
+        }
+        return;
+      }
+
       const history = store.recentMessages(phone);
       store.addMessage(phone, "user", label);
       await brain.respond({ actions, history, text, image });
     } catch (e) {
-      console.error(`[lia] erro com ${phone}:`, e);
+      console.error(`[lia] erro com ${phone}:`, e.message);
       await actions.say("Tive um probleminha aqui 😓 Já avisei a equipe. Tenta de novo em 1 minutinho?").catch(() => {});
       await actions.notifyAdmin(`⚠️ Erro atendendo ${client.business} (${phone}): ${String(e.message || e).slice(0, 300)}`);
     }

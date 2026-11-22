@@ -71,10 +71,40 @@ Preencha as variáveis do `.env.example` no painel da hospedagem. Defina `ADMIN_
 4. Clique em *Verificar e salvar* e assine o campo **messages**.
 5. Do seu número pessoal, mande `/ajuda` para o número da Lia. Se chegar a lista de comandos, está tudo ligado.
 
-O simulador continua disponível em `https://SEU-ENDERECO/sim?token=SEU_ADMIN_TOKEN`.
+O simulador continua disponível em `https://SEU-ENDERECO/sim` (pede a senha `ADMIN_TOKEN`).
 
 ### 4. Áudio (opcional)
 Para a Lia entender áudio, configure `TRANSCRIBE_API_URL`, `TRANSCRIBE_API_KEY` e `TRANSCRIBE_MODEL` com qualquer serviço compatível com o formato Whisper (`/v1/audio/transcriptions`). Sem isso, ela pede para o cliente escrever.
+
+## Segurança
+
+### O que o sistema já faz sozinho
+| Ameaça | Proteção |
+|---|---|
+| Alguém fingir ser a Meta e mandar mensagens falsas | Toda chamada ao `/webhook` precisa da assinatura HMAC do seu app. Sem `WHATSAPP_APP_SECRET`, o servidor **se recusa a subir**. |
+| Invadir o simulador / painel | Senha forte obrigatória (`ADMIN_TOKEN`, 24+ caracteres) enviada por cabeçalho, nunca na URL. Sem senha, só abre no seu computador. Depois de 10 senhas erradas, o IP fica bloqueado por 15 minutos. |
+| Cliente virar operador | Comandos (`/add`, `/creditos`…) só são aceitos do seu número (`ADMIN_PHONE`). |
+| Cliente convencer a IA a dar créditos ("ignore as regras…") | A IA não tem nenhuma ferramenta que mexe em créditos. Débitos e saldos são feitos só pelo código, no clique do botão. |
+| Spam para queimar seus créditos de IA | Limite de 30 mensagens a cada 10 min e 150 conversas por dia por cliente; números desconhecidos recebem no máximo uma resposta por dia e nunca chegam à IA. |
+| Encher seu WhatsApp de avisos | No máximo 3 pedidos de "falar com humano" por hora por cliente. |
+| Arquivo malicioso disfarçado de foto | O tipo é conferido pelos bytes do arquivo (só JPG, PNG e WEBP), com limite de 5 MB. Download de mídia só dos servidores da Meta. |
+| Repetir mensagens antigas | Cada mensagem é processada uma vez só; mensagens com mais de 24 h são ignoradas. |
+| Ler arquivos do servidor pela URL | Nomes de arquivo validados; qualquer outra rota responde 404. |
+| Ataques pelo navegador (XSS, clickjacking) | Cabeçalhos de segurança (CSP sem scripts embutidos, `X-Frame-Options`, `nosniff`, HSTS em HTTPS). Todo texto exibido é escapado. |
+| Vazamento de detalhes técnicos | Erros internos vão só para o log; o cliente recebe mensagem genérica. |
+| Invasor tomar a máquina | O contêiner roda sem privilégios de administrador. |
+
+`npm test` roda também os testes de segurança (assinatura, senha, força bruta, spam, arquivos falsos).
+
+### O que depende de você
+1. **Senhas fortes e únicas** para `ADMIN_TOKEN` e `WHATSAPP_VERIFY_TOKEN` (`openssl rand -hex 24`). Nunca mande essas chaves por WhatsApp, e-mail ou print.
+2. **Verificação em duas etapas** em tudo: Meta (Facebook), Anthropic, GitHub, hospedagem e seu e-mail. A maioria das invasões começa por uma conta pessoal sem 2FA.
+3. **PIN de duas etapas no número da Lia** (Meta → WhatsApp → Números de telefone → Verificação em duas etapas) e no seu chip pessoal (`ADMIN_PHONE` manda no sistema). Peça à operadora bloqueio de portabilidade/troca de chip.
+4. **Limite de gasto** em console.anthropic.com → Limits, para um problema nunca virar uma conta gigante.
+5. **Backup** da pasta `/data` (banco e artes) pelo menos uma vez por semana.
+6. **Atualizações**: rode `npm audit` e `npm update` uma vez por mês.
+7. **Se suspeitar de vazamento**: gere um novo token na Meta, troque `ADMIN_TOKEN`, `WHATSAPP_APP_SECRET` e a chave do Claude, e reinicie.
+8. **LGPD**: você guarda nome, telefone, fotos e conversas dos clientes. Informe isso no contrato e apague os dados de quem cancelar (peça que eu crie o comando quando precisar).
 
 ## Custos de IA
 
@@ -93,6 +123,7 @@ src/art.js               templates das artes (SVG → PNG)
 src/db.js                banco SQLite
 src/plans.js             planos, preços e custo em créditos
 src/channels/            WhatsApp Cloud API e canal do simulador
-public/sim.html          simulador
+src/security.js          assinatura, senhas, limites, validação de arquivos, cabeçalhos
+public/                  simulador (HTML, CSS e JS separados por causa da CSP)
 fonts/                   fonte Inter (licença OFL, em fonts/LICENSE-Inter.txt)
 ```

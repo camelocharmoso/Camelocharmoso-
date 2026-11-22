@@ -65,10 +65,17 @@ export const whatsapp = {
   },
 
   async downloadMedia(mediaId) {
+    if (!/^\d{1,32}$/.test(String(mediaId))) throw new Error("id de mídia inválido");
     const meta = await call(`${base()}/${mediaId}`, { headers: auth() });
+    // Só baixa do domínio da Meta e com limite de tamanho.
+    const host = new URL(meta.url).hostname;
+    if (!/(^|\.)(fbsbx\.com|fbcdn\.net|facebook\.com|whatsapp\.net)$/.test(host)) throw new Error(`mídia em domínio inesperado: ${host}`);
+    if (Number(meta.file_size) > 16 * 1024 * 1024) throw new Error("mídia grande demais");
     const res = await fetch(meta.url, { headers: auth() });
     if (!res.ok) throw new Error(`download de mídia falhou: ${res.status}`);
-    return { buffer: Buffer.from(await res.arrayBuffer()), mime: meta.mime_type || "application/octet-stream" };
+    const buffer = Buffer.from(await res.arrayBuffer());
+    if (buffer.length > 16 * 1024 * 1024) throw new Error("mídia grande demais");
+    return { buffer, mime: meta.mime_type || "application/octet-stream" };
   },
 
   async markRead(messageId) {
@@ -89,7 +96,7 @@ export function parseWebhook(body) {
     for (const change of entry.changes || []) {
       const value = change.value || {};
       for (const m of value.messages || []) {
-        const base = { id: m.id, from: m.from, channel: "whatsapp" };
+        const base = { id: m.id, from: m.from, channel: "whatsapp", timestamp: Number(m.timestamp) || 0 };
         if (m.type === "text") out.push({ ...base, type: "text", text: m.text?.body || "" });
         else if (m.type === "image") out.push({ ...base, type: "image", mediaId: m.image?.id, text: m.image?.caption || "" });
         else if (m.type === "audio") out.push({ ...base, type: "audio", mediaId: m.audio?.id });

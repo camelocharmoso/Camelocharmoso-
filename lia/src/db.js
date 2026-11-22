@@ -3,6 +3,7 @@ import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { config } from "./config.js";
 import { planOf } from "./plans.js";
+import { mediaPath } from "./art.js";
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS clients (
@@ -230,6 +231,16 @@ class Store {
   latestPhoto(phone) { return this.db.prepare("SELECT * FROM photos WHERE phone = ? ORDER BY id DESC LIMIT 1").get(phone) || null; }
 
   // ---------- housekeeping ----------
+  /** Apaga registros de deduplicação com mais de 7 dias e artes descartadas com mais de 30. */
+  cleanup() {
+    this.db.prepare("DELETE FROM processed WHERE created_at < datetime('now', '-7 days')").run();
+    const old = this.db.prepare("SELECT id, file FROM arts WHERE status = 'discarded' AND created_at < datetime('now', '-30 days')").all();
+    for (const a of old) {
+      try { fs.unlinkSync(mediaPath(a.file)); } catch { /* já apagado */ }
+      this.db.prepare("DELETE FROM arts WHERE id = ?").run(a.id);
+    }
+    return old.length;
+  }
   /** Marca a mensagem como processada. Devolve false se já tinha sido. */
   markProcessed(msgId) {
     try { this.db.prepare("INSERT INTO processed (msg_id) VALUES (?)").run(msgId); return true; }

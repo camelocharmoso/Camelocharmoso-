@@ -265,8 +265,9 @@ export function createBrain({ anthropic } = {}) {
         try {
           result = await runTool(actions, tu.name, tu.input || {});
         } catch (e) {
-          console.error(`[lia] ferramenta ${tu.name} falhou:`, e);
-          result = { ok: false, message: `Falha técnica: ${e.message}. Peça desculpas e ofereça chamar a equipe.` };
+          console.error(`[lia] ferramenta ${tu.name} falhou:`, e.message);
+          // Detalhes técnicos ficam no log; o modelo (e o cliente) só sabem que falhou.
+          result = { ok: false, message: "Falha técnica ao executar. Peça desculpas e ofereça chamar a equipe." };
         }
         results.push({ type: "tool_result", tool_use_id: tu.id, content: result.message, ...(result.ok ? {} : { is_error: true }) });
         if (!(result.ok && FINAL_TOOLS.has(tu.name))) allFinal = false;

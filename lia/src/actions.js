@@ -13,7 +13,8 @@ export class Actions {
   /**
    * @param {object} deps { store, channel, adminChannel, phone }
    */
-  constructor({ store, channel, adminChannel, phone }) {
+  constructor({ store, channel, adminChannel, phone, limiter }) {
+    this.limiter = limiter;
     this.store = store;
     this.channel = channel;
     this.adminChannel = adminChannel || channel;
@@ -216,6 +217,10 @@ export class Actions {
   }
 
   async callHuman(reason) {
+    // Evita que alguém use a Lia para encher seu WhatsApp de avisos.
+    if (this.limiter && this.limiter.hit(`human:${this.phone}`, 60 * 60_000) > config.limits.humanCallsPerHour) {
+      return { ok: true, message: "A equipe já foi avisada e vai responder por aqui. Diga isso ao cliente." };
+    }
     const id = this.store.addTask(this.phone, "humano", reason);
     const c = this.client;
     await this.notifyAdmin(`🙋 *Tarefa t${id}* · ${c.business} (${c.phone}) quer falar com a equipe:\n${reason}\n\nResponder: /msg ${c.phone} sua mensagem\nEncerrar: /feito t${id}`);

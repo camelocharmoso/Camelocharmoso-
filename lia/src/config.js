@@ -28,6 +28,20 @@ export const config = {
   },
 
   timezone: "America/Sao_Paulo",
+
+  // Quantos proxies existem na frente do servidor (Railway, Render e Cloudflare usam 1).
+  // Serve para saber o IP real de quem acessa e aplicar os limites. Use 0 se o Node recebe direto.
+  trustProxy: Number(env.TRUST_PROXY ?? 1),
+
+  // Limites contra spam e abuso (cada mensagem que chega ao Claude custa dinheiro).
+  limits: {
+    messagesPer10Min: Number(env.LIMIT_MESSAGES_10MIN || 30),
+    aiTurnsPerDay: Number(env.LIMIT_AI_TURNS_DAY || 150),
+    humanCallsPerHour: 3,
+    maxTextChars: 2000,
+    maxImageBytes: 5 * 1024 * 1024,
+    maxMessageAgeSec: 24 * 3600,
+  },
 };
 
 export const waEnabled = () => Boolean(config.wa.token && config.wa.phoneNumberId);
