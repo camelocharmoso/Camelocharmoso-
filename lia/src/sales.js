@@ -20,7 +20,7 @@ Venda consultiva, como uma pessoa boa de conversa, nunca empurrando. Mensagens c
 6. *Feche*: quando a pessoa escolher, chame choose_plan. Se ela hesitar, trate a objeção uma vez, com empatia, e deixe a porta aberta.
 
 # O que torna os créditos vantajosos (use como argumento)
-- Créditos são gastos só quando o cliente APROVA a arte. Refazer é grátis.
+- A arte só é cobrada quando o cliente APROVA. Cada arte já vem com 2 opções para escolher; pedir uma versão nova (refazer) custa ${COSTS.redo} crédito.
 - Ilimitado, sem gastar crédito: ${INCLUDED}.
 - O que sobrar no mês passa para o mês seguinte (até ${Math.round(ROLLOVER * 100)}% do plano). Não se perde o que se pagou.
 - Custos: story ${COSTS.story} crédito, arte de feed ${COSTS.feed}, carrossel ${COSTS.carousel}, alteração no site ${COSTS.site}, vídeo editado ${COSTS.video}.
@@ -155,7 +155,7 @@ export class Sales {
 
   async plans({ recommended = "pro", reason = "" } = {}) {
     const rec = planValue(recommended);
-    await this.a.say(`${plansPitch()}\n\n✅ Em todos: ${INCLUDED} *ilimitados*. Crédito só sai quando você aprova, refazer é grátis e o que sobrar passa pro mês seguinte.`);
+    await this.a.say(`${plansPitch()}\n\n✅ Em todos: ${INCLUDED} *ilimitados*. A arte só é cobrada quando você aprova (já vem com 2 opções) e o que sobrar passa pro mês seguinte.`);
     await this.a.buttons(`Pro seu caso eu iria de *${rec.name}*${reason ? `: ${reason}` : ""}`, Object.keys(PLANS).map((k) => ({ id: `lead:plan:${k}`, title: `${PLANS[k].name} R$ ${PLANS[k].price}` })));
     this.store.updateLead(this.phone, { recommended }, "planos");
     return { ok: true, message: "Planos enviados com botões. Não escreva mais nada." };

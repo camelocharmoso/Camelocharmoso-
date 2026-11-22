@@ -91,8 +91,8 @@ export class Actions {
 
     const price = cost ? `Aprovar usa ${plural(cost, "crédito", "créditos")}.` : "Essa é por nossa conta 🎁";
     const btns = kind === "feed"
-      ? [{ id: `pick:${ids[0]}`, title: "Quero a 1" }, { id: `pick:${ids[1]}`, title: "Quero a 2" }, { id: `redo:${group}`, title: "Refazer" }]
-      : [{ id: `pick:${ids[0]}`, title: "Aprovar" }, { id: `redo:${group}`, title: "Refazer" }];
+      ? [{ id: `pick:${ids[0]}`, title: "Quero a 1" }, { id: `pick:${ids[1]}`, title: "Quero a 2" }, { id: `redo:${group}`, title: `Refazer · ${COSTS.redo} crédito` }]
+      : [{ id: `pick:${ids[0]}`, title: "Aprovar" }, { id: `redo:${group}`, title: `Refazer · ${COSTS.redo} crédito` }];
     await this.buttons(kind === "feed" ? `Qual você prefere? ${price}` : `Gostou? ${price}`, btns);
     this.sentArt = true;
     return { ok: true, message: "Artes enviadas com botões de escolha. Não escreva mais nada neste turno." };
@@ -118,7 +118,7 @@ export class Actions {
     }
     this.store.addMessage(this.phone, "assistant", `[Lia enviou um carrossel de ${ids.length} slides: "${spec.cover_title}"]`);
     const price = cost ? `Aprovar usa ${plural(cost, "crédito", "créditos")}.` : "Esse é por nossa conta 🎁";
-    await this.buttons(`Carrossel pronto! ${price}`, [{ id: `pick:${ids[0]}`, title: "Aprovar" }, { id: `redo:${group}`, title: "Trocar as cores" }]);
+    await this.buttons(`Carrossel pronto! ${price}`, [{ id: `pick:${ids[0]}`, title: "Aprovar" }, { id: `redo:${group}`, title: `Refazer · ${COSTS.redo} crédito` }]);
     this.sentArt = true;
     return { ok: true, message: "Carrossel enviado com botões. Não escreva mais nada neste turno." };
   }
@@ -153,18 +153,23 @@ export class Actions {
     ]);
   }
 
-  /** Botão "Refazer" / "Trocar as cores": grátis, até 3 vezes. */
+  /** Botão "Refazer": custa COSTS.redo crédito, cobrado na hora. Depois de 3 vezes, a equipe assume. */
   async redo(group) {
     const arts = this.store.groupArts(group, "option");
     if (!arts.length || arts[0].phone !== this.phone) return this.say("Essa arte já foi aprovada ou trocada 👍");
     const spec = arts[0].spec;
     const redo = (spec.redo || 0) + 1;
-    this.store.setGroupStatus(group, "discarded");
     if (redo > 3) {
+      this.store.setGroupStatus(group, "discarded");
       await this.callHuman("Cliente refez a mesma arte 3 vezes e não gostou. Fazer uma versão manual.");
-      return this.say("Vou pedir pra alguém da equipe caprichar numa versão feita à mão. Te mando ainda hoje 🙌");
+      return this.say("Vou pedir pra alguém da equipe caprichar numa versão feita à mão, sem custo a mais. Te mando ainda hoje 🙌");
     }
-    await this.say("Bora! Testei outra combinação 👇");
+    if (!this.store.spend(this.phone, COSTS.redo, `refazer (${group})`)) {
+      await this.say(`Refazer usa ${plural(COSTS.redo, "crédito", "créditos")} e seus créditos acabaram 😅 Você ainda pode aprovar uma das opções acima.`);
+      return this.offerPack();
+    }
+    this.store.setGroupStatus(group, "discarded");
+    await this.say(`Bora! Fiz outra versão 👇 (usou ${plural(COSTS.redo, "crédito", "créditos")}, restam ${this.client.credits})`);
     if (arts[0].kind === "carousel") return this.createCarousel(spec, { redo, free: spec.free });
     return this.createArt(spec, { redo, free: spec.free });
   }
@@ -215,7 +220,7 @@ export class Actions {
   creditsInfo() {
     const c = this.client;
     const plan = planOf(c.plan);
-    return { ok: true, message: `Plano ${plan.name} (R$ ${plan.price}/mês). Créditos disponíveis: ${c.credits} de ${plan.credits}. Renova no dia 1º de cada mês. Custos: story ${COSTS.story}, arte de feed ${COSTS.feed}, alteração no site ${COSTS.site}, carrossel ${COSTS.carousel}, vídeo editado ${COSTS.video}. Legendas, ideias, roteiros e respostas de avaliação são livres.` };
+    return { ok: true, message: `Plano ${plan.name} (R$ ${plan.price}/mês). Créditos disponíveis: ${c.credits} de ${plan.credits}. Renova no dia 1º de cada mês. Custos: story ${COSTS.story}, arte de feed ${COSTS.feed}, alteração no site ${COSTS.site}, carrossel ${COSTS.carousel}, vídeo editado ${COSTS.video}, refazer ${COSTS.redo}. Legendas, ideias, roteiros e respostas de avaliação são livres.` };
   }
 
   // ---------- equipe ----------

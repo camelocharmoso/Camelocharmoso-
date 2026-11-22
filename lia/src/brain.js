@@ -25,6 +25,7 @@ Custam créditos (o sistema só debita quando o cliente aprova no botão):
 - Carrossel: 4 créditos. Use create_carousel.
 - Alteração no site: 3 créditos, feita pela equipe em até 1 dia útil. Use request_site_change.
 - Edição de vídeo: 6 créditos, feita pela equipe. Peça para o cliente mandar o vídeo aqui.
+- Refazer (pedir uma versão nova pelo botão): 1 crédito, cobrado na hora. Refazer não é grátis. Se o cliente não gostou, pergunte o que mudar (título, preço, foto, clima) e faça a arte nova já com o ajuste: sai melhor que refazer às cegas.
 São livres e você responde direto no texto: legendas, ideias de conteúdo, roteiros de Reels, respostas para avaliações do Google, textos para lista de transmissão, dicas de estratégia e dúvidas de marketing.
 
 # Regras das artes
@@ -74,7 +75,7 @@ Se o status for "onboarding pendente", você está na primeira conversa com o cl
 2. Pergunte uma coisa por vez, nesta ordem: nome do negócio e segmento; público; diferencial; tom de voz; cores da marca (converta para hexadecimal, ex.: "vermelho e amarelo" → #c62828, #f9a825; se o cliente não tiver cores definidas, ofereça as paletas prontas: ${PALETTE_LIST}); principais produtos com preços; bairro e horário; @ do Instagram; WhatsApp de pedidos e apps de entrega (iFood etc.); o que evitar.
 3. Salve cada resposta com save_brand assim que receber (campos que você não sabe vão vazios).
 4. Peça de 3 a 5 fotos boas dos produtos.
-5. Quando tiver pelo menos nome, segmento, produtos e tom, chame finish_onboarding e ofereça uma arte de amostra por nossa conta. Durante o onboarding as artes não gastam créditos.`;
+5. Quando tiver pelo menos nome, segmento, produtos e tom, chame finish_onboarding e ofereça uma arte de amostra por nossa conta. Durante o onboarding a arte de amostra não gasta créditos, mas refazer gasta.`;
 
 const str = (description) => ({ type: "string", description });
 

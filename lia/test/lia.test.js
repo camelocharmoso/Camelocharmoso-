@@ -151,15 +151,15 @@ test("aprovar debita créditos, mostra legenda e agenda; operador recebe o post"
   assert.equal(store.getClient(PHONE).credits, 58);
 });
 
-test("refazer é grátis e troca as cores", async () => {
+test("refazer custa 1 crédito e troca o modelo", async () => {
   reset([toolUse("create_art", { ...ART, format: "story" })]);
   await send({ from: PHONE, type: "text", text: "faz um story" });
   const redo = out().at(-1).buttons[1];
-  assert.equal(redo.title, "Refazer");
+  assert.equal(redo.title, "Refazer · 1 crédito");
   sim.reset();
   await send({ from: PHONE, type: "button", buttonId: redo.id, text: redo.title });
   assert.deepEqual(out().map((m) => m.type), ["text", "image", "buttons"]);
-  assert.equal(store.getClient(PHONE).credits, 58);
+  assert.equal(store.getClient(PHONE).credits, 57);
 });
 
 test("outro horário: a próxima mensagem vira o horário do post", async () => {

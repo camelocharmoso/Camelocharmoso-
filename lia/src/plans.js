@@ -6,7 +6,7 @@ export const PLANS = {
   premium: { name: "Premium", price: 797, credits: 150, extras: ["site completo + cardápio digital", "Google Meu Negócio", "campanhas do mês", "revisão humana de todas as artes"] },
 };
 
-export const COSTS = { story: 1, feed: 2, site: 3, carousel: 4, video: 6 };
+export const COSTS = { story: 1, feed: 2, site: 3, carousel: 4, video: 6, redo: 1 };
 
 export const EXTRA_PACK = { credits: 20, price: 49 };
 
