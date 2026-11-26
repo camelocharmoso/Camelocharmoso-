@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mr.book Black Friday</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=block" rel="stylesheet">
+<style>
+:root{
+  --y:#F8CA26; --ink:#121318; --bg:#16171C; --bg2:#0E0F13; --red:#E4342B;
+  --muted:#9A9CA6; --line:#2A2C34;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1350px;background:var(--bg);overflow:hidden}
+body{font-family:'Inter Tight',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+.post{position:relative;width:1080px;height:1350px;overflow:hidden}
+.display{font-family:'Archivo',sans-serif;font-weight:900;font-stretch:125%;text-transform:uppercase;letter-spacing:-.01em;line-height:.9}
+.mono{font-family:'JetBrains Mono',monospace;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+
+/* topo */
+.top{position:absolute;left:64px;right:64px;top:58px;display:flex;justify-content:space-between;align-items:center}
+.logo{height:46px}
+.pill{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:20px;letter-spacing:.12em;padding:10px 22px;border-radius:999px;background:var(--red);color:#fff;text-transform:uppercase}
+.pill.out{background:transparent;border:2px solid currentColor}
+
+.eyebrow{position:absolute;left:64px;top:170px;font-size:21px;color:var(--muted)}
+.eyebrow b{color:var(--y);font-weight:700}
+h1{position:absolute;left:64px;right:64px;top:212px;font-size:92px}
+h1 .l{display:block}
+h1 .hl{display:inline-block;background:var(--y);color:var(--ink);padding:6px 14px 0 12px;margin-left:-12px;margin-top:8px}
+
+/* palco do produto */
+.card{position:absolute;left:64px;top:470px;width:560px;height:600px;border-radius:26px;background:#fff;overflow:hidden}
+.card img{width:100%;height:100%;display:block}
+.card.contain img{object-fit:contain;padding:44px}
+.card.cover img{object-fit:cover}
+.tag{position:absolute;left:20px;top:20px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:#fff;padding:8px 14px;border-radius:999px}
+
+.price{position:absolute;left:40px;top:1000px;background:var(--y);color:var(--ink);border-radius:22px;padding:20px 30px 18px;box-shadow:0 18px 40px rgba(0,0,0,.45);transform:rotate(-2deg)}
+.price .lab{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:17px;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+.price .val{font-family:'Archivo',sans-serif;font-weight:900;font-stretch:125%;font-size:120px;line-height:.95;display:flex;align-items:flex-start;letter-spacing:-.02em}
+.price .rs{font-size:40px;margin:16px 10px 0 0}
+.price .cts{font-size:46px;margin:12px 0 0 4px}
+
+.side{position:absolute;left:660px;right:56px;top:486px}
+.side .k{font-size:18px;color:var(--muted);margin-bottom:22px}
+.checks{list-style:none;display:flex;flex-direction:column;gap:26px}
+.checks li{display:flex;gap:14px;align-items:flex-start;font-size:25px;line-height:1.22;font-weight:500}
+.checks li i{flex:none;width:32px;height:32px;border-radius:50%;background:var(--y);display:grid;place-items:center;margin-top:-1px}
+.checks li i svg{width:18px;height:18px}
+.stock{margin-top:40px;border:2px dashed #3A3C45;border-radius:18px;padding:18px 20px;font-size:21px;line-height:1.3;color:#D6D7DC}
+.stock b{color:var(--y)}
+
+.swatches{display:flex;gap:10px;margin-top:30px}
+.swatches span{width:34px;height:34px;border-radius:50%;border:3px solid var(--bg);box-shadow:0 0 0 2px #3A3C45}
+
+/* pulso + rodapé */
+.pulse{position:absolute;left:0;right:0;bottom:84px;height:90px}
+.foot{position:absolute;left:0;right:0;bottom:0;height:84px;background:var(--bg2);display:flex;align-items:center;justify-content:space-between;padding:0 64px;font-size:18px;color:#C9CAD0}
+.foot b{color:var(--y);font-weight:700}
+
+/* lanternas em leque */
+.fan{position:absolute;inset:0}
+.fan img{position:absolute;width:600px;left:50%;top:50%;object-fit:contain;mix-blend-mode:multiply}
+
+/* ---------- capa (amarela) ---------- */
+.cover-post{background:var(--y);color:var(--ink)}
+.cover-post .eyebrow{color:#5b4a06}
+.cover-post .big{position:absolute;left:58px;top:200px;font-size:196px;line-height:.86}
+.cover-post .big .dot{color:var(--ink)}
+.cover-post .sub{position:absolute;left:64px;top:620px;font-size:36px;line-height:1.18;font-weight:600;max-width:540px}
+.cover-post .from{position:absolute;left:64px;top:800px;background:var(--ink);color:#fff;border-radius:24px;padding:22px 30px}
+.cover-post .from .lab{font-family:'JetBrains Mono',monospace;font-size:18px;letter-spacing:.14em;color:var(--y)}
+.cover-post .from .val{font-family:'Archivo';font-weight:900;font-stretch:125%;font-size:104px;line-height:1;display:flex;align-items:flex-start}
+.cover-post .from .rs{font-size:38px;margin:14px 10px 0 0}
+.cover-post .from .cts{font-size:42px;margin:10px 0 0 4px}
+.cover-post .foot{background:var(--ink)}
+.cover-post .swipe{position:absolute;right:64px;bottom:128px;display:flex;gap:14px;align-items:center;font-family:'Archivo';font-weight:900;font-stretch:125%;font-size:26px}
+.cover-post .swipe i{width:52px;height:52px;border-radius:50%;background:var(--ink);display:grid;place-items:center}
+.thumbs{position:absolute;right:60px;top:660px;width:360px;display:grid;grid-template-columns:1fr 1fr;gap:14px;transform:rotate(3deg)}
+.thumbs div{aspect-ratio:1;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.thumbs img.c{object-fit:contain;padding:14px}
+
+/* ---------- tabela ---------- */
+.list{position:absolute;left:64px;right:64px;top:410px}
+.row{display:flex;align-items:baseline;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}
+.row .n{font-family:'JetBrains Mono';font-size:17px;color:var(--muted);width:34px}
+.row .t{font-size:27px;font-weight:600}
+.row .t small{font-size:20px;color:var(--muted);font-weight:500;margin-left:6px}
+.row .d{flex:1;border-bottom:2px dotted #3A3C45;transform:translateY(-6px)}
+.row .p{font-family:'Archivo';font-weight:900;font-stretch:125%;font-size:32px;color:var(--y)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="#121318" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const ARROW='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F8CA26" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+const PULSE=`<svg class="pulse" viewBox="0 0 1080 90" preserveAspectRatio="none"><path d="M0 60 H700 l14 -22 l12 44 l16 -78 l16 86 l12 -30 h24 l10 -10 l10 10 H1080" fill="none" stroke="COLOR" stroke-width="3" stroke-linejoin="round" opacity=".9"/></svg>`;
+
+const P=[
+ {id:'01-kit-glicose',eb:'Glicemia · <b>Bioland G-425-3</b>',h:['Kit de','Glicose.'],img:'glicose',fit:'contain',tag:'Kit completo',price:'46,90',
+  k:'O que vem no kit',b:['Resultado em 5 segundos','Amostra mínima de 0,7 µL de sangue','Estojo, lancetador, 25 fitas e 25 lancetas']},
+ {id:'02-tiras-glicose',eb:'Glicemia · <b>Bioland G-423S</b>',h:['Tiras de','Glicose.'],img:'tiras',fit:'contain',tag:'Caixa c/ 50',price:'39,90',
+  k:'Reposição',b:['Caixa com 50 tiras (2 frascos)','Code free: sem codificação','Compatível com os medidores Bioland']},
+ {id:'03-lancetas',eb:'Glicemia · <b>Bioland G-423L</b>',h:['Lancetas','100 unid.'],img:'lancetas',fit:'contain',tag:'Caixa c/ 100',price:'6,00',
+  k:'Microlanceta 28G',b:['Ponta trifacetada','Encaixe universal','Estéril, de uso único']},
+ {id:'04-garrote-livre-latex',eb:'Coleta · <b>P.A.MED</b>',h:['Garrote sem','Látex.'],img:'garrote_latex',fit:'cover',tag:'Livre de látex',price:'3,00',
+  k:'Pra flebotomia',b:['Livre de látex, sem talco','Tiras com picote a cada 45 cm','Descartável, uso único']},
+ {id:'05-garrote-tradicional',eb:'Coleta · <b>Garrote tradicional</b>',h:['Garrote','Clássico.'],img:'garrote_trad',fit:'cover',tag:'Tubo 0,50 cm',price:'3,00',
+  k:'O do estágio',b:['Tubo de 0,50 cm','Nas cores preta, vermelha e amarela','Simples, resistente e barato'],sw:['#1b1b1f','#D7262B','#F5C518']},
+ {id:'06-garrote-automatico',eb:'Coleta · <b>Garrote com trava</b>',h:['Garrote','Automático.'],img:'garrote_auto',fit:'cover',tag:'Várias cores',price:'6,00',
+  k:'Um clique e pronto',b:['Fecho com trava: aperta e solta rápido','Fita elástica reutilizável','Escolha a sua cor'],sw:['#1b1b1f','#22305e','#D7262B','#6a3fb0','#E5408C','#F4B6CC']},
+ {id:'07-relogio-lapela',eb:'Jaleco · <b>P.A.MED</b>',h:['Relógio de','Lapela.'],img:'relogio',fit:'cover',tag:'Várias cores',price:'15,00',
+  k:'Pra contar pulso e FR',b:['Prende no bolso do jaleco','Silicone fácil de higienizar','Mostrador com ponteiro de segundos'],sw:['#1b1b1f','#7b4fc4','#4FC3E0','#2f4ac0','#E5408C','#f2f2f2']},
+ {id:'08-adipometro',eb:'Avaliação física · <b>P.A.MED</b>',h:['Adipô-','metro.'],img:'adipometro',fit:'cover',tag:'Lacrado',price:'14,90',
+  k:'Mede dobras cutâneas',b:['Calcula o % de gordura corporal','Instruções detalhadas de uso','Tabela pra homens e mulheres']},
+ {id:'09-lanterna-clinica',eb:'Semiologia · <b>Bioland LT200</b>',h:['Lanterna','Clínica.'],img:'lanterna',fit:'fan',tag:'Alumínio + LED',price:'19,90',
+  k:'Pupila, orofaringe, pele',b:['Corpo em alumínio com clipe','Luz LED','Várias cores'],sw:['#c9cbd0','#E07BB5','#7A3FB8','#D7262B','#1b1b1f']},
+ {id:'10-fita-metrica',eb:'Avaliação · <b>Fita métrica</b>',h:['Fita','Métrica.'],img:'fita_metrica',fit:'cover',tag:'Retrátil',price:'7,00',
+  k:'Cabe no bolso',b:['Retrátil, com botão de recolher','Com argola de chaveiro','Várias cores'],sw:['#F5C518','#cfd8dc','#22305e','#E8B4A8','#f2f2f2']},
+ {id:'11-termometro-digital',eb:'Sinais vitais · <b>Incoterm</b>',h:['Termômetro','Digital.'],img:'termometro',fit:'contain',tag:'Branco',price:'9,90',
+  k:'Clínico, de uso geral',b:['Aviso sonoro ao fim da medição','Memoriza a última medição','Ponta resistente']},
+];
+
+function money(v,cls=''){const[r,c]=v.split(',');return `<div class="val"><span class="rs">R$</span>${r}<span class="cts">,${c}</span></div>`}
+function foot(left){return `<div class="foot mono">${left}<span>@mrbookessencial</span></div>`}
+function topBar(logo='logo_white',pill='Black Friday'){return `<div class="top"><img class="logo" src="img/${logo}.png"><span class="pill">${pill}</span></div>`}
+
+function product(p,i){
+  let media;
+  if(p.fit==='fan'){
+    const cs=['prata','rosa','roxa','preta','verde'];
+    media=`<div class="card"><div class="fan">${cs.map((c,j)=>`<img src="img/lanterna_${c}.jpg" style="transform:translate(-50%,-50%) translate(${(j-2)*10}px,${(j-2)*84-20}px) rotate(-14deg)">`).join('')}</div><span class="tag">${p.tag}</span></div>`;
+  } else media=`<div class="card ${p.fit}"><img src="img/${p.img}.jpg"><span class="tag">${p.tag}</span></div>`;
+  return `<div class="post">${topBar()}
+  <div class="eyebrow mono">${p.eb} · ${String(i+1).padStart(2,'0')}/11</div>
+  <h1 class="display"><span class="l">${p.h[0]}</span><span class="hl">${p.h[1]}</span></h1>
+  ${media}
+  <div class="price"><div class="lab">Preço Black Friday</div>${money(p.price)}</div>
+  <div class="side"><div class="k mono">${p.k}</div>
+    <ul class="checks">${p.b.map(t=>`<li><i>${CHECK}</i><span>${t}</span></li>`).join('')}</ul>
+    ${p.sw?`<div class="swatches">${p.sw.map(c=>`<span style="background:${c}"></span>`).join('')}</div>`:''}
+    <div class="stock"><b>Estoque limitado.</b><br>Acabou, acabou.</div>
+  </div>
+  ${PULSE.replace('COLOR','#F8CA26')}
+  ${foot('<span>Peça pelo <b>WhatsApp</b> · Estoque limitado</span>')}
+  </div>`;
+}
+
+function cover(){
+  const th=[['glicose','c'],['relogio',''],['lancetas','c'],['garrote_trad','']];
+  return `<div class="post cover-post">${topBar('logo_black','Até acabar')}
+  <div class="eyebrow mono">Black Friday · <b style="color:#121318">11 itens</b> · Recife</div>
+  <div class="big display">Black<br>Friday<span class="dot">.</span></div>
+  <div class="sub">Preço quase de custo pra esvaziar o estoque. Garrote, glicose, lanterna, relógio e mais.</div>
+  <div class="from"><div class="lab">A PARTIR DE</div>${money('3,00')}</div>
+  <div class="thumbs">${th.map(([s,c])=>`<div><img class="${c}" src="img/${s}.jpg"></div>`).join('')}</div>
+  <div class="swipe">ARRASTA <i>${ARROW}</i></div>
+  ${PULSE.replace('COLOR','#121318')}
+  ${foot('<span>Mr.book · <b>20 anos</b> em Recife</span>')}
+  </div>`;
+}
+
+function table(){
+  const short=[['Kit de glicose','Bioland G-425-3'],['Tiras de glicose','cx 50'],['Lancetas','cx 100'],['Garrote sem látex','P.A.MED'],['Garrote tradicional','0,50 cm'],['Garrote automático','c/ trava'],['Relógio de lapela',''],['Adipômetro','P.A.MED'],['Lanterna clínica LED','alumínio'],['Fita métrica','retrátil'],['Termômetro digital','Incoterm']];
+  return `<div class="post">${topBar()}
+  <div class="eyebrow mono">Tabela · <b>Black Friday</b> · salva esse post</div>
+  <h1 class="display" style="font-size:84px"><span class="l">Lista de</span><span class="hl">Preços.</span></h1>
+  <div class="list">${P.map((p,i)=>`<div class="row"><span class="n">${String(i+1).padStart(2,'0')}</span><span class="t">${short[i][0]}${short[i][1]?`<small>${short[i][1]}</small>`:''}</span><span class="d"></span><span class="p">R$ ${p.price}</span></div>`).join('')}</div>
+  ${foot('<span>Peça pelo <b>WhatsApp</b> · Estoque limitado</span>')}
+  </div>`;
+}
+
+const id=location.hash.slice(1)||'00-capa';
+const root=document.getElementById('root');
+if(id==='00-capa') root.innerHTML=cover();
+else if(id==='12-tabela') root.innerHTML=table();
+else {const i=P.findIndex(p=>p.id===id);root.innerHTML=product(P[i],i);}
+window.IDS=['00-capa',...P.map(p=>p.id),'12-tabela'];
+</script>
+</body>
+</html>
