@@ -121,7 +121,7 @@ const P=[
  {id:'10-fita-metrica',eb:'Avaliação · <b>Fita métrica</b>',h:['Fita','Métrica.'],img:'fita_metrica',fit:'cover',tag:'Retrátil',price:'7,00',
   k:'Cabe no bolso',b:['Retrátil, com botão de recolher','Com argola de chaveiro','Várias cores'],sw:['#F5C518','#cfd8dc','#22305e','#E8B4A8','#f2f2f2']},
  {id:'11-termometro-digital',eb:'Sinais vitais · <b>Incoterm</b>',h:['Termômetro','Digital.'],img:'termometro',fit:'contain',tag:'Branco',price:'9,90',
-  k:'Clínico, de uso geral',b:['Aviso sonoro ao fim da medição','Memoriza a última medição','Ponta resistente']},
+  k:'Clínico, de uso geral',b:['Aviso sonoro ao fim da medição','Memoriza a última medição','Resistente à água']},
 ];
 
 function money(v,cls=''){const[r,c]=v.split(',');return `<div class="val"><span class="rs">R$</span>${r}<span class="cts">,${c}</span></div>`}
@@ -131,7 +131,7 @@ function topBar(logo='logo_white',pill='Black Friday'){return `<div class="top">
 function product(p,i){
   let media;
   if(p.fit==='fan'){
-    const cs=['prata','rosa','roxa','preta','verde'];
+    const cs=['prata','rosa','roxa','vermelha','preta'];
     media=`<div class="card"><div class="fan">${cs.map((c,j)=>`<img src="img/lanterna_${c}.jpg" style="transform:translate(-50%,-50%) translate(${(j-2)*10}px,${(j-2)*84-20}px) rotate(-14deg)">`).join('')}</div><span class="tag">${p.tag}</span></div>`;
   } else media=`<div class="card ${p.fit}"><img src="img/${p.img}.jpg"><span class="tag">${p.tag}</span></div>`;
   return `<div class="post">${topBar()}
