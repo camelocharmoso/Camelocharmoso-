@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smile Burguer · Fichas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: uma "chapa" de pedidos — capa mostarda com o sorriso, abas como comandas, cada hambúrguer desenhado camada por camada na ordem real de montagem. */
+:root{
+  --bg:#FFFCF4; --surface:#FFFFFF; --surface-2:#FFF3D6; --line:#EADFC6;
+  --ink:#2B1A10; --ink-2:#6E5644; --ink-3:#9A8370;
+  --mustard:#F4AE16; --mustard-deep:#C98500; --ketchup:#D62F1F; --on-mustard:#2B1A10;
+  --good:#3F7D20; --good-bg:#E5F2D8; --warn:#A35F00; --warn-bg:#FFEBC2; --bad:#B4231A; --bad-bg:#FBE0DB;
+  --est:#8A5A00; --est-bg:#FFF0C9; --src:#2D5E8C; --src-bg:#E1ECF7;
+  /* camadas do hambúrguer */
+  --l-bun:#E99A3C; --l-bun-hi:#F6BF6B; --l-sesame:#FFF3DA; --l-patty:#5A3220; --l-patty-2:#3F2215;
+  --l-cheese:#FFC21C; --l-gouda:#F7DD7A; --l-mayo:#FFF4D9; --l-ketchup:#D62F1F; --l-bbq:#7A2412;
+  --l-bacon:#C2453A; --l-bacon-2:#F0A99A; --l-onion:#B86D1E; --l-pickle:#6E9A2E; --l-ring:#E2A64A;
+  --l-pep:#B7281D; --l-jam:#7D3B12; --l-shred:#7B4428; --l-charque:#5B2A1A; --l-fries:#F4C04E;
+  --f-display:"Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
+  --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#17100B; --surface:#21170F; --surface-2:#2E2115; --line:#3D2D1F;
+  --ink:#FBEFDC; --ink-2:#CDB79F; --ink-3:#9C8670;
+  --mustard:#FFB927; --mustard-deep:#FFCF5C; --ketchup:#FF5A47; --on-mustard:#2B1A10;
+  --good:#8FD16A; --good-bg:#1F3315; --warn:#FFC266; --warn-bg:#3A2A0E; --bad:#FF8A7D; --bad-bg:#3E1814;
+  --est:#FFCF6B; --est-bg:#3A2B0D; --src:#9CC7F2; --src-bg:#14283C;
+  --l-mayo:#F3E6C4; --l-patty:#6B3C27; --l-patty-2:#4A2819;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#17100B; --surface:#21170F; --surface-2:#2E2115; --line:#3D2D1F;
+  --ink:#FBEFDC; --ink-2:#CDB79F; --ink-3:#9C8670;
+  --mustard:#FFB927; --mustard-deep:#FFCF5C; --ketchup:#FF5A47; --on-mustard:#2B1A10;
+  --good:#8FD16A; --good-bg:#1F3315; --warn:#FFC266; --warn-bg:#3A2A0E; --bad:#FF8A7D; --bad-bg:#3E1814;
+  --est:#FFCF6B; --est-bg:#3A2B0D; --src:#9CC7F2; --src-bg:#14283C;
+  --l-mayo:#F3E6C4; --l-patty:#6B3C27; --l-patty-2:#4A2819;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+body{margin:0}[hidden]{display:none!important}img{max-width:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.05;letter-spacing:-.01em}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--ketchup);outline-offset:2px;border-radius:6px}
+
+/* ---------- capa ---------- */
+.hero{background:var(--mustard);color:var(--on-mustard);margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:calc(env(safe-area-inset-top,0px) + 28px);padding-bottom:0;position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;padding-block:0 26px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:18px;letter-spacing:.02em;text-transform:uppercase}
+.brand svg{width:34px;height:34px}
+.hero h1{font-size:clamp(40px,7.4vw,92px);font-weight:800;margin-top:18px;letter-spacing:-.035em;line-height:.92}
+.hero h1 em{font-style:normal;color:var(--ketchup);}
+.hero p.lede{max-width:56ch;font-size:17px;margin:16px 0 0;color:#4A3020;font-weight:500}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.fact{background:rgba(43,26,16,.09);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px;color:#2B1A10}
+.fact b{font-family:var(--f-mono);font-weight:700}
+.hero-burger{width:230px;margin-bottom:-4px}
+@media (max-width:720px){.hero .wrap{grid-template-columns:1fr}.hero-burger{display:none}}
+
+/* ---------- abas ---------- */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line)}
+.tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-block:10px}
+.tabs .wrap::-webkit-scrollbar{display:none}
+.tab{flex:none;border:0;background:transparent;padding:9px 14px;border-radius:999px;font-weight:600;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.tab:hover{background:var(--surface-2);color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.tab .badge{font-family:var(--f-mono);font-size:11px;background:var(--ketchup);color:#fff;border-radius:999px;padding:1px 6px;margin-left:6px}
+
+main{padding-block:28px 80px}
+.view-head{display:flex;flex-wrap:wrap;gap:16px;align-items:end;justify-content:space-between;margin-bottom:22px}
+.view-head h2{font-size:clamp(28px,4vw,40px);font-weight:800}
+.view-head p{margin:6px 0 0;color:var(--ink-2);max-width:62ch}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+
+/* ---------- controles ---------- */
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;padding:7px 14px;border-radius:999px;font-weight:600;cursor:pointer;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(43,26,16,.18)}
+.slider{display:flex;align-items:center;gap:10px;background:var(--surface-2);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px}
+.slider input{accent-color:var(--ketchup);width:110px}
+.slider output{font-family:var(--f-mono);min-width:3.2ch}
+
+/* ---------- grade de burgers ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(172px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 16px 14px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:10px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;width:100%}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px -12px rgba(43,26,16,.35)}
+.card[aria-current="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink) inset}
+.card .art{height:118px;display:grid;place-items:end center}
+.card h3{font-size:20px;font-weight:800}
+.card .tag{color:var(--ink-2);font-size:13px;line-height:1.35;min-height:2.7em}
+.card .row{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--line);padding-top:9px;margin-top:auto}
+.card .row small{display:block;color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.card .row .num{font-size:15px;font-weight:700}
+.card .row .price{color:var(--ketchup)}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700;font-family:var(--f-mono)}
+.pill.good{background:var(--good-bg);color:var(--good)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.bad{background:var(--bad-bg);color:var(--bad)}
+.chip{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:2px 6px;white-space:nowrap}
+.chip.est{background:var(--est-bg);color:var(--est)} .chip.src{background:var(--src-bg);color:var(--src)} .chip.fix{background:var(--bad-bg);color:var(--bad)}
+
+/* ---------- hambúrguer desenhado ---------- */
+.stack{--w:150px;width:var(--w);display:flex;flex-direction:column;align-items:center;gap:1px;transition:gap .25s ease}
+.card:hover .stack{gap:5px}
+.L{width:100%;border-radius:6px;flex:none}
+.L.bunT{height:calc(var(--w)*.3);border-radius:50% 50% 10% 10%/90% 90% 14% 14%;
+  background:radial-gradient(circle at 30% 34%,var(--l-sesame) 0 2.2%,transparent 2.6%),radial-gradient(circle at 52% 22%,var(--l-sesame) 0 2.2%,transparent 2.6%),radial-gradient(circle at 70% 40%,var(--l-sesame) 0 2.2%,transparent 2.6%),radial-gradient(circle at 42% 52%,var(--l-sesame) 0 2%,transparent 2.4%),radial-gradient(circle at 62% 60%,var(--l-sesame) 0 2%,transparent 2.4%),radial-gradient(ellipse at 40% 25%,var(--l-bun-hi),var(--l-bun) 60%)}
+.L.bunT.aus{background:radial-gradient(ellipse at 40% 25%,#8A4A2A,#4E2414 65%)}
+.L.bunB{height:calc(var(--w)*.13);border-radius:4px 4px 40% 40%/4px 4px 70% 70%;background:linear-gradient(var(--l-bun-hi),var(--l-bun))}
+.L.bunB.aus{background:linear-gradient(#7A3E22,#4E2414)}
+.L.patty{height:calc(var(--w)*.15);width:96%;border-radius:999px;background:repeating-linear-gradient(100deg,var(--l-patty) 0 6px,var(--l-patty-2) 6px 8px)}
+.L.cheese{height:calc(var(--w)*.07);width:103%;background:var(--l-cheese);clip-path:polygon(0 0,100% 0,100% 55%,88% 55%,84% 100%,80% 55%,46% 55%,42% 120%,38% 55%,16% 55%,12% 100%,8% 55%,0 55%);margin-bottom:-3px;position:relative;z-index:1}
+.L.gouda{height:calc(var(--w)*.07);width:103%;background:var(--l-gouda);clip-path:polygon(0 0,100% 0,100% 55%,92% 55%,86% 100%,80% 55%,54% 55%,48% 100%,42% 55%,20% 55%,15% 100%,10% 55%,0 55%);margin-bottom:-3px;position:relative;z-index:1}
+.L.mayo{height:calc(var(--w)*.035);width:92%;background:var(--l-mayo);border-radius:999px}
+.L.ketchup{height:calc(var(--w)*.035);width:90%;background:var(--l-ketchup);border-radius:999px}
+.L.bbq{height:calc(var(--w)*.045);width:94%;background:var(--l-bbq);border-radius:999px}
+.L.bacon{height:calc(var(--w)*.06);width:106%;border-radius:3px;background:repeating-linear-gradient(90deg,var(--l-bacon) 0 9px,var(--l-bacon-2) 9px 12px,var(--l-bacon) 12px 17px);clip-path:polygon(0 30%,10% 0,22% 35%,35% 5%,48% 35%,60% 0,74% 30%,86% 0,100% 30%,100% 100%,0 100%)}
+.L.onion{height:calc(var(--w)*.06);width:94%;border-radius:40% 60% 50% 50%;background:repeating-linear-gradient(170deg,var(--l-onion) 0 4px,#8C4B10 4px 6px)}
+.L.pickle{height:calc(var(--w)*.06);width:88%;border-radius:0;background:radial-gradient(circle,var(--l-pickle) 0 55%,#4C7019 56% 66%,transparent 67%) 0 50%/calc(var(--w)*.14) 100% repeat-x}
+.L.ring{height:calc(var(--w)*.1);width:98%;border-radius:0;background:radial-gradient(ellipse,transparent 0 34%,var(--l-ring) 35% 62%,#B97A23 63% 70%,transparent 71%) 0 50%/calc(var(--w)*.33) 100% repeat-x}
+.L.pep{height:calc(var(--w)*.05);width:100%;border-radius:0;background:radial-gradient(ellipse,var(--l-pep) 0 60%,transparent 64%) 0 50%/calc(var(--w)*.2) 100% repeat-x}
+.L.jam{height:calc(var(--w)*.05);width:92%;border-radius:999px;background:linear-gradient(var(--l-jam),#4F220A)}
+.L.shred{height:calc(var(--w)*.1);width:100%;border-radius:30% 40% 30% 40%/60%;background:repeating-linear-gradient(70deg,var(--l-shred) 0 3px,#A0603A 3px 4px,#5E3018 4px 7px)}
+.L.charque{height:calc(var(--w)*.1);width:100%;border-radius:40% 30% 40% 30%/60%;background:repeating-linear-gradient(110deg,var(--l-charque) 0 3px,#8A3E27 3px 4px,#3E1A10 4px 7px)}
+/* batata */
+.fries{--w:130px;width:var(--w);position:relative;height:calc(var(--w)*.9);display:flex;align-items:flex-end;justify-content:center}
+.fries .box{position:absolute;bottom:0;left:12%;right:12%;height:58%;background:var(--ketchup);clip-path:polygon(0 0,100% 0,88% 100%,12% 100%);display:grid;place-items:center;z-index:2}
+.fries .box svg{width:34%;opacity:.95}
+.fries .stick{position:absolute;bottom:30%;width:9%;border-radius:3px;background:linear-gradient(90deg,var(--l-fries),#E0A436);height:55%;transform-origin:bottom center}
+.fries .top{position:absolute;z-index:3;left:16%;right:16%;bottom:52%;height:16%;border-radius:40%;background:var(--l-cheese);opacity:.95}
+.fries .bits{position:absolute;z-index:4;left:22%;right:22%;bottom:60%;height:8%;background:radial-gradient(circle,var(--l-bacon) 0 45%,transparent 50%) 0 0/16px 100% repeat-x}
+@keyframes drop{from{transform:translateY(-26px);opacity:0}to{transform:none;opacity:1}}
+.detail .stack .L{animation:drop .42s cubic-bezier(.2,.8,.3,1.2) both}
+@media (prefers-reduced-motion:reduce){.detail .stack .L{animation:none}.card,.stack{transition:none}}
+
+/* ---------- ficha detalhada ---------- */
+.detail{margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;scroll-margin-top:80px}
+.d-top{display:grid;grid-template-columns:280px 1fr;gap:0}
+.d-art{background:var(--surface-2);padding:26px 20px;display:flex;flex-direction:column;align-items:center;gap:18px;justify-content:flex-start}
+.d-art .stack{--w:210px}
+.d-art .fries{--w:180px}
+.legend{width:100%;display:flex;flex-direction:column;gap:3px;font-size:12.5px}
+.legend div{display:flex;gap:8px;align-items:center;color:var(--ink-2)}
+.legend i{width:12px;height:12px;border-radius:3px;flex:none}
+.legend .n{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);width:16px}
+.d-body{padding:24px 26px;min-width:0}
+.d-title{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 14px}
+.d-title h3{font-size:clamp(30px,4vw,44px);font-weight:800;letter-spacing:-.02em}
+.d-title .code{font-family:var(--f-mono);font-size:12px;color:var(--ink-3)}
+.d-tag{color:var(--ink-2);margin:6px 0 18px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:20px}
+.kpi{background:var(--surface-2);border-radius:12px;padding:11px 13px}
+.kpi small{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--ink-3)}
+.kpi .num{font-size:19px;font-weight:700;display:block;margin-top:2px}
+.kpi.hl{background:var(--ink);color:var(--bg)} .kpi.hl small{color:var(--bg);opacity:.7}
+.kpi input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-family:var(--f-mono);font-size:17px;font-weight:700;margin-top:3px}
+@media (max-width:860px){.d-top{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);text-align:left;font-weight:700;padding:9px 12px;background:var(--surface-2);white-space:nowrap}
+td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:middle}
+td.r,th.r{text-align:right}
+td.num{white-space:nowrap}
+tr.group td{background:transparent;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding-top:14px;border-top:0}
+tr.total td{font-weight:700;background:var(--surface-2)}
+tr.total td.num{font-size:16px}
+.ins-name{font-weight:600}
+.ins-sub{display:block;font-size:12px;color:var(--ink-3)}
+
+.prod{border-top:1px solid var(--line);padding:24px 26px;display:grid;grid-template-columns:1.25fr 1fr;gap:28px}
+@media (max-width:860px){.prod{grid-template-columns:1fr}}
+.prod h4{font-size:20px;font-weight:800;margin-bottom:12px;display:flex;gap:10px;align-items:center}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;counter-reset:s}
+.steps li{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:start;counter-increment:s}
+.steps li::before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--mustard);color:var(--on-mustard);display:grid;place-items:center;font-family:var(--f-mono);font-weight:700;font-size:13px}
+.steps .t{font-family:var(--f-mono);font-size:12px;color:var(--ink-2);background:var(--surface-2);border-radius:6px;padding:2px 7px;white-space:nowrap;margin-top:4px}
+.steps b{font-weight:700}
+.crit{background:var(--bad-bg);color:var(--bad);border-radius:12px;padding:12px 14px;font-size:13.5px;margin-top:14px}
+.crit b{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.fixnote{background:var(--est-bg);color:var(--ink);border-radius:12px;padding:12px 14px;font-size:13.5px;margin-top:16px}
+.fixnote b{color:var(--est)}
+.side-box{background:var(--surface-2);border-radius:14px;padding:16px}
+.side-box dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14px}
+.side-box dt{color:var(--ink-3);font-weight:600}
+.side-box dd{margin:0;font-weight:600}
+
+/* ---------- produção ---------- */
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px}
+.panel h3{font-size:22px;font-weight:800;margin-bottom:4px}
+.panel > p{color:var(--ink-2);margin:0 0 14px;font-size:14px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.qty button{border:0;background:var(--surface-2);width:30px;height:32px;cursor:pointer;font-weight:700}
+.qty input{width:48px;border:0;text-align:center;font-family:var(--f-mono);font-weight:700;background:transparent;height:32px;-moz-appearance:textfield}
+.qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.sum-band{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.sum-band .kpi .num{font-size:19px}
+.lotes{display:flex;flex-direction:column;gap:8px}
+.lote{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;background:var(--surface-2);border-radius:12px;padding:10px 13px}
+.lote b{font-weight:700}
+.lote span{font-size:12.5px;color:var(--ink-2)}
+.lote .num{grid-row:span 2;font-size:18px;font-weight:700;color:var(--ketchup)}
+.lineup{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.line-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;grid-template-columns:62px 1fr;gap:12px}
+.line-card .stack{--w:60px}
+.line-card h4{font-size:17px;font-weight:800;margin-bottom:4px}
+.line-card ol{margin:0;padding-left:18px;font-size:13px;color:var(--ink-2)}
+.line-card .time{font-family:var(--f-mono);font-size:11.5px;margin-top:6px;color:var(--ink)}
+
+/* ---------- preparos ---------- */
+.preps{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+@media (max-width:420px){.preps{grid-template-columns:1fr}}
+.prep{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.prep h3{font-size:22px;font-weight:800}
+.prep .meta{display:flex;flex-wrap:wrap;gap:6px}
+.prep .meta span{background:var(--surface-2);border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:600}
+.prep .meta span b{font-family:var(--f-mono)}
+.prep table{font-size:13.5px}
+.prep ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:5px;font-size:14px}
+.prep .used{font-size:12.5px;color:var(--ink-3)}
+
+/* ---------- insumos ---------- */
+.price-in{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:8px;padding:2px 8px;background:var(--surface)}
+.price-in input{width:74px;border:0;background:transparent;font-family:var(--f-mono);font-weight:700;text-align:right;padding:3px 0}
+.price-in.changed{border-color:var(--ketchup)}
+.btn{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:999px;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--surface-2)}
+.btn.dark{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* ---------- correções ---------- */
+.fixes{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+@media (max-width:400px){.fixes{grid-template-columns:1fr}}
+.fix{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.fix h3{font-size:18px;font-weight:800;line-height:1.15}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13.5px}
+.ba div{border-radius:10px;padding:9px 11px}
+.ba .b{background:var(--bad-bg)} .ba .a{background:var(--good-bg)}
+.ba small{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:2px}
+.ba .b small{color:var(--bad)} .ba .a small{color:var(--good)}
+.confirm{background:var(--ink);color:var(--bg);border-radius:20px;padding:24px;margin-top:22px}
+.confirm h3{font-size:24px;font-weight:800;margin-bottom:10px}
+.confirm ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.note{font-size:13px;color:var(--ink-3);margin-top:14px}
+.hint{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink-2);margin-top:10px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="brand">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="#2B1A10"/><circle cx="14" cy="16" r="2.6" fill="#F4AE16"/><circle cx="26" cy="16" r="2.6" fill="#F4AE16"/><path d="M11 23 Q20 32 29 23" stroke="#F4AE16" stroke-width="3.2" fill="none" stroke-linecap="round"/></svg>
+        Smile Burguer
+      </div>
+      <h1>Cada burger,<br>do pão à <em>sacola.</em></h1>
+      <p class="lede">Fichas técnicas corrigidas, custo real com embalagem, preço sugerido e a ficha de produção da chapa. Mude um preço de insumo e todas as fichas se recalculam.</p>
+      <div class="facts" id="facts"></div>
+    </div>
+    <div class="hero-burger" aria-hidden="true" id="heroBurger"></div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Seções">
+  <div class="wrap" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-v="fichas">Fichas técnicas</button>
+    <button class="tab" role="tab" data-v="producao">Ficha de produção</button>
+    <button class="tab" role="tab" data-v="preparos">Preparos base</button>
+    <button class="tab" role="tab" data-v="insumos">Insumos &amp; preços</button>
+    <button class="tab" role="tab" data-v="correcoes">O que corrigimos<span class="badge" id="fixCount">0</span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section id="v-fichas" data-view>
+    <div class="view-head">
+      <div>
+        <div class="eyebrow">Cardápio · 9 hambúrgueres · 2 batatas</div>
+        <h2>Fichas técnicas</h2>
+        <p>Toque num item para abrir a ficha completa. O custo inclui comida e embalagem do canal escolhido.</p>
+      </div>
+      <div class="controls">
+        <div class="seg" role="group" aria-label="Canal de venda" id="modeSeg">
+          <button data-m="delivery" aria-pressed="true">Delivery</button>
+          <button data-m="balcao" aria-pressed="false">Balcão</button>
+        </div>
+        <label class="slider" for="cmvTarget">CMV alvo <input type="range" id="cmvTarget" min="22" max="40" step="1" value="30"><output id="cmvOut">30%</output></label>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <article class="detail" id="detail" aria-live="polite"></article>
+  </section>
+
+  <section id="v-producao" data-view hidden>
+    <div class="view-head">
+      <div>
+        <div class="eyebrow">Chapa · mise en place · plano do dia</div>
+        <h2>Ficha de produção</h2>
+        <p>Diga quantos de cada item você espera vender e a ficha calcula o que separar, quantos lotes de cada preparo fazer e quanto o turno vai custar.</p>
+      </div>
+      <button class="btn" id="planReset">Voltar ao exemplo</button>
+    </div>
+    <div class="two">
+      <div class="panel">
+        <h3>Previsão de vendas</h3>
+        <p>Números de exemplo de um sábado. Troque pelos seus.</p>
+        <div class="tbl-wrap"><table id="planTbl"></table></div>
+      </div>
+      <div class="panel">
+        <h3>O turno em números</h3>
+        <p id="planModeTxt"></p>
+        <div class="sum-band" id="planSum"></div>
+        <h3 style="font-size:18px;margin:6px 0 10px">Preparos para fazer antes de abrir</h3>
+        <div class="lotes" id="planLotes"></div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:20px">
+      <h3>Separar para o turno</h3>
+      <p>Quantidade de cada insumo que precisa estar na bancada, já com 10% de margem de segurança.</p>
+      <div class="tbl-wrap"><table id="planIns"></table></div>
+    </div>
+    <div style="margin-top:30px">
+      <div class="eyebrow">Para colar na parede da chapa</div>
+      <h3 style="font-size:26px;font-weight:800;margin:4px 0 14px">Linha de montagem</h3>
+      <div class="lineup" id="lineup"></div>
+    </div>
+  </section>
+
+  <section id="v-preparos" data-view hidden>
+    <div class="view-head">
+      <div>
+        <div class="eyebrow">Feito antes do serviço</div>
+        <h2>Preparos base</h2>
+        <p>Receitas de lote para os complementos que a planilha só citava pelo nome. O custo por kg daqui é o que entra nas fichas.</p>
+      </div>
+    </div>
+    <div class="preps" id="preps"></div>
+  </section>
+
+  <section id="v-insumos" data-view hidden>
+    <div class="view-head">
+      <div>
+        <div class="eyebrow">Fonte única de preços</div>
+        <h2>Insumos &amp; preços</h2>
+        <p>Preços com etiqueta <span class="chip src">planilha</span> vieram do seu arquivo. Os com <span class="chip est">estimado</span> são médias de mercado: troque pelo valor da sua nota fiscal e tudo se recalcula.</p>
+      </div>
+      <button class="btn" id="priceReset">Restaurar preços</button>
+    </div>
+    <div class="tbl-wrap"><table id="insTbl"></table></div>
+    <p class="note">As alterações ficam salvas só neste navegador.</p>
+  </section>
+
+  <section id="v-correcoes" data-view hidden>
+    <div class="view-head">
+      <div>
+        <div class="eyebrow">Revisão da planilha original</div>
+        <h2>O que corrigimos</h2>
+        <p>Problemas encontrados no PDF "Planilha Delivery Perfeito – SMILE" e como cada um ficou nas fichas novas.</p>
+      </div>
+    </div>
+    <div class="fixes" id="fixes"></div>
+    <div class="confirm">
+      <h3>Preciso que você confirme</h3>
+      <ul id="confirmList"></ul>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+"use strict";
+/* ================= DADOS ================= */
+// per: 'un' = preço por unidade; 'kg' = preço por kg (quantidade em g)
+const INS = {
+  pao:{n:"Pão de hambúrguer",g:"Pães e queijos",per:"un",u:"un",c:2.00,src:"planilha"},
+  pao_aus:{n:"Pão australiano",g:"Pães e queijos",per:"un",u:"un",c:2.50,src:"est"},
+  queijo:{n:"Queijo fatiado da casa",sub:"cheddar ou prato",g:"Pães e queijos",per:"un",u:"fatia",c:0.50,src:"planilha"},
+  gouda:{n:"Queijo gouda",sub:"fatia de 10 g",g:"Pães e queijos",per:"un",u:"fatia",c:0.90,src:"est"},
+  carne:{n:"Blend bovino 130 g",sub:"bola porcionada",g:"Carnes",per:"un",u:"un",c:6.00,src:"planilha"},
+  bacon:{n:"Bacon fatiado",sub:"fatia de 15 g",g:"Carnes",per:"kg",u:"g",c:42.00,src:"est"},
+  bacon_cubo:{n:"Bacon em cubos crocante",sub:"preparo pronto",g:"Carnes",per:"kg",u:"g",c:80.00,src:"est",prep:"bacon"},
+  fraldinha:{n:"Fraldinha desfiada",sub:"preparo pronto",g:"Carnes",per:"kg",u:"g",c:94.50,src:"est",prep:"fraldinha"},
+  charque:{n:"Charque desfiada",sub:"preparo pronto",g:"Carnes",per:"kg",u:"g",c:68.00,src:"est",prep:"charque"},
+  peperoni:{n:"Peperoni fatiado",sub:"fatia de 3 g",g:"Carnes",per:"kg",u:"g",c:100.00,src:"est"},
+  maionese:{n:"Maionese da casa",sub:"porção de 20 g = R$ 0,50",g:"Molhos e complementos",per:"kg",u:"g",c:25.00,src:"planilha"},
+  ketchup:{n:"Ketchup (bisnaga)",g:"Molhos e complementos",per:"kg",u:"g",c:10.00,src:"est"},
+  bbq:{n:"Molho barbecue",g:"Molhos e complementos",per:"kg",u:"g",c:15.00,src:"est"},
+  cebola_car:{n:"Cebola caramelizada",sub:"preparo pronto",g:"Molhos e complementos",per:"kg",u:"g",c:23.20,src:"est",prep:"cebola"},
+  geleia:{n:"Geleia de bacon",sub:"preparo pronto",g:"Molhos e complementos",per:"kg",u:"g",c:56.67,src:"est",prep:"geleia"},
+  picles:{n:"Picles de pepino",sub:"rodelas",g:"Molhos e complementos",per:"kg",u:"g",c:20.00,src:"est"},
+  onion:{n:"Onion rings (congelado)",g:"Molhos e complementos",per:"un",u:"anel",c:0.50,src:"est"},
+  cheddar_cr:{n:"Cheddar cremoso",g:"Molhos e complementos",per:"kg",u:"g",c:35.00,src:"est"},
+  tempero:{n:"Sal e pimenta",g:"Molhos e complementos",per:"un",u:"porção",c:0.05,src:"est"},
+  batata:{n:"Batata palito congelada",g:"Batata",per:"kg",u:"g",c:22.00,src:"est"},
+  oleo:{n:"Óleo de fritura (reposição)",g:"Batata",per:"un",u:"porção",c:0.30,src:"est"},
+  papel:{n:"Papel laminado",g:"Embalagem",per:"un",u:"un",c:0.20,src:"planilha"},
+  sache:{n:"Sachê de ketchup",g:"Embalagem",per:"un",u:"un",c:0.14,src:"planilha"},
+  saco:{n:"Saco personalizado Smile",g:"Embalagem",per:"un",u:"un",c:1.50,src:"planilha"},
+  sacola:{n:"Sacola",g:"Embalagem",per:"un",u:"un",c:0.10,src:"planilha"},
+  guardanapo:{n:"Guardanapo",g:"Embalagem",per:"un",u:"un",c:0.05,src:"est"},
+  cx_batata:{n:"Caixa de batata",g:"Embalagem",per:"un",u:"un",c:0.60,src:"est"},
+  cx_batata_t:{n:"Caixa de batata com tampa",g:"Embalagem",per:"un",u:"un",c:0.90,src:"est"}
+};
+const DEFAULT_PRICES = Object.fromEntries(Object.entries(INS).map(([k,v])=>[k,v.c]));
+
+const LAYER_COLOR = {bunT:"var(--l-bun)",bunB:"var(--l-bun)",patty:"var(--l-patty)",cheese:"var(--l-cheese)",gouda:"var(--l-gouda)",mayo:"var(--l-mayo)",ketchup:"var(--l-ketchup)",bbq:"var(--l-bbq)",bacon:"var(--l-bacon)",onion:"var(--l-onion)",pickle:"var(--l-pickle)",ring:"var(--l-ring)",pep:"var(--l-pep)",jam:"var(--l-jam)",shred:"var(--l-shred)",charque:"var(--l-charque)"};
+
+const EMB = {
+  delivery:[{k:"papel",q:1},{k:"saco",q:1},{k:"sache",q:3},{k:"sacola",q:1}],
+  balcao:[{k:"papel",q:1},{k:"guardanapo",q:2}]
+};
+const BASE = (pao="pao", queijo=true)=>[
+  {k:pao,q:1},
+  ...(queijo?[{k:"queijo",q:2}]:[]),
+  {k:"maionese",q:20},
+  {k:"carne",q:1},
+  {k:"tempero",q:1}
+];
+// m = montagem de baixo para cima: [camada, rótulo]
+const STD_GRILL = "Blend na chapa, sal e pimenta, 2 min 30 s sem mexer. Virar, queijo por cima, abafar 1 min 30 s.";
+const R = [
+ {id:"classic",code:"SB-01",n:"Smile Classic",tag:"O sorriso original: blend, queijo duplo e maionese da casa.",
+  items:BASE(),m:[["bunB","Pão (base)"],["mayo","Maionese 20 g"],["patty","Blend 130 g"],["cheese","2 fatias de queijo"],["bunT","Pão (tampa)"]],
+  extra:[],fix:"Única ficha com embalagem na planilha. O sachê estava somado como R$ 0,40; o certo é 3 × R$ 0,14 = R$ 0,42."},
+ {id:"bacon",code:"SB-02",n:"Smile Bacon",tag:"O Classic com duas fatias de bacon tostadas na chapa.",
+  items:[...BASE(),{k:"bacon",q:30}],m:[["bunB","Pão (base)"],["mayo","Maionese 20 g"],["patty","Blend 130 g"],["cheese","2 fatias de queijo"],["bacon","2 fatias de bacon"],["bunT","Pão (tampa)"]],
+  extra:[["Bacon na chapa junto com o blend, 3 min, virando uma vez até ficar crocante.","3 min"]],
+  fix:"Bacon estava sem quantidade e sem custo. Definido 2 fatias (30 g)."},
+ {id:"cheddar",code:"SB-03",n:"Smile Cheddar",tag:"Pão australiano, cheddar derretido e cebola caramelizada.",
+  items:[...BASE("pao_aus"),{k:"cebola_car",q:30}],m:[["bunB aus","Pão australiano (base)"],["mayo","Maionese 20 g"],["patty","Blend 130 g"],["cheese","2 fatias de cheddar"],["onion","Cebola caramelizada 30 g"],["bunT aus","Pão australiano (tampa)"]],
+  extra:[["Aquecer 30 g de cebola caramelizada num canto da chapa.","30 s"]],
+  fix:"Pão australiano custava igual ao comum e a cebola caramelizada não tinha quantidade nem custo."},
+ {id:"quarteirola",code:"SB-04",n:"Smile Quarteirola",tag:"Picles, ketchup e queijo duplo, no estilo clássico americano.",
+  items:[...BASE(),{k:"picles",q:15},{k:"ketchup",q:15}],m:[["bunB","Pão (base)"],["mayo","Maionese 20 g"],["patty","Blend 130 g"],["cheese","2 fatias de queijo"],["pickle","Picles 15 g (3 rodelas)"],["ketchup","Ketchup 15 g"],["bunT","Pão (tampa)"]],
+  extra:[],fix:"Picles e ketchup estavam sem quantidade e sem custo."},
+ {id:"gouda",code:"SB-05",n:"Smile Gouda",tag:"Três fatias de gouda derretendo sobre o blend.",
+  items:[...BASE("pao",false),{k:"gouda",q:3}],m:[["bunB","Pão (base)"],["mayo","Maionese 20 g"],["patty","Blend 130 g"],["gouda","Gouda"],["gouda","3 fatias de gouda"],["bunT","Pão (tampa)"]],
+  extra:[],fix:"A planilha somava 2 fatias de queijo + 3 de gouda (5 fatias). Ajustado para 3 de gouda no lugar do queijo da casa. Confirme."},
+ {id:"rodeio",code:"SB-06",n:"Smile Rodeio",tag:"Onion rings crocantes e molho barbecue defumado.",
+  items:[...BASE(),{k:"onion",q:2},{k:"bbq",q:20}],m:[["bunB","Pão (base)"],["mayo","Maionese 20 g"],["patty","Blend 130 g"],["cheese","2 fatias de queijo"],["ring","2 onion rings"],["bbq","Barbecue 20 g"],["bunT","Pão (tampa)"]],
+  extra:[["Onion rings na fritadeira a 175 °C.","3 min"]],
+  fix:"Onion rings e barbecue estavam sem custo."},
+ {id:"italiano",code:"SB-07",n:"Smile Italiano",tag:"Pão australiano, peperoni tostado e geleia de bacon.",
+  items:[...BASE("pao_aus"),{k:"peperoni",q:12},{k:"geleia",q:25}],m:[["bunB aus","Pão australiano (base)"],["mayo","Maionese 20 g"],["patty","Blend 130 g"],["cheese","2 fatias de queijo"],["pep","4 fatias de peperoni"],["jam","Geleia de bacon 25 g"],["bunT aus","Pão australiano (tampa)"]],
+  extra:[["Peperoni na chapa até soltar a gordura e as bordas curvarem.","30 s"]],
+  fix:"Escrito \"PAO AUS\" e com custo de pão comum. Peperoni e geleia de bacon sem custo."},
+ {id:"fraldinha",code:"SB-08",n:"Smile Fraldinha",tag:"Blend e fraldinha desfiada no mesmo pão. Carne em dobro.",
+  items:[...BASE(),{k:"fraldinha",q:50}],m:[["bunB","Pão (base)"],["mayo","Maionese 20 g"],["patty","Blend 130 g"],["cheese","2 fatias de queijo"],["shred","Fraldinha desfiada 50 g"],["bunT","Pão (tampa)"]],
+  extra:[["Aquecer 50 g de fraldinha na chapa com um fio de água, abafado.","1 min"]],
+  fix:"O item mais caro do cardápio aparecia com o mesmo custo do Classic, porque a fraldinha estava sem custo."},
+ {id:"nordestino",code:"SB-09",n:"Smile Nordestino",tag:"Blend e charque desfiada. Sabor de sertão.",
+  items:[...BASE(),{k:"charque",q:50}],m:[["bunB","Pão (base)"],["mayo","Maionese 20 g"],["patty","Blend 130 g"],["cheese","2 fatias de queijo"],["charque","Charque desfiada 50 g"],["bunT","Pão (tampa)"]],
+  extra:[["Aquecer 50 g de charque na chapa até as pontas tostarem.","1 min"]],
+  fix:"Ficha sem nenhuma quantidade preenchida. Completada com o padrão da casa e 50 g de charque."},
+ {id:"batata",code:"SB-20",n:"Batata Média",fries:true,tag:"Palito crocante, sal na hora.",
+  items:[{k:"batata",q:150},{k:"oleo",q:1},{k:"tempero",q:1}],emb:{delivery:[{k:"cx_batata",q:1},{k:"sache",q:2}],balcao:[{k:"cx_batata",q:1}]},
+  steps:[["Fritar 150 g de batata direto do congelado, óleo a 175–180 °C. Não encher o cesto além da metade.","3–4 min"],["Escorrer 30 s sobre a cuba, sacudindo o cesto.","30 s"],["Salgar fora do óleo, na cuba, e virar na caixa.",""]],
+  fix:"Sem custo nem embalagem. Unidade escrita \"150 g\" junto da quantidade."},
+ {id:"batata_cb",code:"SB-21",n:"Batata Cheddar e Bacon",fries:true,top:true,tag:"200 g de batata, cheddar cremoso e bacon crocante.",
+  items:[{k:"batata",q:200},{k:"oleo",q:1},{k:"tempero",q:1},{k:"cheddar_cr",q:50},{k:"bacon_cubo",q:20}],emb:{delivery:[{k:"cx_batata_t",q:1}],balcao:[{k:"cx_batata",q:1}]},
+  steps:[["Fritar 200 g de batata a 175–180 °C.","4 min"],["Escorrer, salgar e virar na caixa com tampa.","30 s"],["Cobrir com 50 g de cheddar cremoso aquecido (65 °C).",""],["Finalizar com 20 g de bacon em cubos crocante.",""]],
+  fix:"Cheddar e bacon sem quantidade e sem custo. Delivery sem caixa com tampa."}
+];
+
+const PREPS = [
+ {id:"blend",n:"Blend 130 g",rend:"≈ 7 bolas por kg",val:"3 dias a 0–4 °C · 60 dias a −18 °C",time:"20 min por 5 kg",
+  ing:[["Carne moída para blend (acém + peito, 20% de gordura)","1 kg",null]],
+  steps:["Manter a carne a no máximo 4 °C durante todo o porcionamento.","Pesar bolas de 130 g na balança. Tolerância de ±3 g.","Bolear sem apertar demais, separar com papel manteiga.","Etiquetar com data de produção e validade. Não temperar antes: o sal vai na chapa."],
+  cost:null,note:"A planilha usa R$ 6,00 por blend. Se você compra pronto, ignore o porcionamento e só confira o peso."},
+ {id:"cebola",n:"Cebola caramelizada",rend:"350 g por lote",val:"5 dias a 0–4 °C",time:"50 min",
+  ing:[["Cebola branca em meia-lua fina","1 kg",6.00],["Manteiga","40 g",2.00],["Açúcar","20 g",0.10],["Sal","5 g",0.02]],
+  steps:["Derreter a manteiga em fogo médio-baixo, juntar a cebola e o sal.","Cozinhar mexendo a cada 5 min. Se grudar, pingar água e raspar o fundo.","Aos 35 min, juntar o açúcar. Seguir até ficar marrom escuro e macia.","Esfriar em cuba rasa até 10 °C em no máximo 2 h e etiquetar."],
+  cost:8.12,yieldG:350,usedIn:["Smile Cheddar"]},
+ {id:"geleia",n:"Geleia de bacon",rend:"450 g por lote",val:"7 dias a 0–4 °C",time:"1 h 10 min",
+  ing:[["Bacon em cubos","500 g",21.00],["Cebola picada","300 g",1.80],["Alho picado","10 g",0.30],["Açúcar mascavo","100 g",1.50],["Café coado","100 ml",0.40],["Vinagre de maçã","50 ml",0.40],["Pimenta-do-reino","a gosto",0.10]],
+  steps:["Fritar o bacon até dourar. Retirar e deixar 2 colheres da gordura na panela.","Refogar cebola e alho nessa gordura até murchar.","Voltar o bacon, juntar mascavo, café e vinagre.","Cozinhar em fogo baixo 40–50 min até virar uma calda grossa. Pulsar 3 vezes no mixer para ficar pedaçuda."],
+  cost:25.50,yieldG:450,usedIn:["Smile Italiano"]},
+ {id:"fraldinha",n:"Fraldinha desfiada",rend:"600 g por lote",val:"3 dias a 0–4 °C",time:"1 h",
+  ing:[["Fraldinha em peça","1 kg",55.00],["Cebola","150 g",0.90],["Alho","15 g",0.45],["Sal","15 g",0.05],["Pimenta-do-reino","2 g",0.10],["Óleo","20 ml",0.20]],
+  steps:["Temperar a peça com sal e pimenta e selar bem em todos os lados.","Juntar cebola, alho e água até cobrir pela metade. Pressão por 45 min.","Desfiar ainda quente com dois garfos. Misturar 3 colheres do caldo reduzido.","Porcionar em potes de 500 g, esfriar rápido e etiquetar."],
+  cost:56.70,yieldG:600,usedIn:["Smile Fraldinha"]},
+ {id:"charque",n:"Charque desfiada",rend:"750 g por lote",val:"4 dias a 0–4 °C",time:"24 h de dessalgue + 50 min",
+  ing:[["Charque","1 kg",48.00],["Cebola","200 g",1.20],["Alho","10 g",0.30],["Manteiga de garrafa","30 ml",1.50]],
+  steps:["Cortar em cubos e dessalgar na geladeira por 12–24 h, trocando a água 4 vezes.","Cozinhar na pressão com água limpa por 30 min. Escorrer.","Desfiar e refogar com manteiga de garrafa, cebola e alho até as pontas tostarem.","Esfriar em cuba rasa e etiquetar."],
+  cost:51.00,yieldG:750,usedIn:["Smile Nordestino"]},
+ {id:"bacon",n:"Bacon em cubos crocante",rend:"450 g por kg cru",val:"5 dias a 0–4 °C",time:"25 min",
+  ing:[["Bacon em manta, em cubos de 1 cm","1 kg",36.00]],
+  steps:["Fritar em fogo médio sem óleo, mexendo, até dourar por igual.","Escorrer em peneira e depois em papel absorvente.","Guardar a gordura coada para a geleia de bacon."],
+  cost:36.00,yieldG:450,usedIn:["Batata Cheddar e Bacon"]}
+];
+
+const FIXES = [
+ ["Soma do ketchup errada","Ketchup: 3 sachês × R$ 0,14 = R$ 0,40","3 × R$ 0,14 = R$ 0,42. Classic sobe de R$ 11,70 para o valor real."],
+ ["Embalagem só no Classic","Os outros 8 burgers saíam sem papel, saco, sachês e sacola","Kit delivery de R$ 2,22 em todos, e kit balcão separado para o físico"],
+ ["O diferencial de cada burger custava R$ 0","Bacon, cebola, picles, gouda, onion, BBQ, peperoni, geleia, fraldinha e charque sem quantidade nem custo","Todos com gramatura e custo, calculado a partir dos preparos base"],
+ ["Coluna U/M vazia","Nenhuma ficha dizia se era grama, fatia ou unidade","Cada linha tem unidade: g, fatia, un ou porção"],
+ ["Smile Nordestino em branco","Nenhuma quantidade preenchida","Padrão da casa + 50 g de charque"],
+ ["Pão australiano com preço de pão comum","Escrito \"PAO AUSTRALIANO\" e \"PAO AUS\", ambos a R$ 2,00","Insumo próprio, padronizado, a R$ 2,50 (estimado)"],
+ ["Smile Gouda com 5 fatias de queijo","2 fatias de queijo + 3X GOUDA","3 fatias de gouda no lugar do queijo da casa"],
+ ["Carne sem peso e sem tempero","\"CARNE 1,00\" sem gramatura; sal não aparecia","Blend de 130 g e sal e pimenta como item de custo"],
+ ["Batatas sem custo","Só a quantidade, e \"150 g\" misturado na coluna de quantidade","Custo de batata, óleo, sal e caixa (com tampa no delivery)"],
+ ["Sem preço de venda e sem CMV","A planilha parava no custo","Preço sugerido pelo CMV alvo, e campo para o seu preço com margem real"],
+ ["PDF de 138 páginas","Colunas de custo saíam em páginas separadas do nome do burger; títulos duplicados","Uma ficha por item, com tudo na mesma tela"]
+];
+const CONFIRM = [
+ "Peso do blend: as fichas assumem 130 g por R$ 6,00. Se for outro, me diga.",
+ "\"Queijo\" da casa é cheddar ou prato? No Smile Cheddar assumi cheddar.",
+ "Smile Gouda: 3 fatias de gouda no lugar do queijo, ou somando (5 fatias)?",
+ "Preço real do pão australiano e de todos os itens marcados como estimado.",
+ "Saco personalizado e sacola vão 1 por burger ou 1 por pedido? Num pedido com 3 burgers isso muda o custo.",
+ "Seus preços de venda atuais no balcão e no app, para eu comparar com os sugeridos."
+];
+const PLAN_DEFAULT = {classic:18,bacon:14,cheddar:10,quarteirola:6,gouda:5,rodeio:7,italiano:4,fraldinha:6,nordestino:5,batata:22,batata_cb:9};
+
+/* ================= ESTADO ================= */
+const store = {
+  get(k,d){try{const v=localStorage.getItem("smile."+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("smile."+k,JSON.stringify(v))}catch(e){}}
+};
+let prices = Object.assign({},DEFAULT_PRICES,store.get("prices",{}));
+let sell = store.get("sell",{});
+let mode = store.get("mode","delivery");
+let target = store.get("target",30);
+let plan = Object.assign({},PLAN_DEFAULT,store.get("plan",{}));
+let current = store.get("current","classic");
+
+/* ================= CÁLCULOS ================= */
+const brl = n => "R$ " + (n||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct = n => (isFinite(n)? n.toLocaleString("pt-BR",{maximumFractionDigits:1}) : "–") + "%";
+const lineCost = it => { const i=INS[it.k]; return i.per==="kg" ? it.q/1000*prices[it.k] : it.q*prices[it.k]; };
+const embOf = (r,m) => r.emb ? r.emb[m] : EMB[m];
+function costOf(r,m=mode){
+  const food = r.items.reduce((s,it)=>s+lineCost(it),0);
+  const emb = embOf(r,m).reduce((s,it)=>s+lineCost(it),0);
+  return {food,emb,total:food+emb};
+}
+function suggest(cost,t=target){ const x=cost/(t/100); let p=Math.ceil(x)-0.10; if(p<x) p+=1; return p; }
+function priceFor(r){ const s=sell[r.id+"."+mode]; return s>0 ? s : suggest(costOf(r).total); }
+function cmvClass(c){ return c<=30?"good":c<=36?"warn":"bad"; }
+const qtyLabel = it => { const i=INS[it.k]; if(i.per==="kg") return it.q.toLocaleString("pt-BR")+" g"; const u=i.u; return it.q.toLocaleString("pt-BR")+" "+(it.q>1 && u==="fatia"?"fatias":it.q>1&&u==="anel"?"anéis":u); };
+const unitPrice = k => { const i=INS[k]; return brl(prices[k]) + (i.per==="kg" ? "/kg" : "/"+i.u); };
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ================= DESENHO ================= */
+function stackHTML(r){
+  if(r.fries){
+    const sticks=[[-14,22],[-6,30],[2,26],[10,34],[-10,40],[6,44],[14,38],[-2,50],[18,48]].map(([rot,left],i)=>`<i class="stick" style="left:${left}%;transform:rotate(${rot}deg);height:${48+(i%3)*7}%"></i>`).join("");
+    return `<div class="fries">${sticks}${r.top?'<i class="top"></i><i class="bits"></i>':""}<div class="box"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#fff"/><circle cx="14" cy="16" r="2.6" fill="#D62F1F"/><circle cx="26" cy="16" r="2.6" fill="#D62F1F"/><path d="M11 23 Q20 32 29 23" stroke="#D62F1F" stroke-width="3.2" fill="none" stroke-linecap="round"/></svg></div></div>`;
+  }
+  const layers=[...r.m].reverse();
+  return `<div class="stack">${layers.map((l,i)=>`<i class="L ${l[0]}" style="animation-delay:${(layers.length-1-i)*70}ms"></i>`).join("")}</div>`;
+}
+
+/* ================= RENDER: FICHAS ================= */
+const $ = s => document.querySelector(s);
+function renderFacts(){
+  const burgers=R.filter(r=>!r.fries);
+  const avg=burgers.reduce((s,r)=>s+costOf(r).total,0)/burgers.length;
+  const cmvs=R.map(r=>costOf(r).total/priceFor(r)*100);
+  const avgCmv=cmvs.reduce((a,b)=>a+b,0)/cmvs.length;
+  $("#facts").innerHTML=`<span class="fact"><b>11</b> fichas técnicas</span><span class="fact"><b>${PREPS.length}</b> preparos base</span><span class="fact">custo médio do burger <b>${brl(avg)}</b></span><span class="fact">CMV médio <b>${pct(avgCmv)}</b></span>`;
+  $("#fixCount").textContent=FIXES.length;
+}
+function renderGrid(){
+  $("#grid").innerHTML=R.map(r=>{
+    const c=costOf(r), p=priceFor(r), cmv=c.total/p*100;
+    return `<button class="card" data-id="${r.id}" aria-current="${r.id===current}">
+      <div class="art">${stackHTML(r)}</div>
+      <div><h3>${esc(r.n)}</h3></div>
+      <div class="tag">${esc(r.tag)}</div>
+      <div class="row"><div><small>Custo</small><span class="num">${brl(c.total)}</span></div><div style="text-align:right"><small>${sell[r.id+"."+mode]>0?"Seu preço":"Sugerido"}</small><span class="num price">${brl(p)}</span></div></div>
+      <div><span class="pill ${cmvClass(cmv)}">CMV ${pct(cmv)}</span></div>
+    </button>`;}).join("");
+}
+function rowsFor(list){
+  return list.map(it=>{const i=INS[it.k];return `<tr><td><span class="ins-name">${esc(i.n)}</span>${i.sub?`<span class="ins-sub">${esc(i.sub)}</span>`:""}</td><td class="num r">${qtyLabel(it)}</td><td class="num r">${unitPrice(it.k)}</td><td><span class="chip ${i.src==="est"?"est":"src"}">${i.src==="est"?"estimado":"planilha"}</span></td><td class="num r">${brl(lineCost(it))}</td></tr>`}).join("");
+}
+function renderDetail(){
+  const r=R.find(x=>x.id===current)||R[0];
+  const c=costOf(r), sug=suggest(c.total), own=sell[r.id+"."+mode], p=own>0?own:sug, cmv=c.total/p*100, margin=p-c.total;
+  const embList=embOf(r,mode);
+  const steps = r.fries ? r.steps : [
+    ["Chapa a 200–220 °C, levemente untada. Separar todos os itens da ficha na bancada.",""],
+    [`Selar o ${r.items[0].k==="pao_aus"?"pão australiano (ele queima mais rápido, fique de olho)":"pão"} com a face cortada para baixo até dourar.`,r.items[0].k==="pao_aus"?"30 s":"40 s"],
+    ...r.extra,
+    [STD_GRILL.replace("queijo por cima", r.id==="gouda"?"3 fatias de gouda por cima":"2 fatias de queijo por cima"),"4 min"],
+    ["Montar de baixo para cima: "+r.m.filter(l=>!l[0].startsWith("bunT")).map(l=>l[1].toLowerCase()).join(" → ")+" → tampa.","30 s"],
+    [mode==="delivery"?"Embrulhar no papel laminado, colocar no saco personalizado com 3 sachês de ketchup e fechar na sacola.":"Embrulhar no papel laminado e servir com 2 guardanapos.","20 s"]
+  ];
+  const totalTime = r.fries ? (r.top?"≈ 6 min":"≈ 5 min") : (r.extra.some(e=>e[1]==="3 min")?"≈ 6 min":"≈ 5 min 30 s");
+  const legend = r.fries ? "" : `<div class="legend">${r.m.map((l,i)=>`<div><span class="n">${i+1}</span><i style="background:${LAYER_COLOR[l[0].split(" ")[0]]}"></i>${esc(l[1])}</div>`).reverse().join("")}<div style="margin-top:4px;color:var(--ink-3);font-size:11.5px">ordem de montagem: 1 é a base</div></div>`;
+  $("#detail").innerHTML=`
+  <div class="d-top">
+    <div class="d-art">${stackHTML(r)}${legend}</div>
+    <div class="d-body">
+      <div class="d-title"><h3>${esc(r.n)}</h3><span class="code">${r.code} · ${mode==="delivery"?"delivery":"balcão"}</span></div>
+      <p class="d-tag">${esc(r.tag)}</p>
+      <div class="kpis">
+        <div class="kpi"><small>Custo total</small><span class="num">${brl(c.total)}</span></div>
+        <div class="kpi"><small>Sugerido a ${target}%</small><span class="num">${brl(sug)}</span></div>
+        <div class="kpi"><small>Seu preço</small><input id="ownPrice" inputmode="decimal" aria-label="Seu preço de venda" placeholder="${sug.toFixed(2).replace(".",",")}" value="${own>0?own.toFixed(2).replace(".",","):""}"></div>
+        <div class="kpi hl"><small>Margem · CMV</small><span class="num">${brl(margin)} · ${pct(cmv)}</span></div>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Ingrediente</th><th class="r">Qtd</th><th class="r">Preço</th><th>Origem</th><th class="r">Custo</th></tr></thead>
+        <tbody>
+          <tr class="group"><td colspan="5">Comida</td></tr>${rowsFor(r.items)}
+          <tr class="group"><td colspan="5">Embalagem ${mode==="delivery"?"delivery":"balcão"}</td></tr>${rowsFor(embList)}
+          <tr class="total"><td colspan="4">Custo total <span class="ins-sub" style="display:inline;margin-left:6px">comida ${brl(c.food)} + embalagem ${brl(c.emb)}</span></td><td class="num r">${brl(c.total)}</td></tr>
+        </tbody></table></div>
+      <div class="fixnote"><b>Corrigido:</b> ${esc(r.fix)}</div>
+    </div>
+  </div>
+  <div class="prod">
+    <div>
+      <h4>Ficha de produção <span class="pill warn">${totalTime}</span></h4>
+      <ol class="steps">${steps.map(s=>`<li><span>${esc(s[0])}</span>${s[1]?`<span class="t">${s[1]}</span>`:"<span></span>"}</li>`).join("")}</ol>
+    </div>
+    <div>
+      <div class="side-box"><dl>
+        ${r.fries?`<dt>Fritadeira</dt><dd>175–180 °C</dd><dt>Porção</dt><dd>${r.items[0].q} g de batata</dd><dt>Óleo</dt><dd>Trocar quando escurecer ou fizer espuma</dd>`:
+        `<dt>Chapa</dt><dd>200–220 °C</dd><dt>Ponto</dt><dd>70 °C no centro do blend</dd><dt>Blend</dt><dd>130 g, direto da geladeira (máx. 4 °C)</dd><dt>Pão</dt><dd>${r.items[0].k==="pao_aus"?"Australiano":"Hambúrguer"}, selado</dd>`}
+        <dt>Rendimento</dt><dd>1 porção</dd>
+        <dt>Pré-preparo</dt><dd>${r.items.filter(it=>INS[it.k].prep).map(it=>INS[it.k].n).join(", ")||"Nenhum"}</dd>
+      </dl></div>
+      <div class="crit"><b>Ponto crítico</b>${r.fries?"Nunca salgar sobre o óleo: o sal degrada a gordura e encurta a vida do óleo.":"Carne moída precisa chegar a 70 °C no centro (RDC 216 da Anvisa). Use termômetro espeto nos primeiros dias até a equipe pegar o tempo."}</div>
+    </div>
+  </div>`;
+  const inp=$("#ownPrice");
+  inp.addEventListener("change",()=>{const v=parseFloat(inp.value.replace(/\./g,"").replace(",","."));if(v>0)sell[r.id+"."+mode]=v;else delete sell[r.id+"."+mode];store.set("sell",sell);refresh();});
+}
+
+/* ================= RENDER: PRODUÇÃO ================= */
+function renderPlan(){
+  $("#planTbl").innerHTML=`<thead><tr><th>Item</th><th class="r">Qtd</th><th class="r">Custo</th></tr></thead><tbody>${R.map(r=>`<tr><td class="ins-name">${esc(r.n)}</td><td class="r"><span class="qty"><button data-d="-1" data-p="${r.id}" aria-label="Menos ${esc(r.n)}">−</button><input id="plan-${r.id}" data-p="${r.id}" type="number" min="0" value="${plan[r.id]||0}" aria-label="Quantidade ${esc(r.n)}"><button data-d="1" data-p="${r.id}" aria-label="Mais ${esc(r.n)}">+</button></span></td><td class="num r">${brl(costOf(r).total*(plan[r.id]||0))}</td></tr>`).join("")}</tbody>`;
+  // somatório
+  const need={}; let cost=0, rev=0, units=0;
+  R.forEach(r=>{const q=plan[r.id]||0; if(!q) return; units+=q; cost+=costOf(r).total*q; rev+=priceFor(r)*q;
+    [...r.items,...embOf(r,mode)].forEach(it=>{need[it.k]=(need[it.k]||0)+it.q*q;});});
+  $("#planModeTxt").textContent=`Canal: ${mode==="delivery"?"delivery":"balcão"}. Troque na aba Fichas técnicas.`;
+  $("#planSum").innerHTML=`<div class="kpi"><small>Itens</small><span class="num">${units}</span></div><div class="kpi"><small>Custo</small><span class="num">${brl(cost)}</span></div><div class="kpi hl"><small>Faturamento</small><span class="num">${brl(rev)}</span></div>`;
+  const prepMap={cebola_car:"cebola",geleia:"geleia",fraldinha:"fraldinha",charque:"charque",bacon_cubo:"bacon"};
+  const lotes=Object.entries(prepMap).filter(([k])=>need[k]).map(([k,pid])=>{const p=PREPS.find(x=>x.id===pid);const g=need[k]*1.1;const n=Math.ceil(g/p.yieldG);return `<div class="lote"><b>${esc(p.n)}</b><span class="num">${n} ${n>1?"lotes":"lote"}</span><span>precisa de ${Math.round(g)} g · lote rende ${p.yieldG} g · ${esc(p.time)}</span></div>`;});
+  const blends=Math.ceil((need.carne||0)*1.1);
+  lotes.unshift(`<div class="lote"><b>Blend 130 g</b><span class="num">${blends} bolas</span><span>${(blends*0.13).toLocaleString("pt-BR",{maximumFractionDigits:1})} kg de carne moída · porcionar e refrigerar</span></div>`);
+  $("#planLotes").innerHTML=lotes.join("");
+  const groups={};
+  Object.entries(need).forEach(([k,q])=>{(groups[INS[k].g]=groups[INS[k].g]||[]).push([k,q]);});
+  const order=["Pães e queijos","Carnes","Molhos e complementos","Batata","Embalagem"];
+  $("#planIns").innerHTML=`<thead><tr><th>Insumo</th><th class="r">Separar</th><th class="r">Custo estimado</th></tr></thead><tbody>${order.filter(g=>groups[g]).map(g=>`<tr class="group"><td colspan="3">${g}</td></tr>`+groups[g].map(([k,q])=>{const i=INS[k];const qq=q*1.1;const lbl=i.per==="kg"?(qq>=1000?(qq/1000).toLocaleString("pt-BR",{maximumFractionDigits:2})+" kg":Math.round(qq)+" g"):Math.ceil(qq)+" "+(i.u==="fatia"?"fatias":i.u==="anel"?"anéis":i.u==="porção"?"porções":"un");return `<tr><td class="ins-name">${esc(i.n)}</td><td class="num r">${lbl}</td><td class="num r">${brl(lineCost({k,q:qq}))}</td></tr>`}).join("")).join("")}</tbody>`;
+}
+function renderLineup(){
+  $("#lineup").innerHTML=R.filter(r=>!r.fries).map(r=>`<div class="line-card"><div style="display:grid;place-items:center">${stackHTML(r)}</div><div><h4>${esc(r.n)}</h4><ol>${r.m.map(l=>`<li>${esc(l[1])}</li>`).join("")}</ol><div class="time">${r.extra.map(e=>e[1]+" "+e[0].split(" ").slice(0,2).join(" ").toLowerCase()).join(" · ")||"só blend"} · blend 4 min</div></div></div>`).join("");
+}
+
+/* ================= RENDER: PREPAROS ================= */
+function renderPreps(){
+  $("#preps").innerHTML=PREPS.map(p=>`<article class="prep">
+    <h3>${esc(p.n)}</h3>
+    <div class="meta"><span>Rende <b>${esc(p.rend)}</b></span><span>${esc(p.time)}</span><span>${esc(p.val)}</span></div>
+    <div class="tbl-wrap"><table><thead><tr><th>Ingrediente</th><th class="r">Qtd</th><th class="r">Custo</th></tr></thead><tbody>
+      ${p.ing.map(i=>`<tr><td>${esc(i[0])}</td><td class="num r">${esc(i[1])}</td><td class="num r">${i[2]==null?"–":brl(i[2])}</td></tr>`).join("")}
+      ${p.cost?`<tr class="total"><td>Lote · por kg pronto</td><td class="num r">${brl(p.cost)}</td><td class="num r">${brl(p.cost/p.yieldG*1000)}</td></tr>`:""}
+    </tbody></table></div>
+    <ol>${p.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+    ${p.note?`<div class="fixnote" style="margin:0">${esc(p.note)}</div>`:""}
+    ${p.usedIn?`<div class="used">Usado em: ${p.usedIn.join(", ")} · custos com ingredientes estimados</div>`:""}
+  </article>`).join("");
+}
+
+/* ================= RENDER: INSUMOS ================= */
+function renderIns(){
+  const used=k=>R.filter(r=>r.items.some(i=>i.k===k)||embOf(r,"delivery").concat(embOf(r,"balcao")).some(i=>i.k===k)).length;
+  const groups={}; Object.entries(INS).forEach(([k,v])=>{(groups[v.g]=groups[v.g]||[]).push(k);});
+  $("#insTbl").innerHTML=`<thead><tr><th>Insumo</th><th>Compra</th><th class="r">Preço</th><th>Origem</th><th class="r">Usado em</th></tr></thead><tbody>${Object.entries(groups).map(([g,ks])=>`<tr class="group"><td colspan="5">${g}</td></tr>`+ks.map(k=>{const i=INS[k];const ch=Math.abs(prices[k]-DEFAULT_PRICES[k])>1e-9;return `<tr><td><span class="ins-name">${esc(i.n)}</span>${i.sub?`<span class="ins-sub">${esc(i.sub)}</span>`:""}</td><td>${i.per==="kg"?"por kg":"por "+i.u}</td><td class="r"><label class="price-in${ch?" changed":""}"><span class="mono" style="color:var(--ink-3)">R$</span><input id="p-${k}" data-k="${k}" inputmode="decimal" value="${prices[k].toFixed(2).replace(".",",")}" aria-label="Preço ${esc(i.n)}"></label></td><td><span class="chip ${ch?"fix":i.src==="est"?"est":"src"}">${ch?"seu preço":i.src==="est"?"estimado":"planilha"}</span></td><td class="num r">${used(k)} ${used(k)===1?"item":"itens"}</td></tr>`}).join("")).join("")}</tbody>`;
+}
+
+/* ================= RENDER: CORREÇÕES ================= */
+function renderFixes(){
+  $("#fixes").innerHTML=FIXES.map(f=>`<div class="fix"><h3>${esc(f[0])}</h3><div class="ba"><div class="b"><small>Antes</small>${esc(f[1])}</div><div class="a"><small>Agora</small>${esc(f[2])}</div></div></div>`).join("");
+  $("#confirmList").innerHTML=CONFIRM.map(c=>`<li>${esc(c)}</li>`).join("");
+}
+
+/* ================= EVENTOS ================= */
+function refresh(){renderFacts();renderGrid();renderDetail();renderPlan();renderIns();}
+$("#grid").addEventListener("click",e=>{const b=e.target.closest(".card");if(!b)return;current=b.dataset.id;store.set("current",current);renderGrid();renderDetail();$("#detail").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"});});
+$("#modeSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;mode=b.dataset.m;store.set("mode",mode);document.querySelectorAll("#modeSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b));refresh();});
+const tgt=$("#cmvTarget"); tgt.value=target; $("#cmvOut").textContent=target+"%";
+tgt.addEventListener("input",()=>{target=+tgt.value;$("#cmvOut").textContent=target+"%";store.set("target",target);renderFacts();renderGrid();renderDetail();renderPlan();});
+document.querySelectorAll("#modeSeg button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.m===mode));
+$("#planTbl").addEventListener("click",e=>{const b=e.target.closest("button[data-d]");if(!b)return;const id=b.dataset.p;plan[id]=Math.max(0,(plan[id]||0)+ +b.dataset.d);store.set("plan",plan);renderPlan();});
+$("#planTbl").addEventListener("change",e=>{const i=e.target.closest("input[data-p]");if(!i)return;plan[i.dataset.p]=Math.max(0,parseInt(i.value)||0);store.set("plan",plan);renderPlan();});
+$("#planReset").addEventListener("click",()=>{plan=Object.assign({},PLAN_DEFAULT);store.set("plan",{});renderPlan();});
+$("#insTbl").addEventListener("change",e=>{const i=e.target.closest("input[data-k]");if(!i)return;const v=parseFloat(i.value.replace(/\./g,"").replace(",","."));const k=i.dataset.k;prices[k]=v>=0?v:DEFAULT_PRICES[k];const saved={};Object.keys(prices).forEach(x=>{if(Math.abs(prices[x]-DEFAULT_PRICES[x])>1e-9)saved[x]=prices[x];});store.set("prices",saved);refresh();});
+$("#priceReset").addEventListener("click",()=>{prices=Object.assign({},DEFAULT_PRICES);store.set("prices",{});refresh();});
+
+/* rotas por hash */
+const VIEWS=["fichas","producao","preparos","insumos","correcoes"];
+function route(){const h=location.hash.slice(1);const v=VIEWS.includes(h)?h:"fichas";document.querySelectorAll("[data-view]").forEach(s=>s.hidden=s.id!=="v-"+v);document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.v===v));}
+$("#tabs").addEventListener("click",e=>{const t=e.target.closest(".tab");if(!t)return;if(location.hash!=="#"+t.dataset.v)location.hash=t.dataset.v;else route();});
+window.addEventListener("hashchange",route);
+
+$("#heroBurger").innerHTML=stackHTML(R.find(r=>r.id==="rodeio")).replace('class="stack"','class="stack" style="--w:230px"');
+renderPreps();renderLineup();renderFixes();refresh();route();
+})();
+</script>
+</body>
+</html>
