@@ -368,7 +368,7 @@ const CONFIG = {
   nome7: "João Lucas",       // personagem 7
   idade: 7,
   data: "2026-12-07",        // AAAA-MM-DD
-  horario: "",               // ex.: "16:00"  (vazio = "EM BREVE")
+  horario: "18:00",               // ex.: "16:00"  (vazio = "EM BREVE")
   duracaoHoras: 4,
   endereco: "Rua Eligio Medeiros de Araújo, nº 6105",
   cidade: "Candeias, Jaboatão dos Guararapes - PE", // ajuda o GPS a achar
@@ -539,7 +539,7 @@ document.querySelector('.char[data-n="7"] .tag').textContent = CONFIG.nome7.toUp
 const dm = `${pad2(D)}/${pad2(M)}`;
 $("#dateBig").innerHTML = mark67(dm); $("#footDate").textContent = dm;
 $("#weekday").textContent = partyStart.toLocaleDateString("pt-BR", { weekday:"long" });
-if (CONFIG.horario){ $("#timeBig").innerHTML = mark67(CONFIG.horario.replace(":", "h")); }
+if (CONFIG.horario){ $("#timeBig").innerHTML = mark67(CONFIG.horario.replace(":00", "h").replace(":", "h")); }
 else {
   $("#timeBig").textContent = "NO ZAP 📲";
   $("#timeNote").textContent = "Clica aqui embaixo e confirma o horário com a gente pelo WhatsApp.";
