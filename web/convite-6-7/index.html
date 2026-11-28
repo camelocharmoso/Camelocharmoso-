@@ -19,6 +19,7 @@
   --white:#fff; --ink:#0a1238; --muted:#b8c4f0;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{
   font-family:Fredoka,system-ui,sans-serif;color:var(--white);background-color:var(--bg);
@@ -265,6 +266,7 @@ body.party{animation:party .67s linear infinite}
         <div class="lbl">⏰ QUE HORAS</div>
         <div class="big" id="timeBig">EM BREVE</div>
         <p class="note" id="timeNote">Chega no horário, que o parabéns é sagrado.</p>
+        <div class="row" id="timeRow" hidden><a class="btn brick white" id="timeZap" target="_blank" rel="noopener">📲 Ver horário no zap</a></div>
       </article>
       <article class="card brick yellow reveal">
         <div class="lbl">📍 ONDE</div>
@@ -369,8 +371,8 @@ const CONFIG = {
   horario: "",               // ex.: "16:00"  (vazio = "EM BREVE")
   duracaoHoras: 4,
   endereco: "Rua Eligio Medeiros de Araújo, nº 6105",
-  cidade: "",                // ex.: "Bairro, Cidade - UF" (ajuda o GPS a achar)
-  whatsapp: "",              // ex.: "5581999999999" (vazio = a pessoa escolhe o contato)
+  cidade: "Candeias, Jaboatão dos Guararapes - PE", // ajuda o GPS a achar
+  whatsapp: "5581994610257", // 55 + DDD + número (vazio = a pessoa escolhe o contato)
   // Fotos na pasta "fotos/" (ordem = ordem da galeria). "pos" ajusta o enquadramento.
   fotos: [
     { src: "fotos/01-arvore.jpg",   legenda: "Primeiro Natal da dupla 🎄", pos: "55% 50%" },
@@ -538,7 +540,13 @@ const dm = `${pad2(D)}/${pad2(M)}`;
 $("#dateBig").innerHTML = mark67(dm); $("#footDate").textContent = dm;
 $("#weekday").textContent = partyStart.toLocaleDateString("pt-BR", { weekday:"long" });
 if (CONFIG.horario){ $("#timeBig").innerHTML = mark67(CONFIG.horario.replace(":", "h")); }
-else { $("#timeBig").textContent = "EM BREVE"; $("#timeNote").textContent = "O horário chega já já. Fica de olho! 👀"; }
+else {
+  $("#timeBig").textContent = "NO ZAP 📲";
+  $("#timeNote").textContent = "Clica aqui embaixo e confirma o horário com a gente pelo WhatsApp.";
+  const zapBase = CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp.replace(/\D/g,"")}` : "https://wa.me/";
+  $("#timeZap").href = `${zapBase}?text=${encodeURIComponent(`Oi! Qual o horário da festa de ${CONFIG.idade} anos do ${CONFIG.nome6} e do ${CONFIG.nome7} no dia ${dm}? 🤲`)}`;
+  $("#timeRow").hidden = false;
+}
 const fullAddr = CONFIG.endereco + (CONFIG.cidade ? " — " + CONFIG.cidade : "");
 $("#addr").innerHTML = mark67(fullAddr);
 const q = encodeURIComponent(CONFIG.endereco + (CONFIG.cidade ? ", " + CONFIG.cidade : ""));
