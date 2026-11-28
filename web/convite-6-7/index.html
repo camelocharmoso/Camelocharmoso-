@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Elias & João Lucas • 5 anos • 6-7</title>
+<meta name="description" content="Você foi convocado! Aniversário de 5 anos do Elias e do João Lucas — 07/12. SIX SEVEN!">
+<meta property="og:title" content="Elias & João Lucas fazem 5 anos 🤲 6-7!">
+<meta property="og:description" content="Você foi convocado! 07/12 — abre o convite e faz o 6-7.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0a1238">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1238; --bg2:#122063; --blue:#2b7bff; --blue-d:#1747b8; --cyan:#22b4ff; --cyan-d:#0f74b3;
+  --yellow:#ffe14d; --yellow-d:#c9a800; --pink:#ff4fa3; --pink-d:#b8236d; --lime:#7dff6a;
+  --white:#fff; --ink:#0a1238; --muted:#b8c4f0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:Fredoka,system-ui,sans-serif;color:var(--white);background-color:var(--bg);
+  background-image:radial-gradient(circle,rgba(255,255,255,.055) 0 5px,transparent 6px);
+  background-size:30px 30px;overflow-x:hidden;-webkit-tap-highlight-color:transparent;line-height:1.4;
+}
+body.locked{overflow:hidden}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+a{color:inherit}
+.display{font-family:Bungee,Impact,sans-serif;font-weight:400;letter-spacing:.01em}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px;position:relative;z-index:2}
+section{padding:72px 0;position:relative}
+.h67{color:var(--yellow);text-shadow:0 0 18px rgba(255,225,77,.6);display:inline-block}
+
+/* ---------- fundo com 6 e 7 flutuando ---------- */
+#floaters{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+#floaters span{position:absolute;bottom:-20vh;font-family:Bungee,sans-serif;color:#fff;opacity:.07;animation:float linear infinite}
+@keyframes float{to{transform:translateY(-140vh) rotate(var(--r))}}
+
+/* ---------- peças de lego ---------- */
+.brick{
+  --c:var(--blue);--d:var(--blue-d);
+  background:var(--c);border-radius:16px;position:relative;
+  box-shadow:inset 0 -6px 0 rgba(0,0,0,.22),0 7px 0 var(--d),0 16px 30px rgba(0,0,0,.35);
+}
+.brick::before{
+  content:"";position:absolute;left:16px;right:16px;top:-9px;height:11px;border-radius:5px 5px 0 0;
+  background:repeating-linear-gradient(90deg,var(--c) 0 18px,transparent 18px 30px);
+  filter:brightness(1.12);
+}
+.brick.yellow{--c:var(--yellow);--d:var(--yellow-d);color:var(--ink)}
+.brick.pink{--c:var(--pink);--d:var(--pink-d)}
+.brick.cyan{--c:var(--cyan);--d:var(--cyan-d)}
+.brick.white{--c:#f3f6ff;--d:#9fb0dc;color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;font-family:Bungee,sans-serif;font-size:15px;text-decoration:none;transition:transform .12s}
+.btn:active{transform:translateY(5px)}
+.btn:active.brick{box-shadow:inset 0 -6px 0 rgba(0,0,0,.22),0 2px 0 var(--d)}
+.chip{display:inline-block;font-family:Bungee,sans-serif;font-size:12px;letter-spacing:.08em;background:var(--pink);color:#fff;padding:6px 12px;border-radius:999px;transform:rotate(-2deg)}
+.sec-title{font-family:Bungee,sans-serif;font-size:clamp(30px,9vw,44px);line-height:1;margin:14px 0 8px}
+.sec-sub{color:var(--muted);font-size:17px;margin-bottom:28px}
+
+/* ---------- intro ---------- */
+#intro{position:fixed;inset:0;z-index:50;background:var(--bg);display:grid;place-items:center;text-align:center;padding:24px;
+  background-image:radial-gradient(circle,rgba(255,255,255,.06) 0 5px,transparent 6px),radial-gradient(ellipse at 50% 40%,#1d3aa8 0,transparent 65%);
+  background-size:30px 30px,100% 100%;transition:opacity .6s,visibility .6s}
+#intro.gone{opacity:0;visibility:hidden}
+#intro .lock-title{font-family:Bungee,sans-serif;font-size:clamp(28px,8vw,40px);line-height:1.05;margin:18px 0 28px}
+#openBtn{width:210px;height:210px;border-radius:32px;font-family:Bungee,sans-serif;font-size:34px;line-height:1;display:grid;place-content:center;gap:10px;animation:pulse 1.4s ease-in-out infinite}
+#openBtn small{font-family:Fredoka,sans-serif;font-size:15px;font-weight:600;opacity:.9}
+@keyframes pulse{50%{transform:scale(1.06) rotate(-2deg)}}
+#intro .hint{margin-top:30px;color:var(--muted);font-size:15px}
+#stage{min-height:300px;display:grid;place-items:center;position:relative}
+.count-num{font-family:Bungee,sans-serif;font-size:min(46vw,240px);line-height:1;animation:pop .36s cubic-bezier(.2,1.6,.4,1) both}
+.count-cap{font-size:18px;color:var(--muted);margin-top:8px;min-height:26px}
+.boom{display:flex;gap:6px;align-items:center;justify-content:center}
+.boom b{font-family:Bungee,sans-serif;font-size:min(40vw,220px);line-height:1;font-weight:400;display:inline-block;animation:pop .45s cubic-bezier(.2,1.8,.4,1) both}
+.boom b:first-child{color:var(--blue);text-shadow:0 8px 0 var(--blue-d)}
+.boom b:last-child{color:var(--cyan);text-shadow:0 8px 0 var(--cyan-d);animation-delay:.28s}
+.boom-txt{font-family:Bungee,sans-serif;font-size:clamp(34px,11vw,60px);color:var(--yellow);animation:pop .5s .55s cubic-bezier(.2,1.8,.4,1) both}
+@keyframes pop{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
+.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translate(-10px,6px) rotate(-2deg)}40%{transform:translate(9px,-7px) rotate(2deg)}60%{transform:translate(-7px,-4px)}80%{transform:translate(6px,5px)}}
+
+/* ---------- botão de som ---------- */
+#soundBtn{position:fixed;top:max(12px,env(safe-area-inset-top));right:12px;z-index:40;width:46px;height:46px;border-radius:14px;font-size:20px;display:grid;place-items:center;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,.2)}
+
+/* ---------- hero ---------- */
+.hero{padding:max(56px,env(safe-area-inset-top)) 0 40px;text-align:center;min-height:100svh;display:flex;flex-direction:column;justify-content:center}
+.duo{display:flex;justify-content:center;align-items:flex-end;gap:0;margin:22px auto 8px;max-width:440px}
+.char{position:relative;flex:1;cursor:pointer;user-select:none;-webkit-user-select:none}
+.char svg{width:100%;height:auto;display:block;overflow:visible;animation:bob 1.1s ease-in-out infinite}
+.char[data-n="7"] svg{animation-delay:-.55s}
+@keyframes bob{50%{transform:translateY(-6px)}}
+.char.jump svg{animation:jump .55s cubic-bezier(.3,1.6,.5,1)}
+@keyframes jump{40%{transform:translateY(-38px) rotate(-6deg)}70%{transform:translateY(4px) scaleY(.94)}}
+.tag{display:inline-block;margin-top:6px;font-family:Bungee,sans-serif;font-size:clamp(13px,3.8vw,17px);padding:6px 12px;border-radius:10px;background:#fff;color:var(--ink);box-shadow:0 5px 0 #9fb0dc;transform:rotate(-3deg)}
+.char[data-n="7"] .tag{transform:rotate(3deg)}
+.bubble{position:absolute;top:-6px;left:50%;transform:translate(-50%,-100%) scale(0);font-family:Bungee,sans-serif;font-size:22px;background:var(--yellow);color:var(--ink);padding:6px 14px;border-radius:14px;white-space:nowrap;transition:transform .25s cubic-bezier(.2,1.8,.4,1);pointer-events:none;z-index:3}
+.bubble::after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-8px;border:8px solid transparent;border-top-color:var(--yellow);border-bottom:0}
+.bubble.show{transform:translate(-50%,-100%) scale(1)}
+.arm-anim{animation:weigh .5s ease-in-out infinite alternate}
+.arm-anim.r{animation-delay:-.5s}
+@keyframes weigh{from{transform:translateY(-15px)}to{transform:translateY(15px)}}
+.eye-ball{transform-box:fill-box;transform-origin:center}
+.eye-ball.blink{animation:blink .18s}
+@keyframes blink{50%{transform:scaleY(.08)}}
+.hero h1{font-family:Bungee,sans-serif;font-weight:400;font-size:clamp(34px,10.5vw,58px);line-height:1;margin-top:18px}
+.hero h1 .amp{color:var(--pink);display:block;font-size:.55em;margin:6px 0}
+.age{font-size:clamp(22px,6vw,28px);font-weight:600;margin-top:14px}
+.age strong{font-family:Bungee,sans-serif;font-weight:400;font-size:2.2em;color:var(--yellow);vertical-align:-.18em;display:inline-block;transform:rotate(-6deg);text-shadow:0 6px 0 var(--yellow-d)}
+.joke{margin-top:6px;font-size:19px;color:var(--muted)}
+.joke em{font-style:normal;font-family:Bungee,sans-serif;color:#fff;background:var(--blue);padding:2px 8px;border-radius:8px}
+.tap-hint{font-size:14px;color:var(--muted);margin-top:10px}
+.scroll-cue{display:inline-block;margin:30px auto 0;font-family:Bungee,sans-serif;font-size:13px;text-decoration:none;color:var(--muted);animation:cue 1.4s ease-in-out infinite}
+@keyframes cue{50%{transform:translateY(8px)}}
+
+/* ---------- marquee ---------- */
+.marquee{overflow:hidden;background:var(--yellow);color:var(--ink);transform:rotate(-2.5deg);margin:10px -20px;position:relative;z-index:3;box-shadow:0 8px 0 var(--yellow-d)}
+.marquee div{display:flex;width:max-content;animation:marq 14s linear infinite}
+.marquee span{font-family:Bungee,sans-serif;font-size:20px;padding:12px 14px;white-space:nowrap}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ---------- info ---------- */
+.cards{display:grid;gap:30px}
+.card{padding:26px 22px 22px}
+.card .lbl{font-family:Bungee,sans-serif;font-size:13px;letter-spacing:.1em;opacity:.85}
+.card .big{font-family:Bungee,sans-serif;font-size:clamp(46px,15vw,72px);line-height:1;margin:6px 0}
+.card .mid{font-family:Bungee,sans-serif;font-size:clamp(20px,6vw,26px);line-height:1.15;margin:8px 0}
+.card p.note{font-size:16px;opacity:.92}
+.card .row{display:flex;flex-wrap:wrap;gap:16px 12px;margin-top:20px}
+.card .row .btn{flex:1 1 140px}
+.card.yellow .h67{color:var(--pink);text-shadow:none}
+.card.cyan .h67,.card .h67{text-shadow:none}
+
+/* ---------- contagem ---------- */
+.clock{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px}
+.tile{padding:18px 4px 12px;text-align:center}
+.tile .n{font-family:Bungee,sans-serif;font-size:clamp(28px,9vw,44px);line-height:1}
+.tile .u{font-size:12px;font-weight:700;letter-spacing:.08em;margin-top:6px;opacity:.85}
+.tile .h67{color:var(--yellow);animation:wig .5s ease-in-out infinite alternate}
+@keyframes wig{to{transform:rotate(10deg) scale(1.12)}}
+.clock-note{margin-top:22px;color:var(--muted);font-size:15px;text-align:center}
+.today{font-family:Bungee,sans-serif;font-size:clamp(36px,12vw,60px);text-align:center;color:var(--yellow);padding:20px 0}
+
+/* ---------- galeria ---------- */
+.gallery{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:16px 16px 28px;margin:0 -16px;scrollbar-width:none}
+.gallery::-webkit-scrollbar{display:none}
+.ph{flex:0 0 74%;max-width:320px;scroll-snap-align:center;padding:12px 12px 16px;transform:rotate(var(--rot));cursor:pointer}
+.ph .frame{aspect-ratio:4/5;border-radius:10px;overflow:hidden;background:rgba(0,0,0,.2);display:grid;place-items:center}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .empty{text-align:center;font-size:15px;padding:16px;opacity:.85}
+.ph .empty b{display:block;font-size:52px;margin-bottom:6px}
+.ph .cap{font-family:Bungee,sans-serif;font-size:20px;margin-top:12px;text-align:center}
+.ph.final .frame{background:var(--ink);color:#fff;text-align:center;padding:18px}
+.ph.final .frame .display{font-size:46px;line-height:1;color:var(--yellow)}
+.swipe{font-size:14px;color:var(--muted);text-align:center}
+#lightbox{position:fixed;inset:0;z-index:60;background:rgba(5,9,30,.92);display:none;place-items:center;padding:20px}
+#lightbox.open{display:grid}
+#lightbox img{max-width:100%;max-height:80vh;border-radius:16px;border:6px solid #fff;animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+#lightbox p{font-family:Bungee,sans-serif;text-align:center;margin-top:14px;font-size:20px}
+
+/* ---------- jogo ---------- */
+.game{padding:24px 18px 22px;text-align:center}
+.g-top{display:flex;justify-content:space-between;align-items:center;font-family:Bungee,sans-serif;font-size:14px}
+.g-score{font-family:Bungee,sans-serif;font-size:clamp(64px,22vw,110px);line-height:1;margin:10px 0 2px}
+.g-score small{font-size:.32em;opacity:.7}
+.bar{height:18px;border-radius:9px;background:rgba(0,0,0,.25);overflow:hidden;margin:10px 0 18px}
+.bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--yellow) 0 18px,#ffd000 18px 30px);border-radius:9px;transition:width .1s}
+.pads{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+.pad{height:150px;border-radius:22px;font-family:Bungee,sans-serif;font-size:76px;line-height:1;display:grid;place-items:center;user-select:none;-webkit-user-select:none;transition:transform .06s}
+.pad.hit{transform:translateY(6px) scale(.96)}
+.pad.next{outline:4px solid #fff;outline-offset:4px}
+.pad.bad{animation:shake .3s}
+.pad:disabled{opacity:.45}
+.g-msg{min-height:52px;margin-top:18px;font-size:17px;font-weight:600}
+.g-msg b{font-family:Bungee,sans-serif;font-weight:400;color:var(--yellow)}
+#gStart{margin-top:6px;width:100%}
+
+/* ---------- rsvp ---------- */
+.rsvp{padding:26px 20px 22px}
+.field{display:block;margin-bottom:18px;text-align:left}
+.field span{display:block;font-family:Bungee,sans-serif;font-size:13px;margin-bottom:8px;letter-spacing:.06em}
+.field input{width:100%;font:600 18px Fredoka,sans-serif;padding:14px 16px;border-radius:14px;border:3px solid rgba(10,18,56,.15);background:#fff;color:var(--ink);outline:none}
+.field input:focus{border-color:var(--ink)}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button{width:56px;height:56px;border-radius:14px;font-family:Bungee,sans-serif;font-size:28px}
+.stepper output{flex:1;text-align:center;font-family:Bungee,sans-serif;font-size:42px}
+.step-note{min-height:22px;font-size:15px;font-weight:600;text-align:center;margin-top:4px}
+.rsvp .btn{width:100%;margin-top:16px;font-size:17px;padding:18px}
+.no-go{display:block;margin:22px auto 0;font-size:15px;text-decoration:underline;opacity:.8}
+
+footer{text-align:center;padding:40px 0 calc(60px + env(safe-area-inset-bottom));color:var(--muted)}
+footer .sig{font-family:Bungee,sans-serif;font-size:clamp(60px,22vw,120px);line-height:1;color:#fff;cursor:pointer;user-select:none;-webkit-user-select:none;display:inline-block}
+footer .sig span:first-child{color:var(--blue)} footer .sig span:last-child{color:var(--cyan)}
+body.party{animation:party .67s linear infinite}
+@keyframes party{to{filter:hue-rotate(360deg)}}
+
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:70}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .7s,transform .7s cubic-bezier(.2,1.2,.4,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  #floaters{display:none}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body class="locked">
+
+<div id="floaters" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<!-- ============ INTRO ============ -->
+<div id="intro" role="dialog" aria-label="Abrir convite">
+  <div>
+    <div id="stage">
+      <div>
+        <span class="chip">CONVITE ULTRA SECRETO 🔒</span>
+        <p class="lock-title">Você foi<br>convocado!</p>
+        <button id="openBtn" class="brick">ABRIR<small>toca aqui 👆</small></button>
+        <p class="hint">🔊 aumenta o som antes</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="soundBtn" aria-label="Som ligado">🔊</button>
+
+<!-- ============ HERO ============ -->
+<header class="hero wrap" id="topo">
+  <div><span class="chip">FESTA DOS GÊMEOS</span></div>
+  <div class="duo">
+    <figure class="char" data-n="6" aria-label="Personagem 6 — Elias"><div class="bubble">SIX!</div><div class="svg-slot"></div><figcaption class="tag">ELIAS</figcaption></figure>
+    <figure class="char" data-n="7" aria-label="Personagem 7 — João Lucas"><div class="bubble">SEVEN!</div><div class="svg-slot"></div><figcaption class="tag">JOÃO LUCAS</figcaption></figure>
+  </div>
+  <p class="tap-hint">(toca neles 👆)</p>
+  <h1><span id="n1">Elias</span><span class="amp">&amp;</span><span id="n2">João Lucas</span></h1>
+  <p class="age">fazem <strong id="ageNum">5</strong> anos</p>
+  <p class="joke">…mas a vibe é <em>6-7</em> 🤲</p>
+  <a href="#info" class="scroll-cue">desliza ↓</a>
+</header>
+
+<div style="overflow:hidden;padding:24px 0;position:relative;z-index:3"><div class="marquee" aria-hidden="true"><div id="marq"></div></div></div>
+
+<!-- ============ INFO ============ -->
+<section id="info">
+  <div class="wrap">
+    <span class="chip">ANOTA AÍ</span>
+    <h2 class="sec-title">O rolê</h2>
+    <p class="sec-sub">Tudo que você precisa pra não perder o 6-7 do ano.</p>
+    <div class="cards">
+      <article class="card brick reveal">
+        <div class="lbl">📅 QUANDO</div>
+        <div class="big" id="dateBig">07/12</div>
+        <div class="mid" id="weekday">segunda-feira</div>
+        <p class="note">Dia <span class="h67">7</span>. Coincidência? Acho que não. 👀</p>
+        <div class="row">
+          <a class="btn brick white" id="gcal" target="_blank" rel="noopener">+ Google Agenda</a>
+          <button class="btn brick white" id="ics">+ Agenda do celular</button>
+        </div>
+      </article>
+      <article class="card brick pink reveal">
+        <div class="lbl">⏰ QUE HORAS</div>
+        <div class="big" id="timeBig">EM BREVE</div>
+        <p class="note" id="timeNote">Chega no horário, que o parabéns é sagrado.</p>
+      </article>
+      <article class="card brick yellow reveal">
+        <div class="lbl">📍 ONDE</div>
+        <div class="mid" id="addr">Rua Eligio Medeiros de Araújo, nº 6105</div>
+        <p class="note">Até o número da casa começa com <span class="h67">6</span>. Tá tudo conectado. 🤯</p>
+        <div class="row">
+          <a class="btn brick" id="gmaps" target="_blank" rel="noopener">📍 Google Maps</a>
+          <a class="btn brick cyan" id="waze" target="_blank" rel="noopener">🚗 Waze</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTAGEM ============ -->
+<section id="contagem">
+  <div class="wrap">
+    <span class="chip">TIC TAC</span>
+    <h2 class="sec-title">Faltam…</h2>
+    <p class="sec-sub">Todo <span class="h67">6</span> e todo <span class="h67">7</span> que aparecer aqui vai dançar.</p>
+    <div id="clockBox" class="reveal">
+      <div class="clock">
+        <div class="tile brick"><div class="n" id="cD">--</div><div class="u">DIAS</div></div>
+        <div class="tile brick cyan"><div class="n" id="cH">--</div><div class="u">HORAS</div></div>
+        <div class="tile brick pink"><div class="n" id="cM">--</div><div class="u">MIN</div></div>
+        <div class="tile brick yellow"><div class="n" id="cS">--</div><div class="u">SEG</div></div>
+      </div>
+    </div>
+    <p class="clock-note">pra festa mais 6-7 do ano 🤲</p>
+  </div>
+</section>
+
+<!-- ============ GALERIA ============ -->
+<section id="fotos">
+  <div class="wrap">
+    <span class="chip">ARQUIVO SECRETO</span>
+    <h2 class="sec-title">Como eles cresceram</h2>
+    <p class="sec-sub">De bebês fofos a dupla mais 6-7 da cidade. Toca na foto pra ampliar.</p>
+    <div class="gallery" id="gallery"></div>
+    <p class="swipe">← arrasta pro lado →</p>
+  </div>
+</section>
+
+<!-- ============ JOGO ============ -->
+<section id="desafio">
+  <div class="wrap">
+    <span class="chip">MINIGAME</span>
+    <h2 class="sec-title">Desafio 6-7</h2>
+    <p class="sec-sub">Aperta <b>6</b>, depois <b>7</b>, depois <b>6</b>… Chega em <b>67</b> antes do tempo acabar. Usa os dois dedões!</p>
+    <div class="game brick cyan reveal">
+      <div class="g-top"><span>⏱ <span id="gTime">15.0</span>s</span><span>🏆 <span id="gBest">--</span></span></div>
+      <div class="g-score"><span id="gCount">0</span><small>/67</small></div>
+      <div class="bar"><i id="gBar"></i></div>
+      <div class="pads">
+        <button class="pad brick" id="p6" disabled>6</button>
+        <button class="pad brick yellow" id="p7" disabled>7</button>
+      </div>
+      <div class="g-msg" id="gMsg">Bora ver se você aguenta o ritmo dos gêmeos.</div>
+      <button class="btn brick pink" id="gStart">▶ COMEÇAR</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RSVP ============ -->
+<section id="confirma">
+  <div class="wrap">
+    <span class="chip">IMPORTANTE</span>
+    <h2 class="sec-title">Vai colar?</h2>
+    <p class="sec-sub">Confirma rapidinho pra gente preparar tudo.</p>
+    <form class="rsvp brick white reveal" id="rsvpForm" autocomplete="on">
+      <label class="field"><span>SEU NOME</span><input id="rName" name="name" placeholder="Ex.: Tia Carla" required></label>
+      <div class="field"><span>QUANTAS PESSOAS?</span>
+        <div class="stepper">
+          <button type="button" class="brick" id="rMinus" aria-label="Menos">−</button>
+          <output id="rNum">1</output>
+          <button type="button" class="brick" id="rPlus" aria-label="Mais">+</button>
+        </div>
+        <div class="step-note" id="rNote"></div>
+      </div>
+      <button type="submit" class="btn brick pink">🙌 SIX SEVEN! EU VOU</button>
+      <button type="button" class="no-go" id="rNo">Não vou conseguir ir 😢</button>
+    </form>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="sig" id="sig" role="button" aria-label="67"><span>6</span><span>7</span></div>
+  <p>Elias &amp; João Lucas • 5 anos • <span id="footDate">07/12</span></p>
+</footer>
+
+<div id="lightbox" role="dialog" aria-label="Foto ampliada"><div><img id="lbImg" alt=""><p id="lbCap"></p></div></div>
+
+<script>
+/* =========================================================
+   CONFIGURAÇÃO — é só editar aqui
+   ========================================================= */
+const CONFIG = {
+  nome6: "Elias",            // personagem 6
+  nome7: "João Lucas",       // personagem 7
+  idade: 5,
+  data: "2026-12-07",        // AAAA-MM-DD
+  horario: "",               // ex.: "16:00"  (vazio = "EM BREVE")
+  duracaoHoras: 4,
+  endereco: "Rua Eligio Medeiros de Araújo, nº 6105",
+  cidade: "",                // ex.: "Bairro, Cidade - UF" (ajuda o GPS a achar)
+  whatsapp: "",              // ex.: "5581999999999" (vazio = a pessoa escolhe o contato)
+  // Coloque as fotos na pasta "fotos/" com estes nomes (ou troque os nomes aqui)
+  fotos: [
+    { src: "fotos/bebes.jpg",   legenda: "Bebês" },
+    { src: "fotos/1-ano.jpg",   legenda: "1 aninho" },
+    { src: "fotos/2-anos.jpg",  legenda: "2 anos" },
+    { src: "fotos/3-anos.jpg",  legenda: "3 anos" },
+    { src: "fotos/4-anos.jpg",  legenda: "4 anos" },
+  ],
+};
+
+/* ---------- utilidades ---------- */
+const $ = s => document.querySelector(s);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const mark67 = str => String(str).replace(/[67]/g, d => `<span class="h67">${d}</span>`);
+const [Y, M, D] = CONFIG.data.split("-").map(Number);
+const [hh, mm] = (CONFIG.horario || "00:00").split(":").map(Number);
+const partyStart = new Date(Y, M - 1, D, hh, mm);
+const pad2 = n => String(n).padStart(2, "0");
+const store = { get(k){ try{ return localStorage.getItem(k) }catch(e){ return null } }, set(k,v){ try{ localStorage.setItem(k,v) }catch(e){} } };
+
+/* ---------- som (Web Audio + voz) ---------- */
+const Snd = {
+  ctx: null, on: true,
+  init(){
+    if (!this.ctx) { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
+    if (this.ctx && this.ctx.state === "suspended") this.ctx.resume();
+  },
+  tone(f, dur=.12, type="square", vol=.08, slide=0, when=0){
+    if (!this.on || !this.ctx) return;
+    const t = this.ctx.currentTime + when, o = this.ctx.createOscillator(), g = this.ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t);
+    if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, f*slide), t+dur);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.0001, t+dur);
+    o.connect(g).connect(this.ctx.destination); o.start(t); o.stop(t+dur+.05);
+  },
+  noise(dur=.4, vol=.25){
+    if (!this.on || !this.ctx) return;
+    const b = this.ctx.createBuffer(1, this.ctx.sampleRate*dur, this.ctx.sampleRate), d = b.getChannelData(0);
+    for (let i=0;i<d.length;i++) d[i] = (Math.random()*2-1) * (1 - i/d.length);
+    const s = this.ctx.createBufferSource(), g = this.ctx.createGain(); g.gain.value = vol;
+    s.buffer = b; s.connect(g).connect(this.ctx.destination); s.start();
+  },
+  boom(){ this.tone(160,.7,"sine",.6,.25); this.tone(80,.8,"triangle",.4,.5); this.noise(.5,.3); },
+  fanfare(){ [523,659,784,1047,784,1047].forEach((f,i)=>this.tone(f,.16,"square",.07,0,i*.11)); },
+  say(txt, pitch=1.3){
+    if (!this.on || !("speechSynthesis" in window)) return;
+    try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang="en-US"; u.rate=1.05; u.pitch=pitch; speechSynthesis.speak(u); } catch(e){}
+  }
+};
+$("#soundBtn").onclick = () => { Snd.on = !Snd.on; $("#soundBtn").textContent = Snd.on ? "🔊" : "🔇"; $("#soundBtn").setAttribute("aria-label", Snd.on ? "Som ligado" : "Som desligado"); if (Snd.on){ Snd.init(); Snd.tone(880,.1); } };
+
+/* ---------- confete de lego, 6 e 7 ---------- */
+const Confetti = (() => {
+  const cv = $("#confetti"), cx = cv.getContext("2d"); let parts = [], running = false, W, H;
+  const COLORS = ["#2b7bff","#22b4ff","#ffe14d","#ff4fa3","#7dff6a","#ffffff"];
+  const size = () => { const r = devicePixelRatio || 1; W = innerWidth; H = innerHeight; cv.width = W*r; cv.height = H*r; cx.setTransform(r,0,0,r,0,0); };
+  size(); addEventListener("resize", size);
+  function burst(x = W/2, y = H/2, n = 90, spread = 1){
+    if (reduce) n = Math.min(n, 20);
+    for (let i=0;i<n;i++){
+      const a = Math.random()*Math.PI*2, v = (4 + Math.random()*9) * spread;
+      parts.push({ x, y, vx: Math.cos(a)*v, vy: Math.sin(a)*v - 6, g: .32, r: Math.random()*6.28, vr: (Math.random()-.5)*.3,
+        s: 10 + Math.random()*10, c: COLORS[i % COLORS.length], k: Math.random() < .28 ? (Math.random()<.5?"6":"7") : "b", life: 0 });
+    }
+    if (!running){ running = true; requestAnimationFrame(loop); }
+  }
+  function rain(n = 120){ for (let i=0;i<n;i++) setTimeout(() => burst(Math.random()*W, -20, 1, .3), i*25); }
+  function loop(){
+    cx.clearRect(0,0,W,H);
+    parts = parts.filter(p => p.y < H + 60 && p.life < 400);
+    for (const p of parts){
+      p.life++; p.vx *= .99; p.vy += p.g; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c;
+      if (p.k === "b"){ cx.fillRect(-p.s/2, -p.s/3, p.s, p.s*.66); cx.fillRect(-p.s/2+2, -p.s/3-4, p.s/3, 4); cx.fillRect(p.s/6-2, -p.s/3-4, p.s/3, 4); }
+      else { cx.font = `${p.s*2}px Bungee, sans-serif`; cx.textAlign="center"; cx.textBaseline="middle"; cx.fillText(p.k,0,0); }
+      cx.restore();
+    }
+    if (parts.length) requestAnimationFrame(loop); else { running = false; cx.clearRect(0,0,W,H); }
+  }
+  return { burst, rain };
+})();
+
+/* ---------- personagens 6 e 7 (blocos) ---------- */
+const SHAPES = {
+  6: { rows: ["..#####.",".##.....","##......","##......","######..","##...##.","##....##","##....##",".##..##.","..####.."],
+       c:"#2b7bff", d:"#1747b8", l:"#5f9dff", eye:{x:74,y:46}, armL:{x:0,y:112}, armR:{x:160,y:132}, leg:60 },
+  7: { rows: ["########","########",".....###","....###.","....##..","...###..","...##...","..###...","..##....","..##...."],
+       c:"#22b4ff", d:"#0f74b3", l:"#6fd3ff", eye:{x:66,y:56}, armL:{x:60,y:112}, armR:{x:140,y:72}, leg:40 },
+};
+function buildChar(n){
+  const S = SHAPES[n], C = 20, gx = 50, gy = 10; let bricks = "";
+  S.rows.forEach((row, r) => [...row].forEach((ch, c) => {
+    if (ch !== "#") return;
+    const x = gx + c*C, y = gy + r*C;
+    bricks += `<rect x="${x}" y="${y}" width="${C}" height="${C}" fill="${S.c}" stroke="${S.d}" stroke-width="1.2"/>`+
+              `<rect x="${x+5}" y="${y+5}" width="10" height="10" rx="2" fill="${S.l}"/><rect x="${x+5}" y="${y+13}" width="10" height="2" fill="${S.d}" opacity=".5"/>`;
+  }));
+  const arm = (side) => {
+    const a = side === "L" ? S.armL : S.armR, flip = side === "L" ? "" : ' transform="scale(-1,1)"';
+    return `<g transform="translate(${gx+a.x},${gy+a.y})"><g class="arm-anim ${side==="R"?"r":""}"><g${flip}>
+      <rect x="-40" y="-10" width="46" height="20" rx="6" fill="#1a3fd0" stroke="#0e2690" stroke-width="2"/>
+      <rect x="-70" y="-16" width="34" height="26" rx="9" fill="#fff" stroke="#c3cde6" stroke-width="2"/>
+      <path d="M-68 -16 v-8 a4 4 0 0 1 8 0 v8 M-60 -16 v-10 a4 4 0 0 1 8 0 v10 M-52 -16 v-9 a4 4 0 0 1 8 0 v9" fill="#fff" stroke="#c3cde6" stroke-width="2"/>
+      <ellipse cx="-38" cy="-12" rx="6" ry="8" fill="#fff" stroke="#c3cde6" stroke-width="2"/>
+    </g></g></g>`;
+  };
+  const lx = gx + S.leg, ly = gy + 200;
+  const leg = `<rect x="${lx}" y="${ly}" width="40" height="58" fill="${S.c}" stroke="${S.d}" stroke-width="1.2"/>
+    <rect x="${lx+6}" y="${ly+6}" width="10" height="10" rx="2" fill="${S.l}"/><rect x="${lx+24}" y="${ly+6}" width="10" height="10" rx="2" fill="${S.l}"/>
+    <rect x="${lx}" y="${ly+24}" width="40" height="14" fill="#1a3fd0"/>
+    <rect x="${lx-8}" y="${ly+56}" width="56" height="30" rx="6" fill="#fff" stroke="#c3cde6" stroke-width="2"/>
+    <rect x="${lx-8}" y="${ly+78}" width="56" height="8" rx="3" fill="#dfe6f7"/>`;
+  const e = S.eye;
+  const eye = `<g transform="translate(${gx+e.x},${gy+e.y})"><g class="eye-ball">
+      <circle r="27" fill="#fff" stroke="#0a1238" stroke-width="4"/>
+      <g class="pupil"><circle r="13" fill="#0a1238"/><circle cx="-4" cy="-5" r="4" fill="#fff"/></g></g></g>`;
+  return `<svg viewBox="-28 0 316 310" role="img" aria-hidden="true">${arm("L")}${arm("R")}${leg}${bricks}${eye}</svg>`;
+}
+document.querySelectorAll(".char").forEach(el => {
+  const n = el.dataset.n; el.querySelector(".svg-slot").innerHTML = buildChar(n);
+  el.addEventListener("click", () => {
+    Snd.init(); el.classList.remove("jump"); void el.offsetWidth; el.classList.add("jump");
+    const b = el.querySelector(".bubble"); b.classList.add("show"); clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove("show"), 900);
+    Snd.tone(n === "6" ? 520 : 700, .18, "square", .08, 1.6); Snd.say(n === "6" ? "six!" : "seven!", n === "6" ? 1.2 : 1.5);
+    const r = el.getBoundingClientRect(); Confetti.burst(r.left + r.width/2, r.top + r.height*.3, 24, .7);
+  });
+});
+/* olhos seguem o dedo / mouse */
+const pupils = [...document.querySelectorAll(".pupil")];
+let lastMove = 0;
+function look(px, py){
+  pupils.forEach(p => {
+    const r = p.parentNode.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+    const dx = px - cx, dy = py - cy, d = Math.hypot(dx, dy) || 1, k = Math.min(9, d/18);
+    p.setAttribute("transform", `translate(${dx/d*k},${dy/d*k})`);
+  });
+}
+addEventListener("pointermove", e => { lastMove = Date.now(); look(e.clientX, e.clientY); }, { passive:true });
+addEventListener("pointerdown", e => { lastMove = Date.now(); look(e.clientX, e.clientY); }, { passive:true });
+setInterval(() => { if (Date.now() - lastMove > 2500) look(Math.random()*innerWidth, Math.random()*innerHeight); }, 1400);
+setInterval(() => document.querySelectorAll(".eye-ball").forEach((b,i) => setTimeout(() => { b.classList.remove("blink"); void b.getBoundingClientRect(); b.classList.add("blink"); }, i*120)), 3600);
+
+/* ---------- fundo, marquee ---------- */
+(() => {
+  const f = $("#floaters");
+  for (let i=0;i<18;i++){
+    const s = document.createElement("span"); s.textContent = i % 2 ? "7" : "6";
+    s.style.left = Math.random()*100 + "vw"; s.style.fontSize = 30 + Math.random()*90 + "px";
+    s.style.animationDuration = 14 + Math.random()*16 + "s"; s.style.animationDelay = -Math.random()*30 + "s";
+    s.style.setProperty("--r", (Math.random() < .5 ? -1 : 1) * (90 + Math.random()*270) + "deg"); f.appendChild(s);
+  }
+  const words = ["SIX SEVEN 🤲","ELIAS 6","JOÃO LUCAS 7","5 ANOS","07/12","SIX SEVEN 🤲","É FESTA","GÊMEOS 2x"];
+  const html = words.map(w => `<span>${w}</span><span>★</span>`).join("");
+  $("#marq").innerHTML = html + html;
+})();
+
+/* ---------- textos a partir da CONFIG ---------- */
+$("#n1").textContent = CONFIG.nome6; $("#n2").textContent = CONFIG.nome7; $("#ageNum").textContent = CONFIG.idade;
+document.querySelector('.char[data-n="6"] .tag').textContent = CONFIG.nome6.toUpperCase();
+document.querySelector('.char[data-n="7"] .tag').textContent = CONFIG.nome7.toUpperCase();
+const dm = `${pad2(D)}/${pad2(M)}`;
+$("#dateBig").innerHTML = mark67(dm); $("#footDate").textContent = dm;
+$("#weekday").textContent = partyStart.toLocaleDateString("pt-BR", { weekday:"long" });
+if (CONFIG.horario){ $("#timeBig").innerHTML = mark67(CONFIG.horario.replace(":", "h")); }
+else { $("#timeBig").textContent = "EM BREVE"; $("#timeNote").textContent = "O horário chega já já. Fica de olho! 👀"; }
+const fullAddr = CONFIG.endereco + (CONFIG.cidade ? " — " + CONFIG.cidade : "");
+$("#addr").innerHTML = mark67(fullAddr);
+const q = encodeURIComponent(CONFIG.endereco + (CONFIG.cidade ? ", " + CONFIG.cidade : ""));
+$("#gmaps").href = `https://www.google.com/maps/search/?api=1&query=${q}`;
+$("#waze").href = `https://waze.com/ul?q=${q}&navigate=yes`;
+
+/* agenda */
+const title = `Aniversário de ${CONFIG.idade} anos — ${CONFIG.nome6} & ${CONFIG.nome7} (6-7!)`;
+const ymd = d => `${d.getFullYear()}${pad2(d.getMonth()+1)}${pad2(d.getDate())}`;
+const hms = d => `${ymd(d)}T${pad2(d.getHours())}${pad2(d.getMinutes())}00`;
+const end = new Date(partyStart.getTime() + CONFIG.duracaoHoras*3600e3);
+const nextDay = new Date(Y, M-1, D+1);
+const gDates = CONFIG.horario ? `${hms(partyStart)}/${hms(end)}` : `${ymd(partyStart)}/${ymd(nextDay)}`;
+$("#gcal").href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${gDates}&location=${encodeURIComponent(fullAddr)}&details=${encodeURIComponent("SIX SEVEN! 🤲")}`;
+$("#ics").onclick = () => {
+  const dt = CONFIG.horario ? `DTSTART:${hms(partyStart)}\r\nDTEND:${hms(end)}` : `DTSTART;VALUE=DATE:${ymd(partyStart)}\r\nDTEND;VALUE=DATE:${ymd(nextDay)}`;
+  const ics = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//convite67//PT\r\nBEGIN:VEVENT\r\nUID:${Date.now()}@convite67\r\nDTSTAMP:${hms(new Date())}\r\n${dt}\r\nSUMMARY:${title}\r\nLOCATION:${fullAddr.replace(/,/g,"\\,")}\r\nDESCRIPTION:SIX SEVEN!\r\nEND:VEVENT\r\nEND:VCALENDAR`;
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([ics], { type:"text/calendar" }));
+  a.download = "aniversario-6-7.ics"; document.body.appendChild(a); a.click(); a.remove();
+};
+
+/* ---------- contagem regressiva ---------- */
+function tick(){
+  const diff = partyStart - new Date();
+  const sameDay = new Date().toDateString() === partyStart.toDateString();
+  if (diff <= 0 || (!CONFIG.horario && sameDay)){
+    $("#clockBox").innerHTML = sameDay ? `<div class="today">É HOJE!!! 🤲🎉</div>` : `<div class="today">Valeu por fazer parte! 💙</div>`;
+    return clearInterval(clockT);
+  }
+  const s = Math.floor(diff/1000), vals = [Math.floor(s/86400), Math.floor(s%86400/3600), Math.floor(s%3600/60), s%60];
+  ["#cD","#cH","#cM","#cS"].forEach((id,i) => { const v = pad2(vals[i]); const el = $(id); if (el.dataset.v !== v){ el.dataset.v = v; el.innerHTML = mark67(v); } });
+}
+const clockT = setInterval(tick, 1000); tick();
+
+/* ---------- galeria ---------- */
+(() => {
+  const g = $("#gallery"), colors = ["", "cyan", "pink", "yellow", "white"];
+  CONFIG.fotos.forEach((f, i) => {
+    const card = document.createElement("figure");
+    card.className = `ph brick ${colors[i % colors.length]}`; card.style.setProperty("--rot", (i%2 ? 2 : -2) + "deg");
+    card.innerHTML = `<div class="frame"><img loading="lazy" alt="${f.legenda}"></div><figcaption class="cap">${mark67(f.legenda)}</figcaption>`;
+    const img = card.querySelector("img");
+    img.onerror = () => { card.querySelector(".frame").innerHTML = `<div class="empty"><b>📸</b>foto em breve</div>`; card.dataset.empty = "1"; };
+    img.src = f.src;
+    card.onclick = () => { if (card.dataset.empty) return; $("#lbImg").src = f.src; $("#lbCap").innerHTML = mark67(f.legenda); $("#lightbox").classList.add("open"); };
+    g.appendChild(card);
+  });
+  const fin = document.createElement("figure");
+  fin.className = "ph brick final"; fin.style.setProperty("--rot", "-1deg");
+  fin.innerHTML = `<div class="frame"><div><div class="display">${CONFIG.idade}<br>ANOS</div><p style="margin-top:14px;font-size:17px">e a próxima foto<br>é com <b>você</b> na festa 📸</p></div></div><figcaption class="cap">${mark67(dm)}</figcaption>`;
+  fin.onclick = () => location.hash = "#confirma";
+  g.appendChild(fin);
+  $("#lightbox").onclick = () => $("#lightbox").classList.remove("open");
+})();
+
+/* ---------- desafio 6-7 ---------- */
+(() => {
+  const GOAL = 67, TIME = 15;
+  let running = false, count = 0, expect = "6", t0 = 0, raf = 0;
+  const p6 = $("#p6"), p7 = $("#p7"), msg = $("#gMsg"), btn = $("#gStart");
+  const best = () => parseFloat(store.get("best67")) || null;
+  const showBest = () => { const b = best(); $("#gBest").textContent = b ? b.toFixed(1) + "s" : "--"; };
+  showBest();
+  const setNext = () => { p6.classList.toggle("next", expect === "6"); p7.classList.toggle("next", expect === "7"); };
+  function start(){
+    Snd.init(); running = true; count = 0; expect = "6"; t0 = performance.now();
+    p6.disabled = p7.disabled = false; btn.style.display = "none"; setNext();
+    $("#gCount").textContent = "0"; $("#gBar").style.width = "0%"; msg.textContent = "VAI! VAI! VAI! 🔥";
+    Snd.tone(440,.1); Snd.tone(880,.15,"square",.08,0,.12);
+    const loop = () => {
+      if (!running) return;
+      const left = Math.max(0, TIME - (performance.now() - t0)/1000);
+      $("#gTime").textContent = left.toFixed(1);
+      if (left <= 0) return finish(false);
+      raf = requestAnimationFrame(loop);
+    };
+    loop();
+  }
+  function finish(win){
+    running = false; cancelAnimationFrame(raf); p6.disabled = p7.disabled = true; p6.classList.remove("next"); p7.classList.remove("next");
+    btn.style.display = ""; btn.textContent = "↻ JOGAR DE NOVO";
+    if (win){
+      const t = (performance.now() - t0)/1000, b = best(), rec = !b || t < b;
+      if (rec) store.set("best67", t.toFixed(2)); showBest();
+      msg.innerHTML = `<b>SIX SEVEN!</b> 67 em ${t.toFixed(1)}s ${rec ? "— NOVO RECORDE! 🏆" : "🤲"}<br>Você tá pronto pra festa.`;
+      Snd.fanfare(); setTimeout(() => Snd.say("six seven!"), 500);
+      const r = $(".game").getBoundingClientRect(); Confetti.burst(r.left + r.width/2, r.top + 80, 160, 1.2);
+    } else {
+      const lines = count >= 50 ? "Quase! Faltou pouco 😱" : count >= 30 ? "Tá esquentando… treina até o dia " + dm + "!" : "Os gêmeos fazem isso dormindo 😴 Tenta de novo!";
+      msg.innerHTML = `Você fez <b>${count}</b>. ${lines}`;
+      Snd.tone(300,.3,"sawtooth",.07,.5);
+    }
+  }
+  function hit(n){
+    if (!running) return;
+    const el = n === "6" ? p6 : p7;
+    el.classList.remove("hit"); void el.offsetWidth; el.classList.add("hit"); setTimeout(() => el.classList.remove("hit"), 80);
+    if (n !== expect){ el.classList.remove("bad"); void el.offsetWidth; el.classList.add("bad"); Snd.tone(120,.12,"sawtooth",.08); msg.textContent = "Alterna! 6, 7, 6, 7…"; return; }
+    count++; expect = n === "6" ? "7" : "6"; setNext();
+    Snd.tone(n === "6" ? 520 + count*4 : 700 + count*4, .07, "square", .06);
+    $("#gCount").textContent = count; $("#gBar").style.width = (count/GOAL*100) + "%";
+    if (count === 6 || count === 7 || count === 33 || count === 60) msg.textContent = ["", "", "", "", "", "", "6… 👀", "7! 🤲"][count] || (count === 33 ? "Metade! 💪" : "Tá chegando!! 🔥");
+    if (count === GOAL) finish(true);
+  }
+  btn.onclick = start;
+  p6.addEventListener("pointerdown", e => { e.preventDefault(); hit("6"); });
+  p7.addEventListener("pointerdown", e => { e.preventDefault(); hit("7"); });
+  addEventListener("keydown", e => {
+    if (!running) return;
+    if (e.key === "6" || e.key === "ArrowLeft") { e.preventDefault(); hit("6"); }
+    if (e.key === "7" || e.key === "ArrowRight") { e.preventDefault(); hit("7"); }
+  });
+})();
+
+/* ---------- confirmação ---------- */
+(() => {
+  let n = 1; const out = $("#rNum"), note = $("#rNote");
+  const upd = () => {
+    out.textContent = n;
+    note.textContent = n === 6 || n === 7 ? "😏 número perfeito, hein" : n === 67 ? "🤯 SIX SEVEN?!" : n > 10 ? "Trouxe a escola toda? 😂" : "";
+    if (n === 6 || n === 7) Snd.say(n === 6 ? "six" : "seven");
+  };
+  $("#rMinus").onclick = () => { Snd.init(); if (n > 1) { n--; Snd.tone(400,.06); upd(); } };
+  $("#rPlus").onclick = () => { Snd.init(); if (n < 99) { n++; Snd.tone(600,.06); upd(); } };
+  const send = (txt) => {
+    const base = CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp.replace(/\D/g,"")}` : "https://wa.me/";
+    window.open(`${base}?text=${encodeURIComponent(txt)}`, "_blank");
+  };
+  $("#rsvpForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const name = $("#rName").value.trim(); if (!name) return $("#rName").focus();
+    Snd.init(); Snd.fanfare(); Confetti.burst(innerWidth/2, innerHeight*.6, 120);
+    const quem = n === 1 ? "1 pessoa" : `${n} pessoas`;
+    setTimeout(() => send(`Oi! Aqui é ${name} 🙌\nConfirmo presença no aniversário de ${CONFIG.idade} anos do ${CONFIG.nome6} e do ${CONFIG.nome7} — dia ${dm}!\nVamos em: ${quem}.\nSIX SEVEN! 🤲`), 600);
+  });
+  $("#rNo").onclick = () => {
+    const name = $("#rName").value.trim() || "(seu nome)";
+    send(`Oi! Aqui é ${name}. Infelizmente não vou conseguir ir no aniversário do ${CONFIG.nome6} e do ${CONFIG.nome7} 😢 Mas manda um abraço gigante pros dois! 🤲`);
+  };
+})();
+
+/* ---------- easter egg: toca 7 vezes no 67 do rodapé ---------- */
+(() => {
+  let taps = 0, t;
+  $("#sig").onclick = () => {
+    Snd.init(); taps++; clearTimeout(t); t = setTimeout(() => taps = 0, 1500);
+    Snd.tone(400 + taps*80, .08);
+    if (taps >= 7){
+      taps = 0; document.body.classList.add("party"); Confetti.rain(160); Snd.fanfare(); Snd.say("six seven! six seven!");
+      setTimeout(() => document.body.classList.remove("party"), 6700);
+    }
+  };
+})();
+
+/* ---------- reveal ao rolar ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold:.15 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+/* ---------- intro: conta até 5… e aí 6-7 ---------- */
+(() => {
+  const stage = $("#stage"), intro = $("#intro");
+  const caps = ["contando a idade deles…", "", "", "", "pronto, 5 anos.", ""];
+  function reveal(){ intro.classList.add("gone"); document.body.classList.remove("locked"); }
+  $("#openBtn").onclick = () => {
+    Snd.init();
+    if (reduce){ reveal(); return; }
+    let i = 1;
+    const step = () => {
+      if (i <= 5){
+        stage.innerHTML = `<div><div class="count-num">${i}</div><div class="count-cap">${caps[i-1]}</div></div>`;
+        Snd.tone(300 + i*90, .14, "square", .08); i++; setTimeout(step, i === 6 ? 900 : 480); return;
+      }
+      if (i === 6){
+        stage.innerHTML = `<div><div class="count-num" style="font-size:min(14vw,80px)">…peraí</div><div class="count-cap">acho que tem mais 🤔</div></div>`;
+        i++; setTimeout(step, 1000); return;
+      }
+      stage.innerHTML = `<div><div class="boom"><b>6</b><b>7</b></div><div class="boom-txt">SIX SEVEN!</div></div>`;
+      Snd.tone(520,.2,"square",.1); setTimeout(() => Snd.tone(700,.25,"square",.1), 280);
+      setTimeout(() => { Snd.boom(); Snd.say("six seven!", 1.1); intro.classList.add("shake"); Confetti.burst(innerWidth/2, innerHeight/2, 180, 1.3); }, 560);
+      setTimeout(reveal, 2300);
+    };
+    step();
+  };
+})();
+</script>
+</body>
+</html>
