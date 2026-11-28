@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Elias & João Lucas • 5 anos • 6-7</title>
-<meta name="description" content="Você foi convocado! Aniversário de 5 anos do Elias e do João Lucas — 07/12. SIX SEVEN!">
-<meta property="og:title" content="Elias & João Lucas fazem 5 anos 🤲 6-7!">
+<title>Elias & João Lucas • 7 anos • 6-7</title>
+<meta name="description" content="Você foi convocado! Aniversário de 7 anos do Elias e do João Lucas — 07/12. SIX SEVEN!">
+<meta property="og:title" content="Elias & João Lucas tinham 6, vão fazer 7 🤲 6-7!">
 <meta property="og:description" content="Você foi convocado! 07/12 — abre o convite e faz o 6-7.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#0a1238">
@@ -238,8 +238,8 @@ body.party{animation:party .67s linear infinite}
   </div>
   <p class="tap-hint">(toca neles 👆)</p>
   <h1><span id="n1">Elias</span><span class="amp">&amp;</span><span id="n2">João Lucas</span></h1>
-  <p class="age">fazem <strong id="ageNum">5</strong> anos</p>
-  <p class="joke">…mas a vibe é <em>6-7</em> 🤲</p>
+  <p class="age">vão fazer <strong id="ageNum">7</strong> anos</p>
+  <p class="joke">tinham 6, agora 7. Literalmente <em>6-7</em> 🤲</p>
   <a href="#info" class="scroll-cue">desliza ↓</a>
 </header>
 
@@ -256,7 +256,7 @@ body.party{animation:party .67s linear infinite}
         <div class="lbl">📅 QUANDO</div>
         <div class="big" id="dateBig">07/12</div>
         <div class="mid" id="weekday">segunda-feira</div>
-        <p class="note">Dia <span class="h67">7</span>. Coincidência? Acho que não. 👀</p>
+        <p class="note">Dia <span class="h67">7</span>, fazendo <span class="h67">7</span>. Coincidência? Acho que não. 👀</p>
         <div class="row">
           <a class="btn brick white" id="gcal" target="_blank" rel="noopener">+ Google Agenda</a>
           <button class="btn brick white" id="ics">+ Agenda do celular</button>
@@ -354,7 +354,7 @@ body.party{animation:party .67s linear infinite}
 
 <footer class="wrap">
   <div class="sig" id="sig" role="button" aria-label="67"><span>6</span><span>7</span></div>
-  <p>Elias &amp; João Lucas • 5 anos • <span id="footDate">07/12</span></p>
+  <p>Elias &amp; João Lucas • 7 anos • <span id="footDate">07/12</span></p>
 </footer>
 
 <div id="lightbox" role="dialog" aria-label="Foto ampliada"><div><img id="lbImg" alt=""><p id="lbCap"></p></div></div>
@@ -366,7 +366,7 @@ body.party{animation:party .67s linear infinite}
 const CONFIG = {
   nome6: "Elias",            // personagem 6
   nome7: "João Lucas",       // personagem 7
-  idade: 5,
+  idade: 7,
   data: "2026-12-07",        // AAAA-MM-DD
   horario: "",               // ex.: "16:00"  (vazio = "EM BREVE")
   duracaoHoras: 4,
@@ -375,7 +375,7 @@ const CONFIG = {
   whatsapp: "5581994610257", // 55 + DDD + número (vazio = a pessoa escolhe o contato)
   // Fotos na pasta "fotos/" (ordem = ordem da galeria). "pos" ajusta o enquadramento.
   fotos: [
-    { src: "fotos/01-arvore.jpg",   legenda: "Primeiro Natal da dupla 🎄", pos: "55% 50%" },
+    { src: "fotos/01-arvore.jpg",   legenda: "Natal dos baby 🎄", pos: "55% 50%" },
     { src: "fotos/02-livro.jpg",    legenda: "Leitura em dupla 📖",        pos: "45% 50%" },
     { src: "fotos/03-dinos.jpg",    legenda: "Era dos dinos 🦖",           pos: "40% 50%" },
     { src: "fotos/04-mario.jpg",    legenda: "Niver de 4 anos: level desbloqueado 🍄" },
@@ -527,7 +527,7 @@ setInterval(() => document.querySelectorAll(".eye-ball").forEach((b,i) => setTim
     s.style.animationDuration = 14 + Math.random()*16 + "s"; s.style.animationDelay = -Math.random()*30 + "s";
     s.style.setProperty("--r", (Math.random() < .5 ? -1 : 1) * (90 + Math.random()*270) + "deg"); f.appendChild(s);
   }
-  const words = ["SIX SEVEN 🤲","ELIAS 6","JOÃO LUCAS 7","5 ANOS","07/12","SIX SEVEN 🤲","É FESTA","GÊMEOS 2x"];
+  const words = ["SIX SEVEN 🤲","ELIAS 6","JOÃO LUCAS 7","6 → 7 ANOS","07/12","SIX SEVEN 🤲","É FESTA","GÊMEOS 2x"];
   const html = words.map(w => `<span>${w}</span><span>★</span>`).join("");
   $("#marq").innerHTML = html + html;
 })();
@@ -711,22 +711,18 @@ document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 /* ---------- intro: conta até 5… e aí 6-7 ---------- */
 (() => {
   const stage = $("#stage"), intro = $("#intro");
-  const caps = ["contando a idade deles…", "", "", "", "pronto, 5 anos.", ""];
+  const caps = ["contando a idade deles…", "", "", "", "", "6 anos… por enquanto 😏"];
   function reveal(){ intro.classList.add("gone"); document.body.classList.remove("locked"); }
   $("#openBtn").onclick = () => {
     Snd.init();
     if (reduce){ reveal(); return; }
     let i = 1;
     const step = () => {
-      if (i <= 5){
+      if (i <= 6){
         stage.innerHTML = `<div><div class="count-num">${i}</div><div class="count-cap">${caps[i-1]}</div></div>`;
-        Snd.tone(300 + i*90, .14, "square", .08); i++; setTimeout(step, i === 6 ? 900 : 480); return;
+        Snd.tone(300 + i*90, .14, "square", .08); i++; setTimeout(step, i === 7 ? 1300 : 420); return;
       }
-      if (i === 6){
-        stage.innerHTML = `<div><div class="count-num" style="font-size:min(14vw,80px)">…peraí</div><div class="count-cap">acho que tem mais 🤔</div></div>`;
-        i++; setTimeout(step, 1000); return;
-      }
-      stage.innerHTML = `<div><div class="boom"><b>6</b><b>7</b></div><div class="boom-txt">SIX SEVEN!</div></div>`;
+      stage.innerHTML = `<div><div class="boom"><b>6</b><b>7</b></div><div class="boom-txt">SIX SEVEN!</div><div class="count-cap">de 6 pra 7 anos 🎂</div></div>`;
       Snd.tone(520,.2,"square",.1); setTimeout(() => Snd.tone(700,.25,"square",.1), 280);
       setTimeout(() => { Snd.boom(); Snd.say("six seven!", 1.1); intro.classList.add("shake"); Confetti.burst(innerWidth/2, innerHeight/2, 180, 1.3); }, 560);
       setTimeout(reveal, 2300);
