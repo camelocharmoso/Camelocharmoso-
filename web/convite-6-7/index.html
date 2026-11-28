@@ -675,14 +675,15 @@ const clockT = setInterval(tick, 1000); tick();
   $("#rPlus").onclick = () => { Snd.init(); if (n < 99) { n++; Snd.tone(600,.06); upd(); } };
   const send = (txt) => {
     const base = CONFIG.whatsapp ? `https://wa.me/${CONFIG.whatsapp.replace(/\D/g,"")}` : "https://wa.me/";
-    window.open(`${base}?text=${encodeURIComponent(txt)}`, "_blank");
+    const a = document.createElement("a"); a.href = `${base}?text=${encodeURIComponent(txt)}`;
+    a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove();
   };
   $("#rsvpForm").addEventListener("submit", e => {
     e.preventDefault();
     const name = $("#rName").value.trim(); if (!name) return $("#rName").focus();
     Snd.init(); Snd.fanfare(); Confetti.burst(innerWidth/2, innerHeight*.6, 120);
     const quem = n === 1 ? "1 pessoa" : `${n} pessoas`;
-    setTimeout(() => send(`Oi! Aqui é ${name} 🙌\nConfirmo presença no aniversário de ${CONFIG.idade} anos do ${CONFIG.nome6} e do ${CONFIG.nome7} — dia ${dm}!\nVamos em: ${quem}.\nSIX SEVEN! 🤲`), 600);
+    send(`Oi! Aqui é ${name} 🙌\nConfirmo presença no aniversário de ${CONFIG.idade} anos do ${CONFIG.nome6} e do ${CONFIG.nome7} — dia ${dm}!\nVamos em: ${quem}.\nSIX SEVEN! 🤲`);
   });
   $("#rNo").onclick = () => {
     const name = $("#rName").value.trim() || "(seu nome)";
