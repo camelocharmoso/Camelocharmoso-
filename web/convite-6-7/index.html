@@ -144,14 +144,14 @@ section{padding:72px 0;position:relative}
 .today{font-family:Bungee,sans-serif;font-size:clamp(36px,12vw,60px);text-align:center;color:var(--yellow);padding:20px 0}
 
 /* ---------- galeria ---------- */
-.gallery{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:16px 16px 28px;margin:0 -16px;scrollbar-width:none}
+.gallery{display:flex;align-items:flex-start;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:16px 16px 28px;margin:0 -16px;scrollbar-width:none}
 .gallery::-webkit-scrollbar{display:none}
 .ph{flex:0 0 74%;max-width:320px;scroll-snap-align:center;padding:12px 12px 16px;transform:rotate(var(--rot));cursor:pointer}
 .ph .frame{aspect-ratio:4/5;border-radius:10px;overflow:hidden;background:rgba(0,0,0,.2);display:grid;place-items:center}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}
 .ph .empty{text-align:center;font-size:15px;padding:16px;opacity:.85}
 .ph .empty b{display:block;font-size:52px;margin-bottom:6px}
-.ph .cap{font-family:Bungee,sans-serif;font-size:20px;margin-top:12px;text-align:center}
+.ph .cap{font-family:Bungee,sans-serif;font-size:16px;line-height:1.2;margin-top:12px;text-align:center;min-height:2.4em;display:grid;place-items:center}
 .ph.final .frame{background:var(--ink);color:#fff;text-align:center;padding:18px}
 .ph.final .frame .display{font-size:46px;line-height:1;color:var(--yellow)}
 .swipe{font-size:14px;color:var(--muted);text-align:center}
@@ -371,13 +371,16 @@ const CONFIG = {
   endereco: "Rua Eligio Medeiros de Araújo, nº 6105",
   cidade: "",                // ex.: "Bairro, Cidade - UF" (ajuda o GPS a achar)
   whatsapp: "",              // ex.: "5581999999999" (vazio = a pessoa escolhe o contato)
-  // Coloque as fotos na pasta "fotos/" com estes nomes (ou troque os nomes aqui)
+  // Fotos na pasta "fotos/" (ordem = ordem da galeria). "pos" ajusta o enquadramento.
   fotos: [
-    { src: "fotos/bebes.jpg",   legenda: "Bebês" },
-    { src: "fotos/1-ano.jpg",   legenda: "1 aninho" },
-    { src: "fotos/2-anos.jpg",  legenda: "2 anos" },
-    { src: "fotos/3-anos.jpg",  legenda: "3 anos" },
-    { src: "fotos/4-anos.jpg",  legenda: "4 anos" },
+    { src: "fotos/01-arvore.jpg",   legenda: "Primeiro Natal da dupla 🎄", pos: "55% 50%" },
+    { src: "fotos/02-livro.jpg",    legenda: "Leitura em dupla 📖",        pos: "45% 50%" },
+    { src: "fotos/03-dinos.jpg",    legenda: "Era dos dinos 🦖",           pos: "40% 50%" },
+    { src: "fotos/04-mario.jpg",    legenda: "Level 4 desbloqueado 🍄" },
+    { src: "fotos/05-piscina.jpg",  legenda: "Modo férias 🌊" },
+    { src: "fotos/06-oculos.jpg",   legenda: "Cool demais 😎",             pos: "60% 50%" },
+    { src: "fotos/07-oculos-2.jpg", legenda: "Pose de capa de revista",    pos: "50% 50%" },
+    { src: "fotos/08-natal.jpg",    legenda: "Camisa 96… quase 6-7 😏" },
   ],
 };
 
@@ -576,8 +579,10 @@ const clockT = setInterval(tick, 1000); tick();
   CONFIG.fotos.forEach((f, i) => {
     const card = document.createElement("figure");
     card.className = `ph brick ${colors[i % colors.length]}`; card.style.setProperty("--rot", (i%2 ? 2 : -2) + "deg");
-    card.innerHTML = `<div class="frame"><img loading="lazy" alt="${f.legenda}"></div><figcaption class="cap">${mark67(f.legenda)}</figcaption>`;
+    card.innerHTML = `<div class="frame"><img loading="lazy" alt="${f.legenda}"></div><figcaption class="cap"><span>${mark67(f.legenda)}</span></figcaption>`;
     const img = card.querySelector("img");
+    img.alt = `${CONFIG.nome6} e ${CONFIG.nome7} — ${f.legenda}`;
+    if (f.pos) img.style.objectPosition = f.pos;
     img.onerror = () => { card.querySelector(".frame").innerHTML = `<div class="empty"><b>📸</b>foto em breve</div>`; card.dataset.empty = "1"; };
     img.src = f.src;
     card.onclick = () => { if (card.dataset.empty) return; $("#lbImg").src = f.src; $("#lbCap").innerHTML = mark67(f.legenda); $("#lightbox").classList.add("open"); };
@@ -585,7 +590,7 @@ const clockT = setInterval(tick, 1000); tick();
   });
   const fin = document.createElement("figure");
   fin.className = "ph brick final"; fin.style.setProperty("--rot", "-1deg");
-  fin.innerHTML = `<div class="frame"><div><div class="display">${CONFIG.idade}<br>ANOS</div><p style="margin-top:14px;font-size:17px">e a próxima foto<br>é com <b>você</b> na festa 📸</p></div></div><figcaption class="cap">${mark67(dm)}</figcaption>`;
+  fin.innerHTML = `<div class="frame"><div><div class="display">${CONFIG.idade}<br>ANOS</div><p style="margin-top:14px;font-size:17px">e a próxima foto<br>é com <b>você</b> na festa 📸</p></div></div><figcaption class="cap"><span>${mark67(dm)}</span></figcaption>`;
   fin.onclick = () => location.hash = "#confirma";
   g.appendChild(fin);
   $("#lightbox").onclick = () => $("#lightbox").classList.remove("open");
